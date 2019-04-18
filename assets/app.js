@@ -20760,6 +20760,65 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -20769,7 +20828,23 @@ exports.default = void 0;
 var _default = {
   props: ["menu_data", "submit_url", "redirect_url"],
   data: function data() {
-    return {};
+    return {
+      p_menu_data: this.menu_data.map(function (menu_categories) {
+        return _objectSpread({}, menu_categories, {
+          menu_items: menu_categories.menu_items.map(function (menu_item) {
+            return _objectSpread({}, menu_item, {
+              is_ordered: false
+            });
+          })
+        });
+      }),
+      selected_menu_category: null
+    };
+  },
+  methods: {
+    onOrderMenuCategoryButtonClick: function onOrderMenuCategoryButtonClick(menu_category) {
+      this.selected_menu_category = menu_category;
+    }
   }
 };
 exports.default = _default;
@@ -20785,16 +20860,138 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-lg-9" }, [
+      _c("div", { staticClass: "card" }, [
+        _c(
+          "div",
+          { staticClass: "card-body" },
+          [
+            _c("transition", { attrs: { name: "menu-fade", mode: "out-in" } }, [
+              _vm.selected_menu_category === null
+                ? _c("div", { key: "if" }, [
+                    _c(
+                      "div",
+                      { staticClass: "row d-flex justify-content-center" },
+                      _vm._l(_vm.menu_data, function(menu_category) {
+                        return _c(
+                          "div",
+                          {
+                            key: menu_category.id,
+                            staticClass: "card col-md-3 mt-3 mr-3"
+                          },
+                          [
+                            _c("img", {
+                              staticClass: "card-img-top",
+                              attrs: {
+                                src: "/menuCategory/image/" + menu_category.id,
+                                alt: menu_category.name
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "card-body" }, [
+                              _c(
+                                "span",
+                                { staticClass: "font-weight-bold text-info" },
+                                [
+                                  _vm._v(
+                                    "\n                                            " +
+                                      _vm._s(menu_category.name) +
+                                      "\n                                        "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("p", { staticClass: "text-muted" }, [
+                                _vm._v(
+                                  "\n                                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem saepe ab, molestiae obcaecati nisi praesentium repellat.\n                                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "text-right" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-info btn-sm",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.onOrderMenuCategoryButtonClick(
+                                          menu_category
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Pesan\n                                                "
+                                    ),
+                                    _c("i", { staticClass: "fa fa-plus" })
+                                  ]
+                                )
+                              ])
+                            ])
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                : _c(
+                    "div",
+                    {
+                      key: "else",
+                      on: {
+                        click: function($event) {
+                          _vm.selected_menu_category = null
+                        }
+                      }
+                    },
+                    [
+                      _c("div", [
+                        _c("div", { staticClass: "text-right" }, [
+                          _c("button", { staticClass: "btn btn-warning" }, [
+                            _c("i", { staticClass: "fa fa-arrow-left" }),
+                            _vm._v(
+                              "\n                                        Kembali\n                                    "
+                            )
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+            ])
+          ],
+          1
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-3" }, [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-body" }, [
+          _c("h1", { staticClass: "h5" }, [_vm._v(" Daftar Pesanan ")]),
+          _vm._v(" "),
+          _c("hr")
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
           return {
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: null,
+            _scopeId: "data-v-3ebacf",
             functional: undefined
           };
         })());
@@ -20814,9 +21011,13 @@ render._withStripped = true
         }
 
         
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
       }
     })();
-},{"vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
+},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -38705,7 +38906,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35771" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42165" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

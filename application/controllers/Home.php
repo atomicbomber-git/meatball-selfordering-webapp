@@ -15,9 +15,10 @@ class Home extends BaseController
 
     public function show()
     {
-        // $menu_data = 
+        $menu_data = MenuCategory::query()
+            ->with("menu_items")
+            ->get();
 
-        $this->jsonResponse(MenuCategory::all());
-        $this->template->render("home/show");
+        $this->template->render("home/show", compact("menu_data"));
     }
 }

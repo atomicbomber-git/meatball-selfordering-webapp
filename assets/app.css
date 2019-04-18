@@ -11993,5 +11993,17 @@ h3 {
     border-color: #dee2e6;
   }
 }
+img[data-v-3ebacf] {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+}
+.menu-fade-enter-active[data-v-3ebacf], .menu-fade-leave-active[data-v-3ebacf] {
+    transition: opacity .1s ease;
+}
+.menu-fade-enter[data-v-3ebacf], .menu-fade-leave-to[data-v-3ebacf]
+/* .menu-fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
 
 /*# sourceMappingURL=/assets/app.css.map */

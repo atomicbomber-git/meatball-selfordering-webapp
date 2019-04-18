@@ -1,12 +1,12 @@
 <?php 
     use App\Helpers\Auth;
-use App\Policies\ItemTypePolicy;
-
+    use App\Policies\MenuCategoryPolicy;
+    use App\Helpers\DefaultRoute;
 ?>
 
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="<?= base_url("/") ?>">
+        <a class="navbar-brand" href="<?= base_url(DefaultRoute::get()) ?>">
             Admin Bakso
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,12 +20,12 @@ use App\Policies\ItemTypePolicy;
 
                 <?php if(Auth::check()): ?>
 
-                <?php if(ItemTypePolicy::canIndex(Auth::user())): ?>
+                <?php if(MenuCategoryPolicy::canIndex(Auth::user())): ?>
                 
                 <li class='nav-item active'>
-                    <a class='nav-link' href="<?= base_url("itemType/index") ?>" >
+                    <a class='nav-link' href="<?= base_url("menuCategory/index") ?>" >
                         <i class='fa fa-cutlery'></i>
-                        Kategori Item
+                        Kategori Menu
                     </a>
                 </li>
 

@@ -19,6 +19,11 @@ class ItemType extends Model
         return $this->belongsTo(ItemGroup::class);
     }
 
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+
     public function delete()
     {
         unlink($this->image);

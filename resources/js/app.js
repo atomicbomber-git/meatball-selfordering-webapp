@@ -3,6 +3,13 @@ import Vue from 'vue/dist/vue.esm'
 
 Vue.component("home", require("./components/Home.vue").default)
 
+
+try {
+    window.Popper = require('popper.js').default;
+    window.$ = window.jQuery = require('jquery');
+    require('bootstrap');
+} catch (e) {}
+
 window.app = new Vue({
     el: '#app',
 });

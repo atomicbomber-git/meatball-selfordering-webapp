@@ -15,13 +15,13 @@ class DefaultRoute
         }
         else {
             if ($user->level === UserLevel::OUTLET_ADMIN) {
-                return "itemType/index";
+                return "menuCategory/index";
             }
             else if ($user->level === UserLevel::WAITER) {
                 return "home/show";
             }
             else {
-                return "itemType/index";
+                return "menuCategory/index";
             }
         }
     }

@@ -3,7 +3,9 @@
     "@vue/component-compiler-utils": "^3.0.0",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
+    "jquery": "^3.4.0",
     "parcel-bundler": "^1.12.3",
+    "popper.js": "^1.15.0",
     "sass": "^1.18.0",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"

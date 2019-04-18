@@ -8,4 +8,9 @@ class Auth
     {
         return get_instance()->session->user !== null;
     }
+
+    public static function user()
+    {
+        return get_instance()->session->user;
+    }
 }

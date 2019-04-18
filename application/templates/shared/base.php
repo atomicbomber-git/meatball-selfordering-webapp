@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="<?= base_url("assets/app.css") ?>">
 </head>
 <body>
-
     <?= $this->insert('shared/navbar') ?>
-
     <div class="mt-5"></div>
 
     <?= $this->section('content') ?>

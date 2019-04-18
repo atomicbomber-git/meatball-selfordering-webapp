@@ -18,6 +18,7 @@
                     <tr>
                         <th> # </th>
                         <th> Nama </th>
+                        <th> Gambar </th>
                         <th> Kendali </th>
                     </tr>
                 </thead>
@@ -28,9 +29,21 @@
                         <td> <?= $key + 1 ?> </td>
                         <td> <?= $item_type->name ?> </td>
                         <td>
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fa fa-trash"></i>
-                            </button>
+                            <img
+                                style="width: 320px; height: 240px; object-fit: cover"
+                                src="<?= base_url("itemType/image/{$item_type->id}") ?>"
+                                alt="<?= $item_type->name ?>">
+                        </td>
+                        <td>
+                            <form class="d-inline-block" method="POST" action="<?= base_url("itemType/delete/{$item_type->id}") ?>" >
+                                <input type="hidden"
+                                    name="<?= $this->csrf_name() ?>"
+                                    value="<?= $this->csrf_token() ?>">
+                                
+                                <button class="btn btn-sm btn-danger">
+                                    Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     <?php endforeach ?>

@@ -2,8 +2,16 @@
 
 use App\BaseController;
 use App\EloquentModels\User;
+use App\Helpers\DefaultRoute;
+use App\Helpers\Auth;
 
 class Login extends BaseController {
+    public function __construct()
+    {
+        parent::__construct();
+        Auth::check() && redirect(DefaultRoute::get());
+    }
+
     protected function allowedMethods()
     {
         return [
@@ -39,12 +47,11 @@ class Login extends BaseController {
         }
 
         $this->session->user = $user;
-
         $this->authenticated();
     }
 
     public function authenticated()
     {
-        redirect("itemType/index");
+        redirect(DefaultRoute::get());
     }
 }

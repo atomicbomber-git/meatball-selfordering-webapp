@@ -1,5 +1,7 @@
 <?php 
     use App\Helpers\Auth;
+use App\Policies\ItemTypePolicy;
+
 ?>
 
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light">
@@ -17,16 +19,19 @@
             <div class="navbar-nav mr-auto">
 
                 <?php if(Auth::check()): ?>
+
+                <?php if(ItemTypePolicy::canIndex(Auth::user())): ?>
+                
                 <li class='nav-item active'>
                     <a class='nav-link' href="<?= base_url("itemType/index") ?>" >
                         <i class='fa fa-cutlery'></i>
                         Kategori Item
                     </a>
                 </li>
-                <?php endif ?>
 
+                <?php endif ?>
+                <?php endif ?>
             </div>
-            
 
             <?php if(Auth::check()): ?>
 
@@ -40,7 +45,6 @@
                     <i class="fa fa-sign-out"></i>
                 </button>
             </form>
-                
             <?php endif ?>
         </div>
 

@@ -184,12 +184,17 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../scss/app.scss":[function(require,module,exports) {
+},{"./bundle-url":"../../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../../node_modules/font-awesome/css/font-awesome.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../node_modules/vue/dist/vue.esm.js":[function(require,module,exports) {
+},{"./../fonts/fontawesome-webfont.eot":[["fontawesome-webfont.f69f3d91.eot","../../node_modules/font-awesome/fonts/fontawesome-webfont.eot"],"../../node_modules/font-awesome/fonts/fontawesome-webfont.eot"],"./../fonts/fontawesome-webfont.woff2":[["fontawesome-webfont.4326a27e.woff2","../../node_modules/font-awesome/fonts/fontawesome-webfont.woff2"],"../../node_modules/font-awesome/fonts/fontawesome-webfont.woff2"],"./../fonts/fontawesome-webfont.woff":[["fontawesome-webfont.ef999803.woff","../../node_modules/font-awesome/fonts/fontawesome-webfont.woff"],"../../node_modules/font-awesome/fonts/fontawesome-webfont.woff"],"./../fonts/fontawesome-webfont.ttf":[["fontawesome-webfont.4f58e7c4.ttf","../../node_modules/font-awesome/fonts/fontawesome-webfont.ttf"],"../../node_modules/font-awesome/fonts/fontawesome-webfont.ttf"],"./../fonts/fontawesome-webfont.svg":[["fontawesome-webfont.33529680.svg","../../node_modules/font-awesome/fonts/fontawesome-webfont.svg"],"../../node_modules/font-awesome/fonts/fontawesome-webfont.svg"],"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../scss/app.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"../../node_modules/font-awesome/css/font-awesome.css":"../../node_modules/font-awesome/css/font-awesome.css","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../node_modules/vue/dist/vue.esm.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -20866,7 +20871,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39635" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36225" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -21042,4 +21047,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","app.js"], null)
-//# sourceMappingURL=/app.js.map
+//# sourceMappingURL=/assets/app.js.map

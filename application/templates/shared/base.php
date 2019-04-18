@@ -7,7 +7,12 @@
     <title> <?= $title ?? "Website Name" ?> </title>
     <link rel="stylesheet" href="<?= base_url("assets/app.css") ?>">
 </head>
-<body class="pt-5">
+<body>
+
+    <?= $this->insert('shared/navbar') ?>
+
+    <div class="mt-5"></div>
+
     <?= $this->section('content') ?>
 
     <script src="<?= base_url("assets/app.js") ?>"></script>

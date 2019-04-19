@@ -8,6 +8,7 @@
     "parcel-bundler": "^1.12.3",
     "popper.js": "^1.15.0",
     "sass": "^1.18.0",
+    "sweetalert": "^2.1.2",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10",
     "vue2-transitions": "^0.3.0"

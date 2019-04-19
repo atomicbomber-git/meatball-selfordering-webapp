@@ -21938,6 +21938,11 @@ var _default = {
         });
       });
       return menu_items;
+    },
+    total_price: function total_price() {
+      return this.ordered_menu_items.reduce(function (prev, cur) {
+        return prev + cur.price * cur.order_quantity;
+      }, 0);
     }
   },
   methods: {
@@ -22170,85 +22175,104 @@ exports.default = _default;
     _c("div", { staticClass: "col-lg-4" }, [
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-body" }, [
-          _c("h1", { staticClass: "h5" }, [_vm._v(" Daftar Pesanan ")]),
-          _vm._v(" "),
-          _c("hr"),
+          _c("h1", { staticClass: "h5 text-info" }, [
+            _vm._v(" DAFTAR PESANAN ")
+          ]),
           _vm._v(" "),
           _vm.ordered_menu_items.length > 0
-            ? _c("table", { staticClass: "table table-sm table-striped" }, [
-                _vm._m(0),
+            ? _c("div", [
+                _c("table", { staticClass: "table table-sm table-striped" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.ordered_menu_items, function(menu_item) {
+                      return _c("tr", { key: menu_item.id }, [
+                        _c("td", [_vm._v(" " + _vm._s(menu_item.name) + " ")]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " " +
+                              _vm._s(_vm.number_format(menu_item.price)) +
+                              " "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-danger",
+                              on: {
+                                click: function($event) {
+                                  --menu_item.order_quantity
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-minus" })]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "font-weight-bold mx-1" },
+                            [
+                              _c("order-quantity", {
+                                model: {
+                                  value: menu_item.order_quantity,
+                                  callback: function($$v) {
+                                    _vm.$set(menu_item, "order_quantity", $$v)
+                                  },
+                                  expression: "menu_item.order_quantity"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-success",
+                              on: {
+                                click: function($event) {
+                                  ++menu_item.order_quantity
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-plus" })]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-right" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(
+                                _vm.number_format(
+                                  menu_item.price * menu_item.order_quantity
+                                )
+                              ) +
+                              "\n                                "
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ]),
                 _vm._v(" "),
                 _c(
-                  "tbody",
-                  _vm._l(_vm.ordered_menu_items, function(menu_item) {
-                    return _c("tr", { key: menu_item.id }, [
-                      _c("td", [_vm._v(" " + _vm._s(menu_item.name) + " ")]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          " " + _vm._s(_vm.number_format(menu_item.price)) + " "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-danger",
-                            on: {
-                              click: function($event) {
-                                --menu_item.order_quantity
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-minus" })]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "span",
-                          { staticClass: "font-weight-bold mx-1" },
-                          [
-                            _c("order-quantity", {
-                              model: {
-                                value: menu_item.order_quantity,
-                                callback: function($$v) {
-                                  _vm.$set(menu_item, "order_quantity", $$v)
-                                },
-                                expression: "menu_item.order_quantity"
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-sm btn-success",
-                            on: {
-                              click: function($event) {
-                                ++menu_item.order_quantity
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-plus" })]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(
-                              _vm.number_format(
-                                menu_item.price * menu_item.order_quantity
-                              )
-                            ) +
-                            "\n                            "
-                        )
-                      ])
+                  "div",
+                  { staticClass: "total-price font-weight-bold text-right" },
+                  [
+                    _vm._v("\n                        TOTAL: "),
+                    _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(
+                        " Rp. " +
+                          _vm._s(_vm.number_format(_vm.total_price)) +
+                          " "
+                      )
                     ])
-                  }),
-                  0
+                  ]
                 )
               ])
             : _c("div", { staticClass: "alert alert-info" }, [
@@ -40199,7 +40223,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42165" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36615" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

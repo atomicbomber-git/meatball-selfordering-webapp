@@ -12011,5 +12011,8 @@ img.img-detail[data-v-3ebacf] {
 /* .menu-fade-leave-active below version 2.1.8 */ {
     opacity: 0;
 }
+div.total-price[data-v-3ebacf] {
+    font-size: 24pt;
+}
 
 /*# sourceMappingURL=/assets/app.css.map */

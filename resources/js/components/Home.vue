@@ -92,43 +92,48 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <h1 class="h5"> Daftar Pesanan </h1>
-                    <hr>
+                    <h1 class="h5 text-info"> DAFTAR PESANAN </h1>
+    
+                    <div v-if="ordered_menu_items.length > 0">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <th> Item </th>
+                                <th> Harga (Rp.) </th>
+                                <th style="width: 10rem"> Jumlah </th>
+                                <th> Subtotal (Rp.) </th>
+                            </thead>
 
-                    <table v-if="ordered_menu_items.length > 0" class="table table-sm table-striped">
-                        <thead>
-                            <th> Item </th>
-                            <th> Harga (Rp.) </th>
-                            <th style="width: 10rem"> Jumlah </th>
-                            <th> Subtotal (Rp.) </th>
-                        </thead>
+                            <tbody>
+                                <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
+                                    <td> {{ menu_item.name }} </td>
+                                    <td> {{ number_format(menu_item.price) }} </td>
+                                    <td>
+                                        <button @click="--menu_item.order_quantity" class="btn btn-sm btn-danger">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
 
-                        <tbody>
-                            <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
-                                <td> {{ menu_item.name }} </td>
-                                <td> {{ number_format(menu_item.price) }} </td>
-                                <td>
-                                    <button @click="--menu_item.order_quantity" class="btn btn-sm btn-danger">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
+                                        <span class="font-weight-bold mx-1">
+                                            <order-quantity
+                                                v-model="menu_item.order_quantity"
+                                                />
+                                        </span>
 
-                                    <span class="font-weight-bold mx-1">
-                                        <order-quantity
-                                            v-model="menu_item.order_quantity"
-                                            />
-                                    </span>
+                                        <button @click="++menu_item.order_quantity" class="btn btn-sm btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
 
-                                    <button @click="++menu_item.order_quantity" class="btn btn-sm btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </td>
+                                    <td class="text-right">
+                                        {{ number_format(menu_item.price * menu_item.order_quantity) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                                <td class="text-right">
-                                    {{ number_format(menu_item.price * menu_item.order_quantity) }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <div class="total-price font-weight-bold text-right">
+                            TOTAL: <span class="text-danger"> Rp. {{ number_format(total_price) }} </span>
+                        </div>
+                    </div>
 
                     <div v-else class="alert alert-info">
                         <i class="fa fa-info"></i>
@@ -182,6 +187,12 @@ export default {
             });
 
             return menu_items
+        },
+
+        total_price() {
+            return this.ordered_menu_items.reduce((prev, cur) => {
+                return prev + (cur.price * cur.order_quantity)
+            }, 0)
         }
     },
 
@@ -215,5 +226,9 @@ export default {
     .menu-fade-enter, .menu-fade-leave-to
     /* .menu-fade-leave-active below version 2.1.8 */ {
         opacity: 0;
+    }
+
+    div.total-price {
+        font-size: 24pt;
     }
 </style>

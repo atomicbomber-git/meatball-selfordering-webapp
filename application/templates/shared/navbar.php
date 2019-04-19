@@ -30,6 +30,17 @@
                 </li>
 
                 <?php endif ?>
+
+                <?php if(TRUE): ?>
+
+                <li class='nav-item active'>
+                    <a class='nav-link' href="<?= base_url("receiptPrinter/index") ?>" >
+                        <i class='fa fa-print'></i>
+                        Printer
+                    </a>
+                </li>
+                
+                <?php endif ?>
                 <?php endif ?>
             </div>
 

@@ -10,4 +10,9 @@ class Outlet extends Model
     {
         return $this->hasMany(OutletMenuItem::class);
     }
+
+    public function receipt_printers()
+    {
+        return $this->hasMany(ReceiptPrinter::class);
+    }
 }

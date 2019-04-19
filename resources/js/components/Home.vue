@@ -133,6 +133,13 @@
                         <div class="total-price font-weight-bold text-right">
                             TOTAL: <span class="text-danger"> Rp. {{ number_format(total_price) }} </span>
                         </div>
+
+                        <div @click="onFinishOrderButtonClick" class="text-right mt-3">
+                            <button class="btn btn-primary">
+                                Selesaikan Pemesanan
+                                <i class="fa fa-check"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div v-else class="alert alert-info">
@@ -154,7 +161,7 @@ import OrderQuantity from "./OrderQuantity.vue"
 export default {
     props: [
         "menu_data",
-        "submit_url", "redirect_url",
+        "submit_url",
     ],
 
     components: { OrderQuantity },
@@ -193,6 +200,19 @@ export default {
             return this.ordered_menu_items.reduce((prev, cur) => {
                 return prev + (cur.price * cur.order_quantity)
             }, 0)
+        },
+
+        form_data() {
+            let ordereds = this.ordered_menu_items.map(menu_item => {
+                return {
+                    id: menu_item.id,
+                    quantity: menu_item.order_quantity,
+                }
+            })
+
+            return {
+                menu_items: ordereds,
+            }
         }
     },
 
@@ -201,6 +221,54 @@ export default {
 
         onOrderMenuCategoryButtonClick(menu_category) {
             this.selected_menu_category = menu_category
+        },
+
+        onFinishOrderButtonClick() {
+            swal({
+                text: 'Apakah Anda yakin Anda hendak menyelesaikan pesanan Anda?',
+                icon: 'warning',
+                dangerMode: true,
+                buttons: {
+                    ok: "Selesaikan Pesanan",
+                    cancel: "Kembali",
+                }
+            })
+            .then(willSubmit => {
+                if (willSubmit) {
+                    this.submitSalesInvoice()
+                }
+            })
+        },
+
+        submitSalesInvoice() {
+            $.post(this.submit_url, {token: window.token, ...this.form_data})
+                .done(response => {
+                    this.error_data = null;
+                    swal({
+                        icon: "success",
+                        text: "Pemesanan berhasil."
+                    })
+
+                    this.restoreToInitialState()
+                })
+                .fail((xhr, status, error) => {
+                    let response = JSON.parse(xhr.responseText);
+                    swal({
+                        text: "Error: " + JSON.stringify(response),
+                        dangerMode: true,
+                    })
+                });
+        },
+
+        restoreToInitialState() {
+            this.selected_menu_category = null
+
+            this.p_menu_data.forEach(menu_category => {
+                menu_category.menu_items
+                    .forEach(menu_item => {
+                        menu_item.order_quantity = 0
+                    })
+            });
         }
     }
 }

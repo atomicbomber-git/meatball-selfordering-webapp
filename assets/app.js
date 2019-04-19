@@ -21909,7 +21909,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
-  props: ["menu_data", "submit_url", "redirect_url"],
+  props: ["menu_data", "submit_url"],
   components: {
     OrderQuantity: _OrderQuantity.default
   },
@@ -21943,12 +21943,69 @@ var _default = {
       return this.ordered_menu_items.reduce(function (prev, cur) {
         return prev + cur.price * cur.order_quantity;
       }, 0);
+    },
+    form_data: function form_data() {
+      var ordereds = this.ordered_menu_items.map(function (menu_item) {
+        return {
+          id: menu_item.id,
+          quantity: menu_item.order_quantity
+        };
+      });
+      return {
+        menu_items: ordereds
+      };
     }
   },
   methods: {
     number_format: _numeral_helpers.number_format,
     onOrderMenuCategoryButtonClick: function onOrderMenuCategoryButtonClick(menu_category) {
       this.selected_menu_category = menu_category;
+    },
+    onFinishOrderButtonClick: function onFinishOrderButtonClick() {
+      var _this = this;
+
+      swal({
+        text: 'Apakah Anda yakin Anda hendak menyelesaikan pesanan Anda?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: {
+          ok: "Selesaikan Pesanan",
+          cancel: "Kembali"
+        }
+      }).then(function (willSubmit) {
+        if (willSubmit) {
+          _this.submitSalesInvoice();
+        }
+      });
+    },
+    submitSalesInvoice: function submitSalesInvoice() {
+      var _this2 = this;
+
+      $.post(this.submit_url, _objectSpread({
+        token: window.token
+      }, this.form_data)).done(function (response) {
+        _this2.error_data = null;
+        swal({
+          icon: "success",
+          text: "Pemesanan berhasil."
+        });
+
+        _this2.restoreToInitialState();
+      }).fail(function (xhr, status, error) {
+        var response = JSON.parse(xhr.responseText);
+        swal({
+          text: "Error: " + JSON.stringify(response),
+          dangerMode: true
+        });
+      });
+    },
+    restoreToInitialState: function restoreToInitialState() {
+      this.selected_menu_category = null;
+      this.p_menu_data.forEach(function (menu_category) {
+        menu_category.menu_items.forEach(function (menu_item) {
+          menu_item.order_quantity = 0;
+        });
+      });
     }
   }
 };
@@ -22273,6 +22330,15 @@ exports.default = _default;
                       )
                     ])
                   ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "text-right mt-3",
+                    on: { click: _vm.onFinishOrderButtonClick }
+                  },
+                  [_vm._m(1)]
                 )
               ])
             : _c("div", { staticClass: "alert alert-info" }, [
@@ -22299,6 +22365,17 @@ var staticRenderFns = [
       _c("th", { staticStyle: { width: "10rem" } }, [_vm._v(" Jumlah ")]),
       _vm._v(" "),
       _c("th", [_vm._v(" Subtotal (Rp.) ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("button", { staticClass: "btn btn-primary" }, [
+      _vm._v(
+        "\n                            Selesaikan Pemesanan\n                            "
+      ),
+      _c("i", { staticClass: "fa fa-check" })
     ])
   }
 ]
@@ -40185,6 +40262,9 @@ require("../scss/app.scss");
 var _vue = _interopRequireDefault(require("vue/dist/vue.esm"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Get CSRF token from the header
+window.token = document.head.querySelector('meta[name="csrf-token"]').content;
 
 _vue.default.component("home", require("./components/Home.vue").default);
 

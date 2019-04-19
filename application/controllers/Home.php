@@ -17,15 +17,7 @@ class Home extends BaseController
 
     public function show()
     {
-        $outlet = null;
-        if (Auth::user()->level === UserLevel::OUTLET_ADMIN) {
-            $outlet = Auth::user()->outlet;
-        }
-        else if (Auth::user()->level === UserLevel::WAITER) {
-            $outlet = Auth::user()->outlet_user->outlet;
-        }
-        $outlet !== null ?: $this->error403();
-
+        $outlet = Auth::user()->outlet ?: $this->error403();
 
         $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
         $menu_item_price_map = $outlet->outlet_menu_items

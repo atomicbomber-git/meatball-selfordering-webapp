@@ -1,6 +1,9 @@
 import "../scss/app.scss"
 import Vue from 'vue/dist/vue.esm'
 
+// Get CSRF token from the header
+window.token = document.head.querySelector('meta[name="csrf-token"]').content
+
 Vue.component("home", require("./components/Home.vue").default)
 
 try {

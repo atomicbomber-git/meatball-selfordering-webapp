@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> <?= $title ?? "Website Name" ?> </title>
     <link rel="stylesheet" href="<?= base_url("assets/app.css") ?>">
+    <meta name="csrf-token" content="<?= $this->csrf_token() ?>">
 </head>
 <body>
     <div class="mt-5"></div>

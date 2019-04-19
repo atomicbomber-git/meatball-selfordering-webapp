@@ -5,8 +5,8 @@
                 <div class="card-body">
                     <transition name="menu-fade" mode="out-in">
                         <div key="if" v-if="selected_menu_category === null">
-                            <div class="row d-flex justify-content-center">
-                                <div class="card col-md-3 mt-3 mr-3" v-for="menu_category in p_menu_data" :key="menu_category.id">
+                            <div class="row d-flex justify-content-left">
+                                <div class="card d-inline-block mt-3 mr-3" style="width: 200px" v-for="menu_category in p_menu_data" :key="menu_category.id">
                                     <img class="card-img-top"
                                         :src="`/menuCategory/image/${menu_category.id}`"
                                         :alt="menu_category.name"
@@ -276,8 +276,8 @@ export default {
 
 <style scoped>
     img.card-img-top {
-        width: 220px;
-        height: 220px;
+        width: 200px;
+        height: 200px;
         object-fit: cover;
     }
 

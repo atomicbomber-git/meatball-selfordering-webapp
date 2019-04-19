@@ -22034,13 +22034,14 @@ exports.default = _default;
                 ? _c("div", { key: "if" }, [
                     _c(
                       "div",
-                      { staticClass: "row d-flex justify-content-center" },
+                      { staticClass: "row d-flex justify-content-left" },
                       _vm._l(_vm.p_menu_data, function(menu_category) {
                         return _c(
                           "div",
                           {
                             key: menu_category.id,
-                            staticClass: "card col-md-3 mt-3 mr-3"
+                            staticClass: "card d-inline-block mt-3 mr-3",
+                            staticStyle: { width: "200px" }
                           },
                           [
                             _c("img", {

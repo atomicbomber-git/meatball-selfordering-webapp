@@ -4,6 +4,7 @@ use App\BaseController;
 use App\EloquentModels\ItemType;
 use App\EloquentModels\MenuCategory;
 use App\Helpers\Auth;
+use App\Enums\UserLevel;
 
 class Home extends BaseController
 {
@@ -16,9 +17,17 @@ class Home extends BaseController
 
     public function show()
     {
-        $outlet = Auth::user()->managed_outlet;
-        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
+        $outlet = null;
+        if (Auth::user()->level === UserLevel::OUTLET_ADMIN) {
+            $outlet = Auth::user()->outlet;
+        }
+        else if (Auth::user()->level === UserLevel::WAITER) {
+            $outlet = Auth::user()->outlet_user->outlet;
+        }
+        $outlet !== null ?: $this->error403();
 
+
+        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
         $menu_item_price_map = $outlet->outlet_menu_items
             ->mapWithKeys(function ($menu_item) {
                 return [$menu_item->menu_item_id => $menu_item->price];
@@ -33,7 +42,6 @@ class Home extends BaseController
                 foreach ($menu_category->menu_items as $menu_item) {
                     $menu_item->price = $menu_item_price_map[$menu_item->id];
                 }
-
                 return $menu_category;
             });
 

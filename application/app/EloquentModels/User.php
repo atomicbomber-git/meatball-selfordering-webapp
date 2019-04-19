@@ -10,4 +10,9 @@ class User extends Model
     {
         return $this->hasOne(Outlet::class, "outlet_administrator_id");
     }
+
+    public function outlet_user()
+    {
+        return $this->hasOne(OutletUser::class);
+    }
 }

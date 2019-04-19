@@ -129,6 +129,7 @@ class MenuCategory extends BaseController {
         $image_file = file_get_contents($menu_category->image);
 
         $this->output
+            ->set_header("Cache-Control: public, max-age=60, s-maxage=60")
             ->set_content_type($image_mime_type)
             ->set_output($image_file);
     }

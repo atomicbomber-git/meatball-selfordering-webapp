@@ -3,6 +3,7 @@
 use App\BaseController;
 use App\EloquentModels\MenuCategory as MenuCategoryModel;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use App\Helpers\Auth;
 
 class MenuCategory extends BaseController {
     public function __construct()

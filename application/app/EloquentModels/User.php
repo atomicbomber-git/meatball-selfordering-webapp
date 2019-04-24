@@ -7,6 +7,10 @@ use App\Enums\UserLevel;
 
 class User extends Model
 {
+    public $hidden = [
+        "password"
+    ];
+
     public function managed_outlet()
     {
         return $this->hasOne(Outlet::class, "outlet_administrator_id");

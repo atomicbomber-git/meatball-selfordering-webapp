@@ -1,13 +1,17 @@
 <?php
 
 use App\BaseController;
-use App\EloquentModels\ItemType;
 use App\EloquentModels\MenuCategory;
 use App\Helpers\Auth;
-use App\Enums\UserLevel;
 
 class Home extends BaseController
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->authorize();
+    }
+
     protected function allowedMethods()
     {
         return [

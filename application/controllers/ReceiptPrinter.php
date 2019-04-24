@@ -7,6 +7,12 @@ use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 
 class ReceiptPrinter extends BaseController {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->authorize();
+    }
+
     protected function allowedMethods()
     {
         return [

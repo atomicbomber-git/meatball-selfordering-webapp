@@ -1,5 +1,8 @@
 import "../scss/app.scss"
 import Vue from 'vue/dist/vue.esm'
+import VModal from 'vue-js-modal'
+
+Vue.use(VModal)
 
 // Get CSRF token from the header
 window.token = document.head.querySelector('meta[name="csrf-token"]').content

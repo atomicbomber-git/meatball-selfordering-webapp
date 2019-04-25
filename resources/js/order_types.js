@@ -1,4 +1,4 @@
 module.exports = {
-    EAT_HERE: "Makan Disini",
+    DINE_IN: "Makan Disini",
     TAKEAWAY: "Bungkus / Bawa Pulang",
 }

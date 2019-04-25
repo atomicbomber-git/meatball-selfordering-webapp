@@ -196,9 +196,9 @@
                         {{ order_types['TAKEAWAY'] }}
                     </button>
                     <button
-                        @click="onSelectOrderMode('EAT_HERE')"
+                        @click="onSelectOrderMode('DINE_IN')"
                         class="btn btn-primary">
-                        {{ order_types['EAT_HERE'] }}
+                        {{ order_types['DINE_IN'] }}
                     </button>
                 </div>
             </div>

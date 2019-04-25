@@ -9,6 +9,7 @@ window.token = document.head.querySelector('meta[name="csrf-token"]').content
 
 Vue.component("home", require("./components/Home.vue").default)
 Vue.component("receipt-printer-index", require("./components/ReceiptPrinterIndex.vue").default)
+Vue.component("sales-invoice-confirm", require("./components/SalesInvoiceConfirm.vue").default)
 
 try {
     window.Popper = require('popper.js').default;

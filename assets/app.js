@@ -21895,7 +21895,7 @@ render._withStripped = true
     })();
 },{"vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"order_types.js":[function(require,module,exports) {
 module.exports = {
-  EAT_HERE: "Makan Disini",
+  DINE_IN: "Makan Disini",
   TAKEAWAY: "Bungkus / Bawa Pulang"
 };
 },{}],"components/Home.vue":[function(require,module,exports) {
@@ -22450,14 +22450,14 @@ exports.default = _default;
                 staticClass: "btn btn-primary",
                 on: {
                   click: function($event) {
-                    return _vm.onSelectOrderMode("EAT_HERE")
+                    return _vm.onSelectOrderMode("DINE_IN")
                   }
                 }
               },
               [
                 _vm._v(
                   "\n                    " +
-                    _vm._s(_vm.order_types["EAT_HERE"]) +
+                    _vm._s(_vm.order_types["DINE_IN"]) +
                     "\n                "
                 )
               ]
@@ -22898,7 +22898,293 @@ render._withStripped = true
         
       }
     })();
-},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
+},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/SalesInvoiceConfirm.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _order_types2 = _interopRequireDefault(require("../order_types.js"));
+
+var _numeral_helpers = require("../numeral_helpers.js");
+
+var _OrderQuantity = _interopRequireDefault(require("./OrderQuantity.vue"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: ["sales_invoice", "submit_url", "redirect_url"],
+  components: {
+    OrderQuantity: _OrderQuantity.default
+  },
+  data: function data() {
+    return {
+      p_sales_invoice: _objectSpread({}, this.sales_invoice, {
+        sales_invoice_items: _toConsumableArray(this.sales_invoice.sales_invoice_items)
+      })
+    };
+  },
+  computed: {
+    order_types: function order_types() {
+      return _order_types2.default;
+    },
+    total_price: function total_price() {
+      return this.p_sales_invoice.sales_invoice_items.reduce(function (prev, curr) {
+        return prev + (curr.price + curr.quantity);
+      }, 0);
+    }
+  },
+  methods: {
+    number_format: _numeral_helpers.number_format
+  }
+};
+exports.default = _default;
+        var $43f480 = exports.default || module.exports;
+      
+      if (typeof $43f480 === 'function') {
+        $43f480 = $43f480.options;
+      }
+    
+        /* template */
+        Object.assign($43f480, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "table table-bordered table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.p_sales_invoice.sales_invoice_items, function(
+          sales_invoice_item
+        ) {
+          return _c("tr", { key: sales_invoice_item.id }, [
+            _c("td", [_vm._v(" " + _vm._s(sales_invoice_item.name) + " ")]),
+            _vm._v(" "),
+            _c(
+              "td",
+              { staticClass: "text-center" },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-danger",
+                    on: {
+                      click: function($event) {
+                        --sales_invoice_item.quantity
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-minus" })]
+                ),
+                _vm._v(" "),
+                _c("order-quantity", {
+                  staticClass: "mx-2",
+                  model: {
+                    value: sales_invoice_item.quantity,
+                    callback: function($$v) {
+                      _vm.$set(sales_invoice_item, "quantity", $$v)
+                    },
+                    expression: "sales_invoice_item.quantity"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    on: {
+                      click: function($event) {
+                        ++sales_invoice_item.quantity
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-plus" })]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                " Rp. " +
+                  _vm._s(_vm.number_format(sales_invoice_item.price)) +
+                  " "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                " Rp. " +
+                  _vm._s(
+                    _vm.number_format(
+                      sales_invoice_item.quantity * sales_invoice_item.price
+                    )
+                  ) +
+                  " "
+              )
+            ])
+          ])
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "text-right" }, [
+      _c(
+        "div",
+        { staticClass: "custom-control custom-radio custom-control-inline" },
+        [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.p_sales_invoice.type,
+                expression: "p_sales_invoice.type"
+              }
+            ],
+            staticClass: "custom-control-input",
+            attrs: {
+              value: "DINE_IN",
+              type: "radio",
+              id: "order_type_dine_in",
+              name: "order_type"
+            },
+            domProps: { checked: _vm._q(_vm.p_sales_invoice.type, "DINE_IN") },
+            on: {
+              change: function($event) {
+                return _vm.$set(_vm.p_sales_invoice, "type", "DINE_IN")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "custom-control-label",
+              attrs: { for: "order_type_dine_in" }
+            },
+            [_vm._v(" " + _vm._s(_vm.order_types["DINE_IN"]) + " ")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "custom-control custom-radio custom-control-inline" },
+        [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.p_sales_invoice.type,
+                expression: "p_sales_invoice.type"
+              }
+            ],
+            staticClass: "custom-control-input",
+            attrs: {
+              value: "TAKEAWAY",
+              type: "radio",
+              id: "order_type_takeaway",
+              name: "order_type"
+            },
+            domProps: { checked: _vm._q(_vm.p_sales_invoice.type, "TAKEAWAY") },
+            on: {
+              change: function($event) {
+                return _vm.$set(_vm.p_sales_invoice, "type", "TAKEAWAY")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "custom-control-label",
+              attrs: { for: "order_type_takeaway" }
+            },
+            [_vm._v(" " + _vm._s(_vm.order_types["TAKEAWAY"]) + " ")]
+          )
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "total-price font-weight-bold text-right" }, [
+      _vm._v("\n        TOTAL:\n        "),
+      _c("span", { staticClass: "text-danger" }, [
+        _vm._v("Rp. " + _vm._s(_vm.number_format(_vm.total_price)))
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead thead-dark" }, [
+      _c("tr", [
+        _c("th", [_vm._v("Nama Item")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Jumlah")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }, [_vm._v("Harga")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }, [_vm._v("Subtotal")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$43f480', $43f480);
+          } else {
+            api.reload('$43f480', $43f480);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"../order_types.js":"order_types.js","../numeral_helpers.js":"numeral_helpers.js","./OrderQuantity.vue":"components/OrderQuantity.vue","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -40761,6 +41047,8 @@ _vue.default.component("home", require("./components/Home.vue").default);
 
 _vue.default.component("receipt-printer-index", require("./components/ReceiptPrinterIndex.vue").default);
 
+_vue.default.component("sales-invoice-confirm", require("./components/SalesInvoiceConfirm.vue").default);
+
 try {
   window.Popper = require('popper.js').default;
   window.$ = window.jQuery = require('jquery');
@@ -40773,7 +41061,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -40801,7 +41089,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42093" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43579" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

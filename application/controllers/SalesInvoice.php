@@ -6,23 +6,16 @@ use App\EloquentModels\SalesInvoice as SalesInvoiceModel;
 use App\Helpers\Auth;
 use App\EloquentModels\SalesInvoiceItem;
 use App\EloquentModels\OutletMenuItem;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
-use Mike42\Escpos\Printer;
 use Illuminate\Support\Carbon;
+use App\EloquentModels\PlannedSalesInvoiceItem;
 
 class SalesInvoice extends BaseController {
-    
-    public function __construct()
-    {
-        parent::__construct();
-        $receipt_printers = Auth::user()->outlet->receipt_printers;
-    }
-
     protected function allowedMethods()
     {
         return [
             'index' => ['get'],
             'create' => ['get'],
+            'confirm' => ['get'],
             'store' => ['post'],
             'edit' => ['get'],
             'update' => ['post'],
@@ -34,7 +27,21 @@ class SalesInvoice extends BaseController {
 
     public function index()
     {
-        $this->template->render("sales_invoice/index");
+        $sales_invoices = SalesInvoiceModel::query()
+            ->whereDate("created_at", Carbon::today())
+            ->where("status", SalesInvoiceModel::UNPAID)
+            ->get();
+
+        $this->template->render("sales_invoice/index", compact("sales_invoices"));
+    }
+
+    public function confirm($sales_invoice_id)
+    {
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $sales_invoice->load("planned_sales_invoice_items");
+
+        $this->jsonResponse($sales_invoice);
+        $this->template->render("sales_invoice/confirm", compact("sales_invoice"));
     }
 
     public function store()
@@ -47,32 +54,24 @@ class SalesInvoice extends BaseController {
 
         $data = $this->input->post(null);
 
-        $outlet_menu_items = OutletMenuItem::query()
-            ->with("menu_item")
-            ->where("outlet_id", Auth::user()->outlet->id)
-            ->whereIn("menu_item_id", collect($data["menu_items"])->pluck("id"))
-            ->get()
-            ->keyBy("menu_item_id");
-
-        $sales_invoice_items = collect();
-
-        DB::transaction(function() use($data, $outlet_menu_items, $sales_invoice_items) {
-            $sales_invoice_count = SalesInvoiceModel::whereDate("created_at", "=", Carbon::today())
+        DB::transaction(function() use($data) {
+            $sales_invoice_count = SalesInvoiceModel::query()
+                ->whereDate("created_at", "=", Carbon::today())
                 ->count();
 
             $this->sales_invoice = SalesInvoiceModel::create([
                 "type" => $data["type"],
+                "status" => SalesInvoiceModel::UNPAID,
                 "number" => $sales_invoice_count + 1,
                 "outlet_id" => Auth::user()->outlet->id,
             ]);
 
             foreach ($data["menu_items"] as $ordered_menu_item) {
-                $sales_invoice_items->push(SalesInvoiceItem::create([
+                PlannedSalesInvoiceItem::create([
                     "sales_invoice_id" => $this->sales_invoice->id,
-                    "name" => $outlet_menu_items[$ordered_menu_item["id"]]->menu_item->name,
-                    "price" => $outlet_menu_items[$ordered_menu_item["id"]]->price,
+                    "menu_item_id" => $ordered_menu_item["id"],
                     "quantity" => $ordered_menu_item["quantity"],
-                ]));
+                ]);
             }
         });
 

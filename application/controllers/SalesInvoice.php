@@ -32,6 +32,11 @@ class SalesInvoice extends BaseController {
 
     private $sales_invoice;
 
+    public function index()
+    {
+        $this->template->render("sales_invoice/index");
+    }
+
     public function store()
     {
         $this->validate([

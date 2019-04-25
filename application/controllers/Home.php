@@ -22,8 +22,8 @@ class Home extends BaseController
     public function show()
     {
         $outlet = Auth::user()->outlet ?: $this->error403();
-
         $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
+        
         $menu_item_price_map = $outlet->outlet_menu_items
             ->mapWithKeys(function ($menu_item) {
                 return [$menu_item->menu_item_id => $menu_item->price];

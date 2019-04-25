@@ -25,7 +25,7 @@
                 <li class='nav-item active'>
                     <a class='nav-link' href="<?= base_url("menuCategory/index") ?>" >
                         <i class='fa fa-cutlery'></i>
-                        Kategori Menu
+                        Master Kategori Menu
                     </a>
                 </li>
 
@@ -41,6 +41,14 @@
                 </li>
                 
                 <?php endif ?>
+
+                <li class='nav-item active'>
+                    <a class='nav-link' href="<?= base_url("salesInvoice/index") ?>" >
+                        <i class='fa fa-usd'></i>
+                        Penjualan
+                    </a>
+                </li>
+
                 <?php endif ?>
             </div>
 

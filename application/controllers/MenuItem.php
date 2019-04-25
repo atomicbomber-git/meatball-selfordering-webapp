@@ -1,9 +1,10 @@
 <?php
 
 use App\BaseController;
-use App\EloquentModels\MenuCategoryItem as MenuCategoryItemModel;
+use App\EloquentModels\MenuItem as MenuItemModel;
+use App\EloquentModels\MenuCategory;
 
-class MenuCategoryItem extends BaseController {
+class MenuItem extends BaseController {
     protected function allowedMethods()
     {
         return [
@@ -18,6 +19,9 @@ class MenuCategoryItem extends BaseController {
 
     public function index($menu_category_id)
     {
-        $this->jsonResponse(MenuCategoryItemModel::all());
+        $menu_category = MenuCategory::find($menu_category_id) ?: $this->error404();
+        $menu_category->load("menu_items");
+
+        $this->template->render("menu_item/index", compact("menu_category"));
     }
 }

@@ -22694,7 +22694,211 @@ render._withStripped = true
       
       }
     })();
-},{"../numeral_helpers.js":"numeral_helpers.js","./OrderQuantity.vue":"components/OrderQuantity.vue","../order_types":"order_types.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
+},{"../numeral_helpers.js":"numeral_helpers.js","./OrderQuantity.vue":"components/OrderQuantity.vue","../order_types":"order_types.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/ReceiptPrinterIndex.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ["print_server_url", "receipt_printers"],
+  methods: {
+    testPrint: function testPrint(receipt_printer) {
+      var _this = this;
+
+      var data = {
+        address: receipt_printer.ipv4_address,
+        port: receipt_printer.port,
+        content: "\n PRINTING TEST ".concat(receipt_printer.name, " \n")
+      };
+      swal({
+        content: this.$refs.loading_modal,
+        closeModal: false,
+        closeOnClickOutside: false,
+        buttons: false
+      });
+      $.post(this.print_server_url, _objectSpread({
+        token: window.token
+      }, data)).done(function (response) {
+        _this.error_data = null;
+        swal({
+          icon: "success",
+          text: "Pengujian printer berhasil."
+        });
+      }).fail(function (xhr, status, error) {
+        var response = JSON.parse(xhr.responseText);
+        _this.error_data = response.data;
+        swal({
+          icon: "error",
+          text: "Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ".concat(_this.print_server_url, ".")
+        });
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $ebb93a = exports.default || module.exports;
+      
+      if (typeof $ebb93a === 'function') {
+        $ebb93a = $ebb93a.options;
+      }
+    
+        /* template */
+        Object.assign($ebb93a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "table table-sm table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.receipt_printers, function(receipt_printer, index) {
+          return _c("tr", { key: receipt_printer.id }, [
+            _c("td", [_vm._v(_vm._s(index + 1))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(receipt_printer.name))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(receipt_printer.ipv4_address))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(receipt_printer.port))]),
+            _vm._v(" "),
+            _c("td", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-dark btn-sm",
+                  on: {
+                    click: function($event) {
+                      return _vm.testPrint(receipt_printer)
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        Test Print\n                        "
+                  ),
+                  _c("i", { staticClass: "fa fa-print" })
+                ]
+              )
+            ])
+          ])
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "invisible" }, [
+      _c("div", { ref: "loading_modal" }, [
+        _c("div", {
+          staticClass: "spinner-border",
+          staticStyle: { width: "3rem", height: "3rem" },
+          attrs: { role: "status" }
+        }),
+        _vm._v(" "),
+        _c("h3", { staticClass: "text-center mt-3" }, [
+          _vm._v(" Tes Printer, Mohon Tunggu. ")
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead thead-dark" }, [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Nama")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Alamat IP")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Port")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Kendali")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$ebb93a', $ebb93a);
+          } else {
+            api.reload('$ebb93a', $ebb93a);
+          }
+        }
+
+        
+      }
+    })();
+},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -40555,6 +40759,8 @@ window.token = document.head.querySelector('meta[name="csrf-token"]').content;
 
 _vue.default.component("home", require("./components/Home.vue").default);
 
+_vue.default.component("receipt-printer-index", require("./components/ReceiptPrinterIndex.vue").default);
+
 try {
   window.Popper = require('popper.js').default;
   window.$ = window.jQuery = require('jquery');
@@ -40567,7 +40773,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -40595,7 +40801,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44989" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42093" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

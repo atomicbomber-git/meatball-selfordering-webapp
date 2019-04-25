@@ -41,6 +41,12 @@
                                 Ubah
                             </a>
 
+                            <a
+                                class="btn btn-dark btn-sm"
+                                href="<?= base_url("menuItem/index/{$menu_category->id}") ?>">
+                                Menu
+                            </a>
+
                             <form class="d-inline-block" method="POST" action="<?= base_url("menuCategory/delete/{$menu_category->id}") ?>" >
                                 <input type="hidden"
                                     name="<?= $this->csrf_name() ?>"

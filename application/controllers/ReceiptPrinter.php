@@ -3,8 +3,7 @@
 use App\BaseController;
 use App\Helpers\Auth;
 use App\EloquentModels\ReceiptPrinter as ReceiptPrinterModel;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
-use Mike42\Escpos\Printer;
+use GuzzleHttp\Client as Guzzle;
 
 class ReceiptPrinter extends BaseController {
     public function __construct()
@@ -30,26 +29,8 @@ class ReceiptPrinter extends BaseController {
     {
         $outlet = Auth::user()->outlet ?: $this->error403();
         $receipt_printers = $outlet->receipt_printers;
-        $this->template->render("receipt_printer/index", compact("receipt_printers"));
-    }
 
-    public function test($receipt_printer_id)
-    {
-        $receipt_printer = ReceiptPrinterModel::find($receipt_printer_id) ?: $this->error404();
-        $printer = new Printer(new NetworkPrintConnector($receipt_printer->ipv4_address, $receipt_printer->port));
-
-        try {
-            $printer->text("\n");
-            $printer->text("PENGUJIAN PRINTER {$receipt_printer->name}\n");
-            $printer->text("\n");
-        }
-        catch(\Exception $e) {
-
-        }
-        finally {
-            $printer->close();
-        };
-
-        $this->redirectBack();
+        $print_server_url = "http://localhost:8002/print";
+        $this->template->render("receipt_printer/index", compact("receipt_printers", "print_server_url"));
     }
 }

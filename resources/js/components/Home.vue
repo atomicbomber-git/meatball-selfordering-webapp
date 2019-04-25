@@ -272,8 +272,12 @@
         <div class="invisible">
             <div ref="orderConfirmationStatusAlertContent">
                 <p>
-                    {{ JSON.stringify(ordered_menu_items) }}
+                    Silahkan ambil struk nomor pesanan Anda pada printer disamping.
+                    <strong> Nomor pesanan Anda adalah </strong>:
                 </p>
+                <h1 class="text-danger">
+                    {{ sales_invoice && sales_invoice.number }}
+                </h1>
             </div>
         </div>
     </div>
@@ -303,6 +307,7 @@ export default {
             order_type: null,
 
             is_submitting_sales_invoice: false,
+            sales_invoice: null,
         };
     },
 
@@ -380,10 +385,12 @@ export default {
             this.is_submitting_sales_invoice = true
             $.post(this.submit_url, { token: window.token, ...this.form_data })
                 .done(response => {
+                    
                     this.is_submitting_sales_invoice = false
                     this.$modal.hide("order-confirmation");
-
                     this.error_data = null;
+
+                    this.sales_invoice = JSON.parse(response)
 
                     swal({
                         icon: "success",

@@ -21936,7 +21936,8 @@ var _default = {
       }),
       selected_menu_category: null,
       order_type: null,
-      is_submitting_sales_invoice: false
+      is_submitting_sales_invoice: false,
+      sales_invoice: null
     };
   },
   computed: {
@@ -22006,6 +22007,7 @@ var _default = {
         _this.$modal.hide("order-confirmation");
 
         _this.error_data = null;
+        _this.sales_invoice = JSON.parse(response);
         swal({
           icon: "success",
           content: _this.$refs.orderConfirmationStatusAlertContent
@@ -22601,10 +22603,12 @@ exports.default = _default;
       _vm._v(" "),
       _c("div", { staticClass: "invisible" }, [
         _c("div", { ref: "orderConfirmationStatusAlertContent" }, [
-          _c("p", [
+          _vm._m(2),
+          _vm._v(" "),
+          _c("h1", { staticClass: "text-danger" }, [
             _vm._v(
               "\n                " +
-                _vm._s(JSON.stringify(_vm.ordered_menu_items)) +
+                _vm._s(_vm.sales_invoice && _vm.sales_invoice.number) +
                 "\n            "
             )
           ])
@@ -22638,6 +22642,18 @@ var staticRenderFns = [
         "\n                            Selesaikan Pemesanan\n                            "
       ),
       _c("i", { staticClass: "fa fa-check" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "\n                Silahkan ambil struk nomor pesanan Anda pada printer disamping.\n                "
+      ),
+      _c("strong", [_vm._v(" Nomor pesanan Anda adalah ")]),
+      _vm._v(":\n            ")
     ])
   }
 ]

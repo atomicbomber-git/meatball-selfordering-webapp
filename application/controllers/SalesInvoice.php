@@ -4,8 +4,6 @@ use App\BaseController;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\EloquentModels\SalesInvoice as SalesInvoiceModel;
 use App\Helpers\Auth;
-use App\EloquentModels\SalesInvoiceItem;
-use App\EloquentModels\OutletMenuItem;
 use Illuminate\Support\Carbon;
 use App\EloquentModels\PlannedSalesInvoiceItem;
 
@@ -40,8 +38,12 @@ class SalesInvoice extends BaseController {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
         $sales_invoice->load("planned_sales_invoice_items");
 
-        $this->jsonResponse($sales_invoice);
-        $this->template->render("sales_invoice/confirm", compact("sales_invoice"));
+        $outlet = Auth::user()->outlet ?: $this->error403();
+        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
+        $outlet->load("outlet_menu_items.menu_item");
+        $outlet_menu_items = $outlet->outlet_menu_items;
+
+        $this->template->render("sales_invoice/confirm", compact("sales_invoice", "outlet_menu_items"));
     }
 
     public function store()

@@ -3,6 +3,7 @@
 use App\BaseController;
 use App\EloquentModels\MenuCategory as MenuCategoryModel;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use App\Policies\MenuCategoryPolicy;
 use App\Helpers\Auth;
 
 class MenuCategory extends BaseController {
@@ -60,6 +61,7 @@ class MenuCategory extends BaseController {
                     ["image" => $this->upload->display_errors('', '')]
                 ));
 
+                $this->saveOldFormData();
                 $this->redirectBack();
                 throw new \Exception("Image upload failed.");
             }
@@ -71,6 +73,7 @@ class MenuCategory extends BaseController {
             ]);
         });
 
+        $this->session->set_flashdata('message-success', 'Data berhasil ditambahkan.');
         redirect("menuCategory/index");
     }
 
@@ -88,37 +91,43 @@ class MenuCategory extends BaseController {
             $menu_category->update([
                 "name" => $this->input->post("name"),
             ]);
-    
-            $this->load->library('upload', [
-                'upload_path' => MenuCategoryModel::IMAGE_STORAGE_PATH,
-                'allowed_types' => 'jpg|jpeg|png',
-                'file_name' => "{$menu_category->id}",
-                'overwrite' => TRUE,
-                'max_size' => 1024 * 40, // 40 Megabytes
-            ]);
-    
-            if ( ! $this->upload->do_upload('image')) {
-                $this->session->set_flashdata("errors", array_merge(
-                    $this->session->flashdata(),
-                    ["image" => $this->upload->display_errors('', '')]
-                ));
 
-                $this->redirectBack();
-                throw new \Exception("Image upload failed.");
+            if (!empty($_FILES["image"]["name"])) {
+                $this->load->library('upload', [
+                    'upload_path' => MenuCategoryModel::IMAGE_STORAGE_PATH,
+                    'allowed_types' => 'jpg|jpeg|png',
+                    'file_name' => "{$menu_category->id}",
+                    'overwrite' => TRUE,
+                    'max_size' => MenuCategoryModel::IMAGE_MAX_SIZE, // 40 Megabytes
+                ]);
+
+                if ( ! $this->upload->do_upload('image')) {
+                    $this->session->set_flashdata("errors", array_merge(
+                        $this->session->flashdata(),
+                        ["image" => $this->upload->display_errors('', '')]
+                    ));
+
+                    $this->redirectBack();
+                    throw new \Exception("Image upload failed.");
+                }
+
+                $upload_data = $this->upload->data();
+                $menu_category->update(["image" => MenuCategoryModel::IMAGE_STORAGE_PATH . "/" . $upload_data["orig_name"]]);
             }
-
-            $upload_data = $this->upload->data();
-            $menu_category->update(["image" => MenuCategoryModel::IMAGE_STORAGE_PATH . "/" . $upload_data["orig_name"]]);
         });
 
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
         $this->redirectBack();
     }
 
     public function delete($menu_category_id)
     {
         $menu_category = MenuCategoryModel::find($menu_category_id) ?: $this->error404();
+        MenuCategoryPolicy::canDelete(Auth::user(), $menu_category) ?: $this->error403();
+        
         $menu_category->delete();
 
+        $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
         $this->redirectBack();
     }
 

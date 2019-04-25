@@ -3,6 +3,9 @@
 <?php $this->layout("shared/base", ["title" => "Ubah Kategori Menu"]) ?>
 
 <div class="container">
+
+    <?php $this->insert("shared/message") ?>
+
     <div class="card">
         <div class="card-body">
             <form method="POST" enctype="multipart/form-data" action="<?= base_url("menuCategory/update/{$menu_category->id}") ?>" >
@@ -25,6 +28,14 @@
                         <?= $this->error("name") ?>
                     </div>
                     <?php endif ?>
+                </div>
+
+                <div class="form-group">
+                    <label for="current_image"> Gambar Lama: </label>
+                    <img
+                        style="width: 640px; height: 480px; display: block; object-fit: cover"
+                        src="<?= base_url("menuCategory/image/{$menu_category->id}") ?>"
+                        alt="<?= $menu_category->name ?>">
                 </div>
 
                 <div class="form-group">

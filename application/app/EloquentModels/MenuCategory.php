@@ -11,6 +11,7 @@ class MenuCategory extends Model
     ];
 
     const IMAGE_STORAGE_PATH = "storage/menu_categories";
+    const IMAGE_MAX_SIZE = 1024 * 40; // In bytes
 
     public function menu_items()
     {

@@ -21968,6 +21968,7 @@ var _default = {
         };
       });
       return {
+        type: this.order_type,
         menu_items: ordereds
       };
     }
@@ -22019,9 +22020,13 @@ var _default = {
 
         _this.$modal.hide("order-confirmation");
 
-        var response = JSON.parse(xhr.responseText);
+        if (xhr.status === 500) {
+          Sentry.captureException(xhr);
+        }
+
         swal({
-          text: "Error: " + JSON.stringify(response),
+          icon: "warning",
+          text: "Terjadi masalah.",
           dangerMode: true
         });
       });
@@ -40590,7 +40595,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44989" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -37,6 +37,7 @@ class SalesInvoice extends BaseController {
         $this->validate([
             ["menu_items[*][id]", "id item menu", "required",],
             ["menu_items[*][quantity]", "jumlah item menu", "required",],
+            ["type", "tipe pemesanan", "required",],
         ]);
 
         $data = $this->input->post(null);
@@ -55,6 +56,7 @@ class SalesInvoice extends BaseController {
                 ->count();
 
             $this->sales_invoice = SalesInvoiceModel::create([
+                "type" => $data["type"],
                 "number" => $sales_invoice_count + 1,
                 "outlet_id" => Auth::user()->outlet->id,
             ]);

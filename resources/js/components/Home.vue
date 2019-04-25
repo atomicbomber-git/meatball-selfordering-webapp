@@ -345,7 +345,8 @@ export default {
             });
 
             return {
-                menu_items: ordereds
+                type: this.order_type,
+                menu_items: ordereds,
             };
         }
     },
@@ -403,9 +404,13 @@ export default {
                     this.is_submitting_sales_invoice = false
                     this.$modal.hide("order-confirmation");
                     
-                    let response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 500) {
+                        Sentry.captureException(xhr)
+                    }
+
                     swal({
-                        text: "Error: " + JSON.stringify(response),
+                        icon: "warning",
+                        text: "Terjadi masalah.",
                         dangerMode: true
                     });
                 });

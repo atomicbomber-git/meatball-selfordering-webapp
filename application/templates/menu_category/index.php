@@ -11,6 +11,8 @@
         </a>
     </div>
 
+    <?php $this->insert("shared/message") ?>
+
     <div class="card">
         <div class="card-body">
             <table class="table table-sm table-bordered table-striped">

@@ -44563,7 +44563,8 @@ var _default = {
           $.post(_this3.submit_url, _objectSpread({
             token: window.token
           }, _this3.form_data)).done(function (response) {
-            _this3.error_data = null; // window.location.replace(this.redirect_url);
+            _this3.error_data = null;
+            window.location.replace(_this3.redirect_url);
           }).fail(function (xhr, status, error) {
             var response = xhr.responseJSON;
             console.log(xhr.responseJSON);
@@ -44850,7 +44851,11 @@ exports.default = _default;
             class: {
               "is-invalid": _vm.get(this.error_data, "errors.password", false)
             },
-            attrs: { type: "text", id: "password", placeholder: "Kata Sandi" },
+            attrs: {
+              type: "password",
+              id: "password",
+              placeholder: "Kata Sandi"
+            },
             domProps: { value: _vm.password },
             on: {
               input: function($event) {
@@ -44865,7 +44870,18 @@ exports.default = _default;
           _c("div", { staticClass: "invalid-feedback" }, [
             _vm._v(_vm._s(_vm.get(this.error_data, "errors.password", false)))
           ])
-        ])
+        ]),
+        _vm._v(" "),
+        _vm.get(_vm.error_data, "message", false)
+          ? _c("div", { staticClass: "alert alert-danger" }, [
+              _c("i", { staticClass: "fa fa-warning" }),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.get(_vm.error_data, "message")) +
+                  "\n            "
+              )
+            ])
+          : _vm._e()
       ])
     ])
   ])

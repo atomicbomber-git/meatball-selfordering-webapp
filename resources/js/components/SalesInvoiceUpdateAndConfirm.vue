@@ -94,8 +94,13 @@
                         v-model='password'
                         class='form-control'
                         :class="{'is-invalid': get(this.error_data, 'errors.password', false)}"
-                        type='text' id='password' placeholder='Kata Sandi'>
+                        type='password' id='password' placeholder='Kata Sandi'>
                     <div class='invalid-feedback'>{{ get(this.error_data, 'errors.password', false) }}</div>
+                </div>
+
+                <div v-if="get(error_data, 'message', false)" class="alert alert-danger">
+                    <i class="fa fa-warning"></i>
+                    {{ get(error_data, "message") }}
                 </div>
             </div>
         </div>
@@ -209,8 +214,8 @@ export default {
                 if (will_submit) {
                     $.post(this.submit_url, {token: window.token, ...this.form_data})
                         .done(response => {
-                            this.error_data = null;    
-                            // window.location.replace(this.redirect_url);
+                            this.error_data = null;
+                            window.location.replace(this.redirect_url);
                         })
                         .fail((xhr, status, error) => {
                             let response = xhr.responseJSON;

@@ -119,6 +119,14 @@ class SalesInvoice extends BaseController {
             ["menu_items[*][quantity]", "jumlah item menu", "required",],
             ["type", "tipe pemesanan", "required",],
         ]);
+
+        if ($outlet->supervisor === null) {
+            $this->error403();
+        }
+
+        if (!password_verify($this->input->post('password'), $outlet->supervisor->password)) {
+            $this->error(403, "Kata sandi keliru");
+        }
         
         $outlet_menu_items = OutletMenuItem::query()
             ->whereIn("menu_item_id", collect($this->input->post("menu_items"))->pluck("id"))

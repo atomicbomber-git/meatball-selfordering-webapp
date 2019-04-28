@@ -9,7 +9,7 @@ trait HandlesErrors
         set_status_header($status);
 
         if ($this->input->is_ajax_request()) {
-            json_response(["data" => compact('message')]);
+            $this->jsonResponse(["data" => compact('message')]);
         }
 
         $this->template->render('error/default', compact('status', 'message'));

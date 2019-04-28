@@ -3,7 +3,7 @@ use App\Helpers\DefaultRoute;
 
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Penjualan"]) ?>
+<?php $this->layout("shared/base", ["title" => "Transaksi"]) ?>
 
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -13,13 +13,13 @@ use App\Helpers\DefaultRoute;
             </li>
             <li class="breadcrumb-item active" aria-current="page">
                 <a href="<?= base_url("salesInvoice/index") ?>">
-                    Penjualan
+                    Transaksi
                 </a>
             </li>
         </ol>
     </nav>
 
-    <h1 class="mb-1"> Penjualan / Kasir </h1>
+    <h1 class="mb-1"> Transaksi / Kasir </h1>
     <hr class="mt-0"/>
 
     <?php $this->insert("shared/message") ?>

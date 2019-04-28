@@ -18,6 +18,8 @@ class SalesInvoice extends BaseController {
             'create' => ['get'],
             'confirm' => ['get'],
             'processConfirm' => ['post'],
+            'updateAndConfirm' => ['get'],
+            'processReviseAndConfirm' => ['post'],
             'store' => ['post'],
             'edit' => ['get'],
             'update' => ['post'],
@@ -90,6 +92,18 @@ class SalesInvoice extends BaseController {
 
         $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
         redirect("salesInvoice/index");
+    }
+
+    public function updateAndConfirm($sales_invoice_id)
+    {
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $this->jsonResponse($sales_invoice);
+        // $this->template->render();
+    }
+
+    public function processUpdateAndConfirm()
+    {
+        ;
     }
 
     public function store()

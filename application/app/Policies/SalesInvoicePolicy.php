@@ -19,7 +19,7 @@ class SalesInvoicePolicy
         ]);
     }
 
-    public function canConfirm(?User $user)
+    public static function canConfirm(?User $user)
     {
         if ($user === null) {
             return false;

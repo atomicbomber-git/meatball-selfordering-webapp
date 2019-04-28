@@ -51,7 +51,7 @@ use App\Helpers\URL;
                 <li class='nav-item <?= URL::has("salesInvoice") ? "active" : "" ?>'>
                     <a class='nav-link' href="<?= base_url("salesInvoice/index") ?>" >
                         <i class='fa fa-usd'></i>
-                        Penjualan
+                        Transaksi
                     </a>
                 </li>
 

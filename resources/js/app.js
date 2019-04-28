@@ -14,8 +14,12 @@ Vue.component("sales-invoice-update-and-confirm", require("./components/SalesInv
 try {
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
+    require('datatables.net-bs4')()
+    require('datatables.net-bs4/css/dataTables.bootstrap4.css')
+
     require('bootstrap');
 } catch (e) {}
+
 
 // Add SweetAlert
 window.swal = require("sweetalert")

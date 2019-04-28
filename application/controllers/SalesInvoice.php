@@ -6,7 +6,6 @@ use App\EloquentModels\SalesInvoice as SalesInvoiceModel;
 use App\Helpers\Auth;
 use Illuminate\Support\Carbon;
 use App\EloquentModels\PlannedSalesInvoiceItem;
-use App\EloquentModels\Outlet;
 use App\EloquentModels\SalesInvoiceItem;
 use App\Policies\SalesInvoicePolicy;
 use App\EloquentModels\OutletMenuItem;

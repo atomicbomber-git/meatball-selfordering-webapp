@@ -2,10 +2,9 @@
     use App\Helpers\Auth;
     use App\Policies\MenuCategoryPolicy;
     use App\Helpers\DefaultRoute;
-use App\Policies\SalesInvoicePolicy;
-use App\Policies\ReceiptPrinterPolicy;
-use App\Helpers\URL;
-
+    use App\Policies\SalesInvoicePolicy;
+    use App\Policies\ReceiptPrinterPolicy;
+    use App\Helpers\URL;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -52,6 +51,17 @@ use App\Helpers\URL;
                     <a class='nav-link' href="<?= base_url("salesInvoice/index") ?>" >
                         <i class='fa fa-usd'></i>
                         Transaksi
+                    </a>
+                </li>
+
+                <?php endif ?>
+
+                <?php if(TRUE): ?>
+                
+                <li class='nav-item <?= URL::has("finishedSalesInvoice") ? "active" : "" ?>'>
+                    <a class='nav-link' href="<?= base_url("finishedSalesInvoice/index") ?>" >
+                        <i class='fa fa-book'></i>
+                        Histori Transaksi
                     </a>
                 </li>
 

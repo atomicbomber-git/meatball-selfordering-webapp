@@ -2,9 +2,13 @@
     use App\Helpers\Auth;
     use App\Policies\MenuCategoryPolicy;
     use App\Helpers\DefaultRoute;
+use App\Policies\SalesInvoicePolicy;
+use App\Policies\ReceiptPrinterPolicy;
+use App\Helpers\URL;
+
 ?>
 
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <a class="navbar-brand" href="<?= base_url(DefaultRoute::get()) ?>">
             Admin Bakso
@@ -31,7 +35,7 @@
 
                 <?php endif ?>
 
-                <?php if(TRUE): ?>
+                <?php if(ReceiptPrinterPolicy::canIndex(Auth::user())): ?>
 
                 <li class='nav-item active'>
                     <a class='nav-link' href="<?= base_url("receiptPrinter/index") ?>" >
@@ -42,12 +46,16 @@
                 
                 <?php endif ?>
 
-                <li class='nav-item active'>
+                <?php if(SalesInvoicePolicy::canIndex(Auth::user()) ): ?>
+                
+                <li class='nav-item <?= URL::has("salesInvoice") ? "active" : "" ?>'>
                     <a class='nav-link' href="<?= base_url("salesInvoice/index") ?>" >
                         <i class='fa fa-usd'></i>
                         Penjualan
                     </a>
                 </li>
+
+                <?php endif ?>
 
                 <?php endif ?>
             </div>

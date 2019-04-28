@@ -4,15 +4,15 @@ namespace App\Enums;
 
 class UserLevel
 {
-    const OUTLET_ADMIN = "OUTLET_ADMIN";
+    const SUPERVISOR = "SUPERVISOR";
     const WAITER = "WAITER";
     const CASHIER = "CASHIER";
-    const SUPERADMIN = "SUPERADMIN";
+    const ADMIN = "ADMIN";
 
     const LEVELS = [
-        self::OUTLET_ADMIN => "Administrator Outlet",
+        self::SUPERVISOR => "Supervisor",
         self::WAITER => "Waiter / Pramusaji",
         self::CASHIER => "Kasir",
-        self::SUPERADMIN => "Super Admin Aplikasi",
+        self::ADMIN => "Admin Aplikasi",
     ];
 }

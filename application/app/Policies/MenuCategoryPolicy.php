@@ -8,13 +8,21 @@ use App\EloquentModels\MenuCategory;
 
 class MenuCategoryPolicy
 {
-    public static function canIndex(User $user)
+    public static function canIndex(?User $user)
     {
-        return $user->level === UserLevel::OUTLET_ADMIN;
+        if ($user === null) {
+            return false;
+        }
+
+        return $user->level === UserLevel::ADMIN;
     }
 
-    public static function canDelete(User $user, MenuCategory $menuCategory)
+    public static function canDelete(?User $user, MenuCategory $menuCategory)
     {
+        if ($user === null) {
+            return false;
+        }
+
         $menuCategory->loadCount("menu_items");
 
         if ($menuCategory->menu_items_count > 0) {

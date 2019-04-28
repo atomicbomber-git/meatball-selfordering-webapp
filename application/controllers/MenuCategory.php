@@ -28,6 +28,8 @@ class MenuCategory extends BaseController {
 
     public function index()
     {
+        MenuCategoryPolicy::canIndex(Auth::user()) ?: $this->error403();
+
         $menu_categories = MenuCategoryModel::all();
         $this->template->render("menu_category/index", compact("menu_categories"));
     }

@@ -8,20 +8,23 @@ class DefaultRoute
 {
     public static function get()
     {
-        $user = get_instance()->session->user;
+        $user = Auth::user();
 
         if ($user === null) {
             return "login";
         }
         else {
-            if ($user->level === UserLevel::OUTLET_ADMIN) {
-                return "menuCategory/index";
-            }
-            else if ($user->level === UserLevel::WAITER) {
-                return "home/show";
-            }
-            else {
-                return "menuCategory/index";
+            switch ($user->level) {
+                case UserLevel::ADMIN:
+                    return "menuCategory/index";
+                case UserLevel::SUPERVISOR:
+                    return "salesInvoice/index";
+                case UserLevel::WAITER:
+                    return "home/show";
+                case UserLevel::CASHIER:
+                    return "salesInvoice/index";
+                default:
+                    get_instance()->error404();
             }
         }
     }

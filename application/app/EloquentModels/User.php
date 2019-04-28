@@ -11,9 +11,9 @@ class User extends Model
         "password"
     ];
 
-    public function managed_outlet()
+    public function supervised_outlet()
     {
-        return $this->hasOne(Outlet::class, "outlet_administrator_id");
+        return $this->hasOne(Outlet::class, "supervisor_id");
     }
 
     public function outlet_user()
@@ -26,10 +26,10 @@ class User extends Model
     {
         $outlet = null;
 
-        if ($this->level === UserLevel::OUTLET_ADMIN) {
-            $outlet = $this->managed_outlet;
+        if ($this->level === UserLevel::SUPERVISOR) {
+            $outlet = $this->supervised_outlet;
         }
-        else if ($this->level === UserLevel::WAITER) {
+        else if (in_array($this->level, [UserLevel::WAITER, UserLevel::CASHIER])) {
             $outlet = $this->outlet_user->outlet;
         }
 

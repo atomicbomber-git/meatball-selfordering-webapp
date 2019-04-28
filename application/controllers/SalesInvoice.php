@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use App\EloquentModels\PlannedSalesInvoiceItem;
 use App\EloquentModels\Outlet;
 use App\EloquentModels\SalesInvoiceItem;
+use App\Policies\SalesInvoicePolicy;
 
 class SalesInvoice extends BaseController {
     protected function allowedMethods()
@@ -28,6 +29,8 @@ class SalesInvoice extends BaseController {
 
     public function index()
     {
+        SalesInvoicePolicy::canIndex(Auth::user()) ?: $this->error403();
+
         $sales_invoices = SalesInvoiceModel::query()
             ->whereDate("created_at", Carbon::today())
             ->where("status", SalesInvoiceModel::UNPAID)
@@ -38,6 +41,8 @@ class SalesInvoice extends BaseController {
 
     public function confirm($sales_invoice_id)
     {
+        SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
+
         $outlet = Auth::user()->outlet ?: $this->error403();
 
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
@@ -54,6 +59,8 @@ class SalesInvoice extends BaseController {
 
     public function processConfirm($sales_invoice_id)
     {
+        SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
+
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
         $outlet = Auth::user()->outlet ?: $this->error403();
 

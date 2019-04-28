@@ -38,7 +38,7 @@
                         name="image"
                         id="image"
                         type="file"
-                        class="form-control <?= $this->has_error("image") ? "is-invalid" : "" ?>"
+                        <?= $this->has_error("image") ? "is-invalid" : "" ?>"
                         placeholder="Gambar"
                         value="<?= $this->old("image") ?>"
                         >

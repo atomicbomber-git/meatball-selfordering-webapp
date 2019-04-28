@@ -2,10 +2,10 @@
 
 use App\BaseController;
 use App\Helpers\Auth;
-use App\EloquentModels\ReceiptPrinter as ReceiptPrinterModel;
-use GuzzleHttp\Client as Guzzle;
+use App\Policies\ReceiptPrinterPolicy;
 
-class ReceiptPrinter extends BaseController {
+class ReceiptPrinter extends BaseController
+{
     public function __construct()
     {
         parent::__construct();
@@ -27,6 +27,8 @@ class ReceiptPrinter extends BaseController {
 
     public function index()
     {
+        ReceiptPrinterPolicy::canIndex(Auth::user()) ?: $this->error403();
+
         $outlet = Auth::user()->outlet ?: $this->error403();
         $receipt_printers = $outlet->receipt_printers;
 

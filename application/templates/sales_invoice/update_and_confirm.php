@@ -1,5 +1,6 @@
 <?php
 use App\Helpers\Formatter;
+use function GuzzleHttp\json_encode;
 
 $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
 
@@ -31,72 +32,15 @@ $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
     <hr class="mt-0"/>
 
     <div class="card">
-        <div class="card-body">
-            <table class="table table-sm table-striped table-bordered">
-                <thead class="thead thead-dark">
-                    <tr>
-                        <th> Item </th>
-                        <th class="text-right"> Jumlah </th>
-                        <th class="text-right"> Harga </th>
-                        <th class="text-right"> Subtotal </th>
-                    </tr>
-                </thead>
+        <div class="card-body" id="app">
+            <sales-invoice-update-and-confirm
+                :sales_invoice='<?= json_encode($sales_invoice) ?>'
+                :outlet_menu_items='<?= json_encode($outlet_menu_items) ?>'
+                submit_url="<?= base_url("salesInvoice/processUpdateAndConfirm/{$sales_invoice->id}") ?>"
+                redirect_url="<?= base_url("salesInvoice/index") ?>"
+                >
 
-                <tbody>
-                    <?php foreach($sales_invoice->planned_sales_invoice_items as $sales_invoice_item): ?>
-                    <tr>
-                        <td> <?= $sales_invoice_item->menu_item->name ?> </td>
-                        <td class="text-right"> <?= $sales_invoice_item->quantity ?> </td>
-                        <td class="text-right">
-                            Rp.
-                            <?= Formatter::currency($sales_invoice_item->menu_item->outlet_menu_item->price) ?>
-                        </td>
-                        <td class="text-right">
-                            Rp.
-                            <?=
-                                Formatter::currency(
-                                    $sales_invoice_item->quantity *
-                                    $sales_invoice_item->menu_item->outlet_menu_item->price
-                                )
-                            ?>
-                        </td>
-                    </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-
-            <h3 class="text-right"> Total:
-                <span class="text-danger">
-                    Rp.
-                    <?=
-                        Formatter::currency(
-                            $sales_invoice->planned_sales_invoice_items->sum(function ($sales_invoice_item) {
-                                return $sales_invoice_item->quantity *
-                                    $sales_invoice_item->menu_item->outlet_menu_item->price;
-                            })
-                        )
-                    ?>
-                </span>
-            </h3>
-
-            <div class="text-right mt-5">
-                <a href="<?= base_url("salesInvoice/updateAndConfirm/{$sales_invoice->id}") ?>" class="btn btn-dark">
-                    Revisi Transaksi
-                </a>
-
-                <form
-                    id="confirm-sales-invoice"
-                    class="d-inline-block"
-                    method="POST" action="<?= base_url("salesInvoice/processConfirm/{$sales_invoice->id}") ?>" >
-                    <input type="hidden"
-                        name="<?= $this->csrf_name() ?>"
-                        value="<?= $this->csrf_token() ?>">
-                    
-                    <button class="btn btn-primary">
-                        Konfirmasi Transaksi
-                    </button>
-                </form>
-            </div>
+            </sales-invoice-update-and-confirm>
         </div>
     </div>
 </div>

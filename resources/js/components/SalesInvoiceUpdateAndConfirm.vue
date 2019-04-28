@@ -6,13 +6,14 @@
             </button>
         </div>
 
-        <table class="table table-bordered table-striped">
+        <table class="table table-sm table-bordered table-striped">
             <thead class="thead thead-dark">
                 <tr>
                     <th>Nama Item</th>
-                    <th class="text-center">Jumlah</th>
-                    <th class="text-right">Harga</th>
-                    <th class="text-right">Subtotal</th>
+                    <th class="text-center"> Jumlah </th>
+                    <th class="text-right"> Harga </th>
+                    <th class="text-right"> Subtotal </th>
+                    <th class="text-center"> Kendali </th>
                 </tr>
             </thead>
 
@@ -24,7 +25,7 @@
                     <td> 
                         <multiselect
                             track-by="id"
-                            :custom-label="om_item => om_item.menu_item.name"
+                            :custom-label="om_item => `${om_item.menu_item.name} - Rp. ${number_format(om_item.price)}`"
                             :options="item_options"
                             v-model="item.outlet_menu_item"
                             />
@@ -51,6 +52,11 @@
                     </td>
                     <td class="text-right"> Rp. {{ number_format(get(item, "outlet_menu_item.price", 0)) }} </td>
                     <td class="text-right"> Rp. {{ number_format(item.quantity * get(item.outlet_menu_item, "price", 0)) }} </td>
+                    <td class="text-center">
+                        <button @click="removeItem(item)" class="btn btn-danger btn-sm">
+                            Hapus
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -67,10 +73,33 @@
             </div>
         </div>
         
-        <div class="total-price font-weight-bold text-right">
-            TOTAL:
-            <span class="text-danger">Rp.  </span>
+        <div class="text-right mt-5">
+            <h3>
+                TOTAL:
+                <span class="text-danger"> Rp. {{ number_format(total_price) }} </span>
+            </h3>
         </div>
+
+        <div @click="confirmTransaction" class="text-right mt-3">
+            <button class="btn btn-primary">
+                Konfirmasi Transaksi
+            </button>
+        </div>
+
+        <div class="invisible">
+            <div ref="auth_form" class="text-left">
+                <div class='form-group'>
+                    <label for='password'> Kata Sandi Supervisor: </label>
+                    <input
+                        v-model='password'
+                        class='form-control'
+                        :class="{'is-invalid': get(this.error_data, 'errors.password', false)}"
+                        type='text' id='password' placeholder='Kata Sandi'>
+                    <div class='invalid-feedback'>{{ get(this.error_data, 'errors.password', false) }}</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -88,6 +117,8 @@ export default {
 
     data() {
         return {
+            password: null,
+
             p_sales_invoice: {
                 ...this.sales_invoice,
                 planned_sales_invoice_items: [ ...this.sales_invoice.planned_sales_invoice_items ],
@@ -103,7 +134,9 @@ export default {
                 else {
                     return { outlet_menu_item: om_item, quantity: 0 }
                 }
-            })
+            }),
+
+            error_data: null,
         }
     },
 
@@ -130,6 +163,24 @@ export default {
                             === undefined
                 })
                 .map(om_item => ({...om_item.outlet_menu_item}))
+        },
+
+        total_price() {
+            return this.added_items.reduce((prev, curr) => {
+                return prev + (curr.quantity * curr.outlet_menu_item.price)
+            }, 0)
+        },
+
+        form_data() {
+            return {
+                menu_items: this.added_items.map(added_item => ({
+                    id: added_item.outlet_menu_item.menu_item_id,
+                    quantity: added_item.quantity,
+                })),
+
+                type: this.p_sales_invoice.type,
+                password: this.password,
+            }
         }
     },
 
@@ -139,7 +190,38 @@ export default {
 
         addItem() {
             this.items.push({ outlet_menu_item: null, quantity: 1 })
-        }
+        },
+
+        removeItem(item) {
+            item.outlet_menu_item = null
+            item.quantity = 0
+        },
+
+        confirmTransaction() {
+
+            swal({
+                icon: "warning",
+                content: this.$refs.auth_form,
+                closeModal: false,
+                closeOnClickOutside: false,
+                buttons: ["Kembali", "Konfirmasi"]
+            })
+            .then(will_submit => {
+                if (will_submit) {
+                    $.post(this.submit_url, {token: window.token, ...this.form_data})
+                        .done(response => {
+                            this.error_data = null;    
+                            // window.location.replace(this.redirect_url);
+                        })
+                        .fail((xhr, status, error) => {
+                            let response = xhr.responseJSON;
+                            console.log(xhr.responseJSON)
+                            this.error_data = response.data;
+                            this.confirmTransaction()
+                        });
+                }
+            })
+        },
     }
 };
 </script>

@@ -26,7 +26,7 @@ use App\Helpers\URL;
 
                 <?php if(MenuCategoryPolicy::canIndex(Auth::user())): ?>
                 
-                <li class='nav-item active'>
+                <li class='nav-item <?= URL::has("menuCategory") ? "active" : "" ?>'>
                     <a class='nav-link' href="<?= base_url("menuCategory/index") ?>" >
                         <i class='fa fa-cutlery'></i>
                         Master Kategori Menu
@@ -37,7 +37,7 @@ use App\Helpers\URL;
 
                 <?php if(ReceiptPrinterPolicy::canIndex(Auth::user())): ?>
 
-                <li class='nav-item active'>
+                <li class='nav-item <?= URL::has("receiptPrinter") ? "active" : "" ?>'>
                     <a class='nav-link' href="<?= base_url("receiptPrinter/index") ?>" >
                         <i class='fa fa-print'></i>
                         Printer

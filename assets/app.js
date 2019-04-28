@@ -22013,7 +22013,7 @@ var _default = {
         _this.$modal.hide("order-confirmation");
 
         _this.error_data = null;
-        _this.sales_invoice = JSON.parse(response);
+        _this.sales_invoice = response;
         swal({
           icon: "success",
           content: _this.$refs.orderConfirmationStatusAlertContent
@@ -44425,7 +44425,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     e.a = o;
   }]);
 });
-},{}],"components/SalesInvoiceConfirm.vue":[function(require,module,exports) {
+},{}],"components/SalesInvoiceUpdateAndConfirm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44467,6 +44467,7 @@ var _default = {
     var _this = this;
 
     return {
+      password: null,
       p_sales_invoice: _objectSpread({}, this.sales_invoice, {
         planned_sales_invoice_items: _toConsumableArray(this.sales_invoice.planned_sales_invoice_items)
       }),
@@ -44486,7 +44487,8 @@ var _default = {
             quantity: 0
           };
         }
-      })
+      }),
+      error_data: null
     };
   },
   computed: {
@@ -44515,6 +44517,23 @@ var _default = {
       }).map(function (om_item) {
         return _objectSpread({}, om_item.outlet_menu_item);
       });
+    },
+    total_price: function total_price() {
+      return this.added_items.reduce(function (prev, curr) {
+        return prev + curr.quantity * curr.outlet_menu_item.price;
+      }, 0);
+    },
+    form_data: function form_data() {
+      return {
+        menu_items: this.added_items.map(function (added_item) {
+          return {
+            id: added_item.outlet_menu_item.menu_item_id,
+            quantity: added_item.quantity
+          };
+        }),
+        type: this.p_sales_invoice.type,
+        password: this.password
+      };
     }
   },
   methods: {
@@ -44525,18 +44544,47 @@ var _default = {
         outlet_menu_item: null,
         quantity: 1
       });
+    },
+    removeItem: function removeItem(item) {
+      item.outlet_menu_item = null;
+      item.quantity = 0;
+    },
+    confirmTransaction: function confirmTransaction() {
+      var _this3 = this;
+
+      swal({
+        icon: "warning",
+        content: this.$refs.auth_form,
+        closeModal: false,
+        closeOnClickOutside: false,
+        buttons: ["Kembali", "Konfirmasi"]
+      }).then(function (will_submit) {
+        if (will_submit) {
+          $.post(_this3.submit_url, _objectSpread({
+            token: window.token
+          }, _this3.form_data)).done(function (response) {
+            _this3.error_data = null; // window.location.replace(this.redirect_url);
+          }).fail(function (xhr, status, error) {
+            var response = xhr.responseJSON;
+            console.log(xhr.responseJSON);
+            _this3.error_data = response.data;
+
+            _this3.confirmTransaction();
+          });
+        }
+      });
     }
   }
 };
 exports.default = _default;
-        var $43f480 = exports.default || module.exports;
+        var $f6bf03 = exports.default || module.exports;
       
-      if (typeof $43f480 === 'function') {
-        $43f480 = $43f480.options;
+      if (typeof $f6bf03 === 'function') {
+        $f6bf03 = $f6bf03.options;
       }
     
         /* template */
-        Object.assign($43f480, (function () {
+        Object.assign($f6bf03, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -44550,108 +44598,136 @@ exports.default = _default;
       )
     ]),
     _vm._v(" "),
-    _c("table", { staticClass: "table table-bordered table-striped" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.added_items, function(item) {
-          return _c("tr", { key: item.id }, [
-            _c(
-              "td",
-              [
-                _c("multiselect", {
-                  attrs: {
-                    "track-by": "id",
-                    "custom-label": function(om_item) {
-                      return om_item.menu_item.name
+    _c(
+      "table",
+      { staticClass: "table table-sm table-bordered table-striped" },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.added_items, function(item) {
+            return _c("tr", { key: item.id }, [
+              _c(
+                "td",
+                [
+                  _c("multiselect", {
+                    attrs: {
+                      "track-by": "id",
+                      "custom-label": function(om_item) {
+                        return (
+                          om_item.menu_item.name +
+                          " - Rp. " +
+                          _vm.number_format(om_item.price)
+                        )
+                      },
+                      options: _vm.item_options
                     },
-                    options: _vm.item_options
-                  },
-                  model: {
-                    value: item.outlet_menu_item,
-                    callback: function($$v) {
-                      _vm.$set(item, "outlet_menu_item", $$v)
-                    },
-                    expression: "item.outlet_menu_item"
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "td",
-              { staticClass: "text-center" },
-              [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-danger",
-                    on: {
-                      click: function($event) {
-                        --item.quantity
-                      }
+                    model: {
+                      value: item.outlet_menu_item,
+                      callback: function($$v) {
+                        _vm.$set(item, "outlet_menu_item", $$v)
+                      },
+                      expression: "item.outlet_menu_item"
                     }
-                  },
-                  [_c("i", { staticClass: "fa fa-minus" })]
-                ),
-                _vm._v(" "),
-                _c("order-quantity", {
-                  staticClass: "mx-2",
-                  model: {
-                    value: item.quantity,
-                    callback: function($$v) {
-                      _vm.$set(item, "quantity", $$v)
-                    },
-                    expression: "item.quantity"
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-success",
-                    on: {
-                      click: function($event) {
-                        ++item.quantity
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                { staticClass: "text-center" },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-danger",
+                      on: {
+                        click: function($event) {
+                          --item.quantity
+                        }
                       }
+                    },
+                    [_c("i", { staticClass: "fa fa-minus" })]
+                  ),
+                  _vm._v(" "),
+                  _c("order-quantity", {
+                    staticClass: "mx-2",
+                    model: {
+                      value: item.quantity,
+                      callback: function($$v) {
+                        _vm.$set(item, "quantity", $$v)
+                      },
+                      expression: "item.quantity"
                     }
-                  },
-                  [_c("i", { staticClass: "fa fa-plus" })]
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-success",
+                      on: {
+                        click: function($event) {
+                          ++item.quantity
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fa fa-plus" })]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-right" }, [
+                _vm._v(
+                  " Rp. " +
+                    _vm._s(
+                      _vm.number_format(
+                        _vm.get(item, "outlet_menu_item.price", 0)
+                      )
+                    ) +
+                    " "
                 )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("td", { staticClass: "text-right" }, [
-              _vm._v(
-                " Rp. " +
-                  _vm._s(
-                    _vm.number_format(
-                      _vm.get(item, "outlet_menu_item.price", 0)
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-right" }, [
+                _vm._v(
+                  " Rp. " +
+                    _vm._s(
+                      _vm.number_format(
+                        item.quantity *
+                          _vm.get(item.outlet_menu_item, "price", 0)
+                      )
+                    ) +
+                    " "
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-center" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger btn-sm",
+                    on: {
+                      click: function($event) {
+                        return _vm.removeItem(item)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Hapus\n                    "
                     )
-                  ) +
-                  " "
-              )
-            ]),
-            _vm._v(" "),
-            _c("td", { staticClass: "text-right" }, [
-              _vm._v(
-                " Rp. " +
-                  _vm._s(
-                    _vm.number_format(
-                      item.quantity * _vm.get(item.outlet_menu_item, "price", 0)
-                    )
-                  ) +
-                  " "
-              )
+                  ]
+                )
+              ])
             ])
-          ])
-        }),
-        0
-      )
-    ]),
+          }),
+          0
+        )
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "text-right" }, [
       _c(
@@ -44733,7 +44809,63 @@ exports.default = _default;
       )
     ]),
     _vm._v(" "),
-    _vm._m(1)
+    _c("div", { staticClass: "text-right mt-5" }, [
+      _c("h3", [
+        _vm._v("\n            TOTAL:\n            "),
+        _c("span", { staticClass: "text-danger" }, [
+          _vm._v(" Rp. " + _vm._s(_vm.number_format(_vm.total_price)) + " ")
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "text-right mt-3", on: { click: _vm.confirmTransaction } },
+      [
+        _c("button", { staticClass: "btn btn-primary" }, [
+          _vm._v("\n            Konfirmasi Transaksi\n        ")
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "invisible" }, [
+      _c("div", { ref: "auth_form", staticClass: "text-left" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "password" } }, [
+            _vm._v(" Kata Sandi Supervisor: ")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.password,
+                expression: "password"
+              }
+            ],
+            staticClass: "form-control",
+            class: {
+              "is-invalid": _vm.get(this.error_data, "errors.password", false)
+            },
+            attrs: { type: "text", id: "password", placeholder: "Kata Sandi" },
+            domProps: { value: _vm.password },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.password = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "invalid-feedback" }, [
+            _vm._v(_vm._s(_vm.get(this.error_data, "errors.password", false)))
+          ])
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -44745,26 +44877,15 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Nama Item")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Jumlah")]),
+        _c("th", { staticClass: "text-center" }, [_vm._v(" Jumlah ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v("Harga")]),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Harga ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v("Subtotal")])
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Subtotal ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v(" Kendali ")])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "total-price font-weight-bold text-right" },
-      [
-        _vm._v("\n        TOTAL:\n        "),
-        _c("span", { staticClass: "text-danger" }, [_vm._v("Rp.  ")])
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -44786,9 +44907,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$43f480', $43f480);
+            api.createRecord('$f6bf03', $f6bf03);
           } else {
-            api.reload('$43f480', $43f480);
+            api.reload('$f6bf03', $f6bf03);
           }
         }
 
@@ -62662,7 +62783,7 @@ _vue.default.component("home", require("./components/Home.vue").default);
 
 _vue.default.component("receipt-printer-index", require("./components/ReceiptPrinterIndex.vue").default);
 
-_vue.default.component("sales-invoice-confirm", require("./components/SalesInvoiceConfirm.vue").default);
+_vue.default.component("sales-invoice-update-and-confirm", require("./components/SalesInvoiceUpdateAndConfirm.vue").default);
 
 try {
   window.Popper = require('popper.js').default;
@@ -62676,7 +62797,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -62704,7 +62825,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33129" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43233" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

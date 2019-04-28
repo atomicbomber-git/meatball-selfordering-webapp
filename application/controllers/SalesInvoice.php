@@ -9,6 +9,7 @@ use App\EloquentModels\PlannedSalesInvoiceItem;
 use App\EloquentModels\Outlet;
 use App\EloquentModels\SalesInvoiceItem;
 use App\Policies\SalesInvoicePolicy;
+use App\EloquentModels\OutletMenuItem;
 
 class SalesInvoice extends BaseController {
     protected function allowedMethods()
@@ -19,7 +20,7 @@ class SalesInvoice extends BaseController {
             'confirm' => ['get'],
             'processConfirm' => ['post'],
             'updateAndConfirm' => ['get'],
-            'processReviseAndConfirm' => ['post'],
+            'processUpdateAndConfirm' => ['post'],
             'store' => ['post'],
             'edit' => ['get'],
             'update' => ['post'],
@@ -97,13 +98,51 @@ class SalesInvoice extends BaseController {
     public function updateAndConfirm($sales_invoice_id)
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $this->jsonResponse($sales_invoice);
-        // $this->template->render();
+        $sales_invoice->load("planned_sales_invoice_items");
+
+        $outlet = Auth::user()->outlet ?: $this->error403();
+        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
+        $outlet->load("outlet_menu_items.menu_item");
+        $outlet_menu_items = $outlet->outlet_menu_items;
+
+        $this->template->render("sales_invoice/update_and_confirm", compact("sales_invoice", "outlet_menu_items"));
     }
 
-    public function processUpdateAndConfirm()
+    public function processUpdateAndConfirm($sales_invoice_id)
     {
-        ;
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $outlet = Auth::user()->outlet ?: $this->error403();
+
+        $this->validate([
+            ["password", "kata sandi", "required"],
+            ["menu_items[*][id]", "id item menu", "required",],
+            ["menu_items[*][quantity]", "jumlah item menu", "required",],
+            ["type", "tipe pemesanan", "required",],
+        ]);
+        
+        $outlet_menu_items = OutletMenuItem::query()
+            ->whereIn("menu_item_id", collect($this->input->post("menu_items"))->pluck("id"))
+            ->where("outlet_id", $outlet->id)
+            ->with("menu_item:id,name")
+            ->get()
+            ->keyBy("id");
+
+        DB::transaction(function() use ($sales_invoice, $outlet_menu_items) {
+            $sales_invoice->update([
+                "status" => SalesInvoiceModel::FINISHED,
+            ]);
+
+            foreach ($this->input->post("menu_items") as $menu_item) {
+                SalesInvoiceItem::create([
+                    "sales_invoice_id" => $sales_invoice->id,
+                    "name" => $outlet_menu_items[$menu_item["id"]]->menu_item->name,
+                    "price" => $outlet_menu_items[$menu_item["id"]]->price,
+                    "quantity" => $menu_item["quantity"],
+                ]);
+            }
+        });
+
+        $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
     }
 
     public function store()

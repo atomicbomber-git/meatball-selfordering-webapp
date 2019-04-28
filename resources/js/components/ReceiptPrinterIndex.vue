@@ -66,9 +66,6 @@ export default {
                     })
                 })
                 .fail((xhr, status, error) => {
-                    let response = JSON.parse(xhr.responseText);
-                    this.error_data = response.data;
-
                     swal({
                         icon: "error",
                         text: `Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ${this.print_server_url}.`,

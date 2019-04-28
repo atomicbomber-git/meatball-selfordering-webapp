@@ -6,6 +6,8 @@ use App\EloquentModels\SalesInvoice as SalesInvoiceModel;
 use App\Helpers\Auth;
 use Illuminate\Support\Carbon;
 use App\EloquentModels\PlannedSalesInvoiceItem;
+use App\EloquentModels\Outlet;
+use App\EloquentModels\SalesInvoiceItem;
 
 class SalesInvoice extends BaseController {
     protected function allowedMethods()
@@ -14,6 +16,7 @@ class SalesInvoice extends BaseController {
             'index' => ['get'],
             'create' => ['get'],
             'confirm' => ['get'],
+            'processConfirm' => ['post'],
             'store' => ['post'],
             'edit' => ['get'],
             'update' => ['post'],
@@ -35,15 +38,51 @@ class SalesInvoice extends BaseController {
 
     public function confirm($sales_invoice_id)
     {
-        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $sales_invoice->load("planned_sales_invoice_items");
-
         $outlet = Auth::user()->outlet ?: $this->error403();
-        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
-        $outlet->load("outlet_menu_items.menu_item");
-        $outlet_menu_items = $outlet->outlet_menu_items;
 
-        $this->template->render("sales_invoice/confirm", compact("sales_invoice", "outlet_menu_items"));
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $sales_invoice->load([
+            "planned_sales_invoice_items",
+            "planned_sales_invoice_items.menu_item",
+            "planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) use($outlet) {
+                $query->where("outlet_id", $outlet->id);
+            }
+        ]);
+
+        $this->template->render("sales_invoice/confirm", compact("sales_invoice"));
+    }
+
+    public function processConfirm($sales_invoice_id)
+    {
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $outlet = Auth::user()->outlet ?: $this->error403();
+
+        $sales_invoice->load([
+            "planned_sales_invoice_items",
+            "planned_sales_invoice_items.menu_item",
+            "planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) use($outlet) {
+                $query->where("outlet_id", $outlet->id);
+            }
+        ]);
+
+        DB::transaction(function() use ($sales_invoice) {
+            
+            $sales_invoice->update([
+                "status" => SalesInvoiceModel::FINISHED,
+            ]);
+
+            foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
+                SalesInvoiceItem::create([
+                    "sales_invoice_id" => $sales_invoice->id,
+                    "name" => $sales_invoice_item->menu_item->name,
+                    "price" => $sales_invoice_item->menu_item->outlet_menu_item->price,
+                    "quantity" => $sales_invoice_item->quantity,
+                ]);
+            }
+        });
+
+        $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
+        redirect("salesInvoice/index");
     }
 
     public function store()

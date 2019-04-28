@@ -22776,8 +22776,6 @@ var _default = {
           text: "Pengujian printer berhasil."
         });
       }).fail(function (xhr, status, error) {
-        var response = JSON.parse(xhr.responseText);
-        _this.error_data = response.data;
         swal({
           icon: "error",
           text: "Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ".concat(_this.print_server_url, ".")
@@ -62706,7 +62704,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41567" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33129" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

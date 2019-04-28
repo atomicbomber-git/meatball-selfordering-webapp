@@ -1,3 +1,9 @@
+<?php
+use App\Helpers\Auth;
+use App\Enums\UserLevel;
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +17,19 @@
 <body>
     <?= $this->insert('shared/navbar') ?>
     <div class="mt-5"></div>
+
+    <div class="container">
+        <?php if(Auth::check()): ?>
+        
+        <div class="alert alert-info">
+            <i class="fa fa-info"></i>
+            Anda log in sebagai <strong> <?= Auth::user()->name ?> </strong> 
+            dengan status <strong> <?= UserLevel::LEVELS[Auth::user()->level] ?? '-' ?> </strong> 
+            pada outlet <strong> <?= Auth::user()->outlet->name ?? "-" ?> </strong>
+        </div>
+
+        <?php endif ?>
+    </div>
 
     <?= $this->section('content') ?>
 

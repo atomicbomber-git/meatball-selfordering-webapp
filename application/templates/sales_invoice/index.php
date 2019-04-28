@@ -1,12 +1,28 @@
-<?php ?>
+<?php
+use App\Helpers\DefaultRoute;
+
+?>
 
 <?php $this->layout("shared/base", ["title" => "Penjualan"]) ?>
 
 <div class="container">
-    <?php $this->insert("shared/message") ?>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active">
+                <a href="<?= base_url(DefaultRoute::get()) ?>"> Aplikasi Bakmi dan Bakso </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <a href="<?= base_url("salesInvoice/index") ?>">
+                    Penjualan
+                </a>
+            </li>
+        </ol>
+    </nav>
 
     <h1 class="mb-1"> Penjualan / Kasir </h1>
     <hr class="mt-0"/>
+
+    <?php $this->insert("shared/message") ?>
 
     <div class="card">
         <div class="card-body">

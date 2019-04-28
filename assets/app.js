@@ -44571,6 +44571,8 @@ var _default = {
 
             _this3.confirmTransaction();
           });
+        } else {
+          _this3.error_data = null;
         }
       });
     }

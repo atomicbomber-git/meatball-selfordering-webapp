@@ -198,7 +198,6 @@ export default {
         },
 
         confirmTransaction() {
-
             swal({
                 icon: "warning",
                 content: this.$refs.auth_form,
@@ -219,6 +218,9 @@ export default {
                             this.error_data = response.data;
                             this.confirmTransaction()
                         });
+                }
+                else {
+                    this.error_data = null
                 }
             })
         },

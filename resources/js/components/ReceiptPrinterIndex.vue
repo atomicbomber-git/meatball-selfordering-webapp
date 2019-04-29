@@ -53,8 +53,29 @@ export default {
             let data = {
                 address: receipt_printer.ipv4_address,
                 port: receipt_printer.port,
-                content: `\n PRINTING TEST ${receipt_printer.name} Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate dolore voluptas eius placeat \n`
+                commands: [
+                    { 
+                        name: "setJustification",
+                        arguments: [{ data: 1 /* Justify Center */, type: "integer" }],
+                    },
+                    {
+                        name: "setTextSize",
+                        arguments: [{ data: 3, type: "integer" }, { data: 3, type: "integer" }]
+                    },
+                    {
+                        name: "text",
+                        arguments: [
+                            {
+                                data: "001\n\n\n",
+                                type: "text",
+                            }
+                        ]
+                    },
+                    { name: "cut", arguments: [] }
+                ]
             };
+
+        
 
             swal({
                 content: this.$refs.loading_modal,
@@ -63,7 +84,7 @@ export default {
                 buttons: false,
             })
 
-            $.post(this.print_server_url, { token: window.token, ...data })
+            $.post(`${this.print_server_url}/manual_print`, { token: window.token, ...data })
                 .done(response => {
                     this.error_data = null;
 

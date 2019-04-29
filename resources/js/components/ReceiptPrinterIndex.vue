@@ -21,6 +21,13 @@
                             Test Print
                             <i class="fa fa-print"></i>
                         </button>
+
+                        <a
+                            :href="`edit/${receipt_printer.id}`"
+                            class="btn btn-dark btn-sm"
+                            >
+                            Ubah
+                        </a>
                     </td>
                 </tr>
             </tbody>
@@ -46,7 +53,7 @@ export default {
             let data = {
                 address: receipt_printer.ipv4_address,
                 port: receipt_printer.port,
-                content: `\n PRINTING TEST ${receipt_printer.name} \n`
+                content: `\n PRINTING TEST ${receipt_printer.name} Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate dolore voluptas eius placeat \n`
             };
 
             swal({

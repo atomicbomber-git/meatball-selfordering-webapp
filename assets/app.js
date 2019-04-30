@@ -13120,9 +13120,22 @@ function number_format(value) {
   return (0, _numeral.default)(converted).format('0,0.[0000]');
 }
 
+function currency_format(value) {
+  var orig_locale = _numeral.default.locale();
+
+  _numeral.default.locale('en');
+
+  var converted = (0, _numeral.default)(value).value();
+
+  _numeral.default.locale(orig_locale);
+
+  return (0, _numeral.default)(converted).format('0,0.00[00]');
+}
+
 module.exports = {
   numeral: _numeral.default,
-  number_format: number_format
+  number_format: number_format,
+  currency_format: currency_format
 };
 },{"numeral":"../../node_modules/numeral/numeral.js"}],"../../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
@@ -22943,7 +22956,610 @@ render._withStripped = true
         
       }
     })();
-},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/base64-js/index.js":[function(require,module,exports) {
+},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/sprintf-js/src/sprintf.js":[function(require,module,exports) {
+var define;
+/* global window, exports, define */
+
+!function() {
+    'use strict'
+
+    var re = {
+        not_string: /[^s]/,
+        not_bool: /[^t]/,
+        not_type: /[^T]/,
+        not_primitive: /[^v]/,
+        number: /[diefg]/,
+        numeric_arg: /[bcdiefguxX]/,
+        json: /[j]/,
+        not_json: /[^j]/,
+        text: /^[^\x25]+/,
+        modulo: /^\x25{2}/,
+        placeholder: /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,
+        key: /^([a-z_][a-z_\d]*)/i,
+        key_access: /^\.([a-z_][a-z_\d]*)/i,
+        index_access: /^\[(\d+)\]/,
+        sign: /^[+-]/
+    }
+
+    function sprintf(key) {
+        // `arguments` is not an array, but should be fine for this call
+        return sprintf_format(sprintf_parse(key), arguments)
+    }
+
+    function vsprintf(fmt, argv) {
+        return sprintf.apply(null, [fmt].concat(argv || []))
+    }
+
+    function sprintf_format(parse_tree, argv) {
+        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, ph, pad, pad_character, pad_length, is_positive, sign
+        for (i = 0; i < tree_length; i++) {
+            if (typeof parse_tree[i] === 'string') {
+                output += parse_tree[i]
+            }
+            else if (typeof parse_tree[i] === 'object') {
+                ph = parse_tree[i] // convenience purposes only
+                if (ph.keys) { // keyword argument
+                    arg = argv[cursor]
+                    for (k = 0; k < ph.keys.length; k++) {
+                        if (arg == undefined) {
+                            throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
+                        }
+                        arg = arg[ph.keys[k]]
+                    }
+                }
+                else if (ph.param_no) { // positional argument (explicit)
+                    arg = argv[ph.param_no]
+                }
+                else { // positional argument (implicit)
+                    arg = argv[cursor++]
+                }
+
+                if (re.not_type.test(ph.type) && re.not_primitive.test(ph.type) && arg instanceof Function) {
+                    arg = arg()
+                }
+
+                if (re.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
+                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
+                }
+
+                if (re.number.test(ph.type)) {
+                    is_positive = arg >= 0
+                }
+
+                switch (ph.type) {
+                    case 'b':
+                        arg = parseInt(arg, 10).toString(2)
+                        break
+                    case 'c':
+                        arg = String.fromCharCode(parseInt(arg, 10))
+                        break
+                    case 'd':
+                    case 'i':
+                        arg = parseInt(arg, 10)
+                        break
+                    case 'j':
+                        arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width) : 0)
+                        break
+                    case 'e':
+                        arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential()
+                        break
+                    case 'f':
+                        arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg)
+                        break
+                    case 'g':
+                        arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg)
+                        break
+                    case 'o':
+                        arg = (parseInt(arg, 10) >>> 0).toString(8)
+                        break
+                    case 's':
+                        arg = String(arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 't':
+                        arg = String(!!arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'T':
+                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'u':
+                        arg = parseInt(arg, 10) >>> 0
+                        break
+                    case 'v':
+                        arg = arg.valueOf()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'x':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16)
+                        break
+                    case 'X':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
+                        break
+                }
+                if (re.json.test(ph.type)) {
+                    output += arg
+                }
+                else {
+                    if (re.number.test(ph.type) && (!is_positive || ph.sign)) {
+                        sign = is_positive ? '+' : '-'
+                        arg = arg.toString().replace(re.sign, '')
+                    }
+                    else {
+                        sign = ''
+                    }
+                    pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' '
+                    pad_length = ph.width - (sign + arg).length
+                    pad = ph.width ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
+                    output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
+                }
+            }
+        }
+        return output
+    }
+
+    var sprintf_cache = Object.create(null)
+
+    function sprintf_parse(fmt) {
+        if (sprintf_cache[fmt]) {
+            return sprintf_cache[fmt]
+        }
+
+        var _fmt = fmt, match, parse_tree = [], arg_names = 0
+        while (_fmt) {
+            if ((match = re.text.exec(_fmt)) !== null) {
+                parse_tree.push(match[0])
+            }
+            else if ((match = re.modulo.exec(_fmt)) !== null) {
+                parse_tree.push('%')
+            }
+            else if ((match = re.placeholder.exec(_fmt)) !== null) {
+                if (match[2]) {
+                    arg_names |= 1
+                    var field_list = [], replacement_field = match[2], field_match = []
+                    if ((field_match = re.key.exec(replacement_field)) !== null) {
+                        field_list.push(field_match[1])
+                        while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
+                            if ((field_match = re.key_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else {
+                                throw new SyntaxError('[sprintf] failed to parse named argument key')
+                            }
+                        }
+                    }
+                    else {
+                        throw new SyntaxError('[sprintf] failed to parse named argument key')
+                    }
+                    match[2] = field_list
+                }
+                else {
+                    arg_names |= 2
+                }
+                if (arg_names === 3) {
+                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
+                }
+
+                parse_tree.push(
+                    {
+                        placeholder: match[0],
+                        param_no:    match[1],
+                        keys:        match[2],
+                        sign:        match[3],
+                        pad_char:    match[4],
+                        align:       match[5],
+                        width:       match[6],
+                        precision:   match[7],
+                        type:        match[8]
+                    }
+                )
+            }
+            else {
+                throw new SyntaxError('[sprintf] unexpected placeholder')
+            }
+            _fmt = _fmt.substring(match[0].length)
+        }
+        return sprintf_cache[fmt] = parse_tree
+    }
+
+    /**
+     * export to either browser or node.js
+     */
+    /* eslint-disable quote-props */
+    if (typeof exports !== 'undefined') {
+        exports['sprintf'] = sprintf
+        exports['vsprintf'] = vsprintf
+    }
+    if (typeof window !== 'undefined') {
+        window['sprintf'] = sprintf
+        window['vsprintf'] = vsprintf
+
+        if (typeof define === 'function' && define['amd']) {
+            define(function() {
+                return {
+                    'sprintf': sprintf,
+                    'vsprintf': vsprintf
+                }
+            })
+        }
+    }
+    /* eslint-enable quote-props */
+}(); // eslint-disable-line
+
+},{}],"components/SalesInvoiceConfirm.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _sprintfJs = require("sprintf-js");
+
+var _numeral_helpers = require("../numeral_helpers");
+
+var _order_types2 = _interopRequireDefault(require("../order_types"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ["sales_invoice", "submit_url", "redirect_url"],
+  data: function data() {
+    return {
+      cash: 1000000
+    };
+  },
+  methods: {
+    number_format: _numeral_helpers.number_format,
+    vsprintf: _sprintfJs.vsprintf,
+    confirmTransaction: function confirmTransaction() {
+      var _this = this;
+
+      swal({
+        icon: 'warning',
+        text: 'Apakah Anda yakin Anda hendak mengkonfirmasi transaksi ini?',
+        buttons: ['Tidak', 'Ya']
+      }).then(function (will_confirm) {
+        if (will_confirm) {
+          var url = "".concat(_this.sales_invoice.outlet.print_server_url, "/manual_print");
+          var commands = [{
+            name: "setJustification",
+            arguments: [{
+              data: 1
+              /* Justify Center */
+              ,
+              type: "integer"
+            }]
+          }, {
+            name: "text",
+            arguments: [{
+              data: _this.receipt_text,
+              type: "text"
+            }]
+          }, {
+            name: "cut",
+            arguments: []
+          }];
+          var data = {
+            address: _this.sales_invoice.outlet.cashier_printer.ipv4_address,
+            port: _this.sales_invoice.outlet.cashier_printer.port,
+            commands: commands
+          };
+          $.post(url, data).done(function (response) {
+            _this.error_data = null; // window.location.replace(this.redirect_url);
+          }).fail(function (xhr, status, error) {// let response = JSON.parse(xhr.responseText);
+            // this.error_data = response.data;
+          });
+        }
+      });
+    },
+    printReceipt: function printReceipt() {
+      var receipt_text = "";
+    },
+    receiptSeparatorLine: function receiptSeparatorLine() {
+      var text = "";
+
+      for (var index = 0; index < 45; index++) {
+        text += "-";
+      }
+
+      return text + "\n";
+    }
+  },
+  computed: {
+    order_types: function order_types() {
+      return _order_types2.default;
+    },
+    pretax_sum: function pretax_sum() {
+      return this.sales_invoice.sorted_planned_sales_invoice_items.reduce(function (prev, curr) {
+        return prev + curr.quantity * curr.menu_item.outlet_menu_item.price;
+      }, 0);
+    },
+    tax: function tax() {
+      return this.sales_invoice.outlet.pajak_pertambahan_nilai / 100 * this.pretax_sum;
+    },
+    aftertax_sum: function aftertax_sum() {
+      return this.pretax_sum + this.tax;
+    },
+    change: function change() {
+      return this.cash - this.aftertax_sum;
+    },
+    receipt_header: function receipt_header() {
+      var text = "";
+      text += this.sales_invoice.outlet.name + "\n";
+      text += this.sales_invoice.outlet.address + "\n";
+      text += this.sales_invoice.outlet.phone + "\n";
+      text += "Tax Invoice" + "\n";
+      text += (0, _sprintfJs.vsprintf)("No. %08d\n", this.sales_invoice.id);
+      text += this.receiptSeparatorLine();
+      return text;
+    },
+    receipt_body: function receipt_body() {
+      var text = "";
+      var column_01_padding = 30;
+      var column_02_padding = 14;
+      var format = "%-".concat(column_01_padding, ".").concat(column_01_padding, "s%").concat(column_02_padding, ".").concat(column_02_padding, "s\n");
+      /* Sales Invoice Items */
+
+      this.sales_invoice.sorted_planned_sales_invoice_items.forEach(function (psi_item) {
+        text += (0, _sprintfJs.vsprintf)(format, ["".concat(psi_item.quantity, "x ").concat(psi_item.menu_item.name), (0, _numeral_helpers.currency_format)(psi_item.menu_item.outlet_menu_item.price * psi_item.quantity)]);
+      });
+      /* Separator Line */
+
+      text += this.receiptSeparatorLine();
+      /* Sub Total / Pre-tax price sum */
+
+      text += (0, _sprintfJs.vsprintf)(format, ["Sub Total", (0, _numeral_helpers.currency_format)(this.pretax_sum)]);
+      /* Tax */
+
+      text += (0, _sprintfJs.vsprintf)(format, ["Tax ".concat(this.sales_invoice.outlet.pajak_pertambahan_nilai, "%"), (0, _numeral_helpers.currency_format)(this.tax)]);
+      /* Service Charge */
+
+      text += (0, _sprintfJs.vsprintf)(format, ["Service ".concat(this.sales_invoice.outlet.service_charge, "%"), (0, _numeral_helpers.currency_format)(this.sales_invoice.outlet.service_charge / 100 * this.pretax_sum)]);
+      /* Separator Line */
+
+      text += this.receiptSeparatorLine();
+      /* Cash Paid */
+
+      text += (0, _sprintfJs.vsprintf)(format, ["Cash", (0, _numeral_helpers.currency_format)(this.cash)]);
+      /* Separator Line */
+
+      text += this.receiptSeparatorLine();
+      /* Total Change */
+
+      text += (0, _sprintfJs.vsprintf)(format, ["Total Change", (0, _numeral_helpers.currency_format)(this.change)]);
+      return text;
+    },
+    receipt_text: function receipt_text() {
+      return this.receipt_header + this.receipt_body;
+    }
+  }
+};
+exports.default = _default;
+        var $43f480 = exports.default || module.exports;
+      
+      if (typeof $43f480 === 'function') {
+        $43f480 = $43f480.options;
+      }
+    
+        /* template */
+        Object.assign($43f480, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "table",
+      { staticClass: "table table-sm table-striped table-bordered" },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.sales_invoice.sorted_planned_sales_invoice_items, function(
+            planned_sales_invoice_item
+          ) {
+            return _c("tr", { key: planned_sales_invoice_item.id }, [
+              _c("td", [
+                _vm._v(
+                  " " + _vm._s(planned_sales_invoice_item.menu_item.name) + " "
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-right" }, [
+                _vm._v(" " + _vm._s(planned_sales_invoice_item.quantity) + " ")
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-right" }, [
+                _vm._v(
+                  " " +
+                    _vm._s(
+                      _vm.number_format(
+                        planned_sales_invoice_item.menu_item.outlet_menu_item
+                          .price
+                      )
+                    ) +
+                    " "
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-right" }, [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(
+                      _vm.number_format(
+                        planned_sales_invoice_item.quantity *
+                          planned_sales_invoice_item.menu_item.outlet_menu_item
+                            .price
+                      )
+                    ) +
+                    "\n                "
+                )
+              ])
+            ])
+          }),
+          0
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "text-right" }, [
+      _c("h4", [
+        _c("span", { staticClass: "badge badge-info" }, [
+          _vm._v(
+            "\n                " +
+              _vm._s(_vm.order_types[_vm.sales_invoice.type]) +
+              "\n            "
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("h3", [
+        _vm._v("\n            Total: \n            "),
+        _c("span", { staticClass: "text-danger" }, [
+          _vm._v(
+            "\n                Rp. " +
+              _vm._s(_vm.number_format(this.pretax_sum)) +
+              "\n            "
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "text-right mt-5" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          on: { click: _vm.confirmTransaction }
+        },
+        [_vm._v("\n            Konfirmasi Transaksi\n        ")]
+      ),
+      _vm._v(" "),
+      _c("div", [
+        _c("div", { staticClass: "text-left" }, [
+          _c("div", { staticClass: "text-center" }, [
+            _c("pre", [_vm._v(_vm._s(this.receipt_header))])
+          ]),
+          _vm._v(" "),
+          _c("pre", [_vm._v(_vm._s(this.receipt_body))])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead thead-dark" }, [
+      _c("tr", [
+        _c("th", [_vm._v(" Item ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Jumlah ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Harga ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Subtotal ")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$43f480', $43f480);
+          } else {
+            api.reload('$43f480', $43f480);
+          }
+        }
+
+        
+      }
+    })();
+},{"sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","../numeral_helpers":"numeral_helpers.js","../order_types":"order_types.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/base64-js/index.js":[function(require,module,exports) {
 'use strict'
 
 exports.byteLength = byteLength
@@ -78335,6 +78951,8 @@ _vue.default.component("home", require("./components/Home.vue").default);
 
 _vue.default.component("receipt-printer-index", require("./components/ReceiptPrinterIndex.vue").default);
 
+_vue.default.component("sales-invoice-confirm", require("./components/SalesInvoiceConfirm.vue").default);
+
 _vue.default.component("sales-invoice-update-and-confirm", require("./components/SalesInvoiceUpdateAndConfirm.vue").default);
 
 try {
@@ -78353,7 +78971,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -78381,7 +78999,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39171" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42679" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

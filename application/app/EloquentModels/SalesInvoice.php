@@ -13,6 +13,11 @@ class SalesInvoice extends Model
         "outlet_id", "waiter_id", "number", "type", "status"
     ];
 
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
+
     public function sales_invoice_items()
     {
         return $this->hasMany(SalesInvoiceItem::class);

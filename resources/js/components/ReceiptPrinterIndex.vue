@@ -75,8 +75,6 @@ export default {
                 ]
             };
 
-        
-
             swal({
                 content: this.$refs.loading_modal,
                 closeModal: false,

@@ -31,4 +31,15 @@ function number_format(value) {
    return  numeral(converted).format('0,0.[0000]')
 }
 
-module.exports = { numeral, number_format }
+function currency_format(value) {
+
+    const orig_locale = numeral.locale()
+
+    numeral.locale('en')
+    const converted = numeral(value).value()
+    numeral.locale(orig_locale)
+
+    return numeral(converted).format('0,0.00[00]')
+}
+
+module.exports = { numeral, number_format, currency_format }

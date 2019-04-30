@@ -20,4 +20,18 @@ class Outlet extends Model
     {
         return $this->hasMany(ReceiptPrinter::class);
     }
+
+    public function cashier_printer()
+    {
+        return $this->hasOne(ReceiptPrinter::class)
+            ->where("type", ReceiptPrinter::CASHIER_TYPE)
+            ->where("is_active", 1);
+    }
+
+    public function kitchen_printer()
+    {
+        return $this->hasOne(ReceiptPrinter::class)
+            ->where("type", ReceiptPrinter::KITCHEN_TYPE)
+            ->where("is_active", 1);
+    }
 }

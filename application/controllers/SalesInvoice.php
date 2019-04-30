@@ -49,6 +49,9 @@ class SalesInvoice extends BaseController {
 
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
         $sales_invoice->load([
+            "outlet",
+            "outlet.cashier_printer",
+            "outlet.kitchen_printer",
             "planned_sales_invoice_items",
             "planned_sales_invoice_items.menu_item",
             "planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) use($outlet) {
@@ -56,6 +59,13 @@ class SalesInvoice extends BaseController {
             }
         ]);
 
+        $sales_invoice->sorted_planned_sales_invoice_items = $sales_invoice->planned_sales_invoice_items
+            ->sortBy(function ($psi_item) {
+                return $psi_item->menu_item->name;
+            })
+            ->values()
+            ->all();
+        
         $this->template->render("sales_invoice/confirm", compact("sales_invoice"));
     }
 
@@ -184,24 +194,5 @@ class SalesInvoice extends BaseController {
         });
 
         $this->jsonResponse($this->sales_invoice);
-    }
-
-    private function getPrintText($sales_invoice_items)
-    {
-        $padding = 20;
-        $text = "\n\n";
-        
-        foreach ($sales_invoice_items as $sales_invoice_item) {
-
-            $text .= sprintf("%-{$padding}s", ($sales_invoice_item->quantity . "x " .  number_format($sales_invoice_item->price)));
-            $text .= sprintf("Rp. %s", number_format($sales_invoice_item->quantity * $sales_invoice_item->price));
-            $text .= "\n";
-
-            $text .= strtoupper($sales_invoice_item->name);
-            $text .= "\n\n";
-        }
-
-        $text .= "\n\n\n\n\n";
-        return $text;
     }
 }

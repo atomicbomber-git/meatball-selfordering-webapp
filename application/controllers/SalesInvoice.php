@@ -78,6 +78,10 @@ class SalesInvoice extends BaseController {
 
     public function processConfirm($sales_invoice_id)
     {
+        $this->validate([
+            ["cash", "cash", "required|greater_than[0]"],
+        ]);
+
         SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
 
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
@@ -95,6 +99,7 @@ class SalesInvoice extends BaseController {
             DB::transaction(function() use ($sales_invoice) {
                 $sales_invoice->update([
                     "status" => SalesInvoiceModel::FINISHED,
+                    "cash" => $this->input->post("cash"),
                 ]);
 
                 foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
@@ -110,9 +115,6 @@ class SalesInvoice extends BaseController {
 
         $cashierReceiptText = $this->cashierReceiptPrintRequest($sales_invoice);
         $this->jsonResponse($cashierReceiptText);
-
-        // $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
-        // redirect("salesInvoice/index");
     }
 
     private function cashierReceiptText(SalesInvoiceModel $sales_invoice)

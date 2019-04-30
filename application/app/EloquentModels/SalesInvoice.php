@@ -10,7 +10,7 @@ class SalesInvoice extends Model
     const FINISHED = 'FINISHED';
 
     public $fillable = [
-        "outlet_id", "waiter_id", "number", "type", "status"
+        "outlet_id", "waiter_id", "number", "type", "status", "cash"
     ];
 
     public function outlet()

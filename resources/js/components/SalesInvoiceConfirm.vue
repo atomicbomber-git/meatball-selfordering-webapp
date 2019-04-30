@@ -42,6 +42,20 @@
             </h3>
         </div>
 
+        <div class='form-group'>
+            <label for='cash'> Cash: </label>
+
+            <vue-cleave
+                class="form-control"
+                :class="{'is-invalid': get(this.error_data, 'errors.cash', false)}"
+                v-model.number="cash"
+                placeholder="Cash"
+                :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }">
+            </vue-cleave>
+            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
+        </div>
+        
+
         <div class="text-right mt-5">
             <form @submit.prevent="confirmTransaction" :action="submit_url" method="POST">
                 <button class="btn btn-primary">
@@ -49,12 +63,6 @@
                 </button>
             </form>
         <div>
-
-        <div class="text-left">
-            <pre>
-{{ this.test_data }}
-            </pre>
-        </div>
     </div>
 </template>
 
@@ -62,21 +70,26 @@
 
 import { vsprintf } from "sprintf-js"
 import { number_format, currency_format } from "../numeral_helpers"
+import { get } from "lodash"
 import order_types from "../order_types"
+import VueCleave from "vue-cleave-component"
 
 export default {
     props: [
         "sales_invoice", "submit_url", "redirect_url",
     ],
 
+    components: { VueCleave },
+
     data() {
         return {
-            cash: 1000000,
-            test_data: null,
+            cash: null,
+            error_data: null,
         }
     },
 
     methods: {
+        get,
         number_format,
         vsprintf,
 
@@ -88,11 +101,9 @@ export default {
             })
             .then(is_ok => {
 
-                $.post(this.submit_url, {token: window.token})
+                $.post(this.submit_url, {cash: this.cash, token: window.token})
                     .done(response => {
                         this.error_data = null;
-
-                        this.test_data = response
 
                         /* Send request to the print server */
                         this.sendPrintRequest(response)

@@ -43,17 +43,17 @@
         </div>
 
         <div class="text-right mt-5">
-            <button @click="confirmTransaction" class="btn btn-primary">
-                Konfirmasi Transaksi
-            </button>
+            <form @submit.prevent="confirmTransaction" :action="submit_url" method="POST">
+                <button class="btn btn-primary">
+                    Konfirmasi Transaksi
+                </button>
+            </form>
         <div>
 
         <div class="text-left">
-            <div class="text-center">
-                <pre>{{ this.receipt_header }}</pre>
-            </div>
-
-            <pre>{{ this.receipt_body }}</pre>
+            <pre>
+{{ this.test_data }}
+            </pre>
         </div>
     </div>
 </template>
@@ -72,6 +72,7 @@ export default {
     data() {
         return {
             cash: 1000000,
+            test_data: null,
         }
     },
 
@@ -79,41 +80,43 @@ export default {
         number_format,
         vsprintf,
 
-        confirmTransaction() {
+        confirmTransaction(e) {
             swal({
                 icon: 'warning',
                 text: 'Apakah Anda yakin Anda hendak mengkonfirmasi transaksi ini?',
                 buttons: ['Tidak', 'Ya'],
             })
-            .then(will_confirm => {
-                if (will_confirm) {
-                    
-                    let url = `${this.sales_invoice.outlet.print_server_url}/manual_print`;
-                    
-                    let commands = [
-                        { name: "setJustification", arguments: [{ data: 1 /* Justify Center */, type: "integer"}] },
-                        { name: "text", arguments: [{ data: this.receipt_text, type: "text" }]},
-                        { name: "cut", arguments: [] },
-                    ]
-                    
-                    let data = {
-                        address: this.sales_invoice.outlet.cashier_printer.ipv4_address,
-                        port: this.sales_invoice.outlet.cashier_printer.port,
-                        commands: commands,
-                    }
+            .then(is_ok => {
 
-                    $.post(url, data)
-                        .done(response => {
-                            this.error_data = null;
-                            // window.location.replace(this.redirect_url);
-                        })
-                        .fail((xhr, status, error) => {
-                            // let response = JSON.parse(xhr.responseText);
-                            // this.error_data = response.data;
-                        });
+                $.post(this.submit_url, {token: window.token})
+                    .done(response => {
+                        this.error_data = null;
 
-                }
+                        this.test_data = response
+
+                        /* Send request to the print server */
+                        this.sendPrintRequest(response)
+                    })
+                    .fail((xhr, status, error) => {
+                        let response = xhr.responseJSON;
+                        this.error_data = response.data;
+                    });
             })
+        },
+
+        sendPrintRequest(request) {
+            console.log(request)
+            $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, request)
+                .done(response => {
+                    swal({
+                        icon: "success",
+                    });
+                })
+                .fail(response => {
+                    swal({
+                        icon: "error",
+                    });
+                })
         },
 
         printReceipt() {

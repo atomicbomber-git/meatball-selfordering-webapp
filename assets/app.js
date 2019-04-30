@@ -23270,51 +23270,45 @@ var _default = {
   props: ["sales_invoice", "submit_url", "redirect_url"],
   data: function data() {
     return {
-      cash: 1000000
+      cash: 1000000,
+      test_data: null
     };
   },
   methods: {
     number_format: _numeral_helpers.number_format,
     vsprintf: _sprintfJs.vsprintf,
-    confirmTransaction: function confirmTransaction() {
+    confirmTransaction: function confirmTransaction(e) {
       var _this = this;
 
       swal({
         icon: 'warning',
         text: 'Apakah Anda yakin Anda hendak mengkonfirmasi transaksi ini?',
         buttons: ['Tidak', 'Ya']
-      }).then(function (will_confirm) {
-        if (will_confirm) {
-          var url = "".concat(_this.sales_invoice.outlet.print_server_url, "/manual_print");
-          var commands = [{
-            name: "setJustification",
-            arguments: [{
-              data: 1
-              /* Justify Center */
-              ,
-              type: "integer"
-            }]
-          }, {
-            name: "text",
-            arguments: [{
-              data: _this.receipt_text,
-              type: "text"
-            }]
-          }, {
-            name: "cut",
-            arguments: []
-          }];
-          var data = {
-            address: _this.sales_invoice.outlet.cashier_printer.ipv4_address,
-            port: _this.sales_invoice.outlet.cashier_printer.port,
-            commands: commands
-          };
-          $.post(url, data).done(function (response) {
-            _this.error_data = null; // window.location.replace(this.redirect_url);
-          }).fail(function (xhr, status, error) {// let response = JSON.parse(xhr.responseText);
-            // this.error_data = response.data;
-          });
-        }
+      }).then(function (is_ok) {
+        $.post(_this.submit_url, {
+          token: window.token
+        }).done(function (response) {
+          _this.error_data = null;
+          _this.test_data = response;
+          /* Send request to the print server */
+
+          _this.sendPrintRequest(response);
+        }).fail(function (xhr, status, error) {
+          var response = xhr.responseJSON;
+          _this.error_data = response.data;
+        });
+      });
+    },
+    sendPrintRequest: function sendPrintRequest(request) {
+      console.log(request);
+      $.post("".concat(this.sales_invoice.outlet.print_server_url, "/manual_print"), request).done(function (response) {
+        swal({
+          icon: "success"
+        });
+      }).fail(function (response) {
+        swal({
+          icon: "error"
+        });
       });
     },
     printReceipt: function printReceipt() {
@@ -23450,7 +23444,7 @@ exports.default = _default;
               _vm._v(" "),
               _c("td", { staticClass: "text-right" }, [
                 _vm._v(
-                  "\n                    " +
+                  "\n                        " +
                     _vm._s(
                       _vm.number_format(
                         planned_sales_invoice_item.quantity *
@@ -23458,7 +23452,7 @@ exports.default = _default;
                             .price
                       )
                     ) +
-                    "\n                "
+                    "\n                    "
                 )
               ])
             ])
@@ -23472,20 +23466,20 @@ exports.default = _default;
       _c("h4", [
         _c("span", { staticClass: "badge badge-info" }, [
           _vm._v(
-            "\n                " +
+            "\n                    " +
               _vm._s(_vm.order_types[_vm.sales_invoice.type]) +
-              "\n            "
+              "\n                "
           )
         ])
       ]),
       _vm._v(" "),
       _c("h3", [
-        _vm._v("\n            Total: \n            "),
+        _vm._v("\n                Total: \n                "),
         _c("span", { staticClass: "text-danger" }, [
           _vm._v(
-            "\n                Rp. " +
+            "\n                    Rp. " +
               _vm._s(_vm.number_format(this.pretax_sum)) +
-              "\n            "
+              "\n                "
           )
         ])
       ])
@@ -23493,21 +23487,28 @@ exports.default = _default;
     _vm._v(" "),
     _c("div", { staticClass: "text-right mt-5" }, [
       _c(
-        "button",
+        "form",
         {
-          staticClass: "btn btn-primary",
-          on: { click: _vm.confirmTransaction }
+          attrs: { action: _vm.submit_url, method: "POST" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.confirmTransaction($event)
+            }
+          }
         },
-        [_vm._v("\n            Konfirmasi Transaksi\n        ")]
+        [
+          _c("button", { staticClass: "btn btn-primary" }, [
+            _vm._v(
+              "\n                    Konfirmasi Transaksi\n                "
+            )
+          ])
+        ]
       ),
       _vm._v(" "),
       _c("div", [
         _c("div", { staticClass: "text-left" }, [
-          _c("div", { staticClass: "text-center" }, [
-            _c("pre", [_vm._v(_vm._s(this.receipt_header))])
-          ]),
-          _vm._v(" "),
-          _c("pre", [_vm._v(_vm._s(this.receipt_body))])
+          _c("pre", [_vm._v(_vm._s(this.test_data) + "\n            ")])
         ])
       ])
     ])
@@ -78999,7 +79000,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42679" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36105" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -31,7 +31,7 @@ $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
         <div class="card-body" id="app">
             <sales-invoice-confirm
                 :sales_invoice='<?= json_encode($sales_invoice) ?>'
-                submit_url="<?= base_url("salesInvoice/processConfirm") ?>"
+                submit_url="<?= base_url("salesInvoice/processConfirm/{$sales_invoice->id}") ?>"
                 redirect_url="<?= base_url("salesInvoice/index") ?>"
                 >
             </sales-invoice-confirm>

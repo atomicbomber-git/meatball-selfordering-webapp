@@ -9,8 +9,15 @@ use App\EloquentModels\PlannedSalesInvoiceItem;
 use App\EloquentModels\SalesInvoiceItem;
 use App\Policies\SalesInvoicePolicy;
 use App\EloquentModels\OutletMenuItem;
+use App\Helpers\Formatter;
+use Mike42\Escpos\Printer;
 
 class SalesInvoice extends BaseController {
+
+    const RECEIPT_COLUMN_01_LENGTH = 20;
+    const RECEIPT_COLUMN_02_LENGTH = 20;
+    const RECEIPT_SEPARATOR_LENGTH = 40;
+
     protected function allowedMethods()
     {
         return [
@@ -84,24 +91,119 @@ class SalesInvoice extends BaseController {
             }
         ]);
 
-        DB::transaction(function() use ($sales_invoice) {
-            
-            $sales_invoice->update([
-                "status" => SalesInvoiceModel::FINISHED,
-            ]);
-
-            foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
-                SalesInvoiceItem::create([
-                    "sales_invoice_id" => $sales_invoice->id,
-                    "name" => $sales_invoice_item->menu_item->name,
-                    "price" => $sales_invoice_item->menu_item->outlet_menu_item->price,
-                    "quantity" => $sales_invoice_item->quantity,
+        if ($sales_invoice->status !== SalesInvoiceModel::FINISHED) {
+            DB::transaction(function() use ($sales_invoice) {
+                $sales_invoice->update([
+                    "status" => SalesInvoiceModel::FINISHED,
                 ]);
-            }
+
+                foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
+                    SalesInvoiceItem::create([
+                        "sales_invoice_id" => $sales_invoice->id,
+                        "name" => $sales_invoice_item->menu_item->name,
+                        "price" => $sales_invoice_item->menu_item->outlet_menu_item->price,
+                        "quantity" => $sales_invoice_item->quantity,
+                    ]);
+                }
+            });
+        }
+
+        $cashierReceiptText = $this->cashierReceiptPrintRequest($sales_invoice);
+        $this->jsonResponse($cashierReceiptText);
+
+        // $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
+        // redirect("salesInvoice/index");
+    }
+
+    private function cashierReceiptText(SalesInvoiceModel $sales_invoice)
+    {
+        $sales_invoice->load([
+            "outlet",
+            "outlet.cashier_printer",
+            "outlet.kitchen_printer",
+            "sales_invoice_items",
+        ]);
+
+        $text = "";
+
+        /* Preliminary calculations */
+        $pretax_total = $sales_invoice->sales_invoice_items->sum(function ($sales_invoice_item) {
+            return $sales_invoice_item->quantity * $sales_invoice_item->price;
         });
 
-        $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
-        redirect("salesInvoice/index");
+        $tax = $pretax_total * ($sales_invoice->outlet->pajak_pertambahan_nilai / 100);
+        $service_charge = $pretax_total * ($sales_invoice->outlet->service_charge / 100);
+        $aftertax_total = $pretax_total - ($tax + $service_charge);
+
+
+        /* The row format */
+        $column_01_length = self::RECEIPT_COLUMN_01_LENGTH;
+        $column_02_length = self::RECEIPT_COLUMN_02_LENGTH;
+        $format = "%-{$column_01_length}.{$column_01_length}s%{$column_02_length}.{$column_02_length}s\n";
+
+
+        /* Receipt Items */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        foreach ($sales_invoice->sales_invoice_items as $sales_invoice_item) {
+            $text .= sprintf(
+                $format,
+                "{$sales_invoice_item->name} x{$sales_invoice_item->quantity}",
+                Formatter::currency($sales_invoice_item->price * $sales_invoice_item->quantity)
+            );
+        }
+
+
+        /* Sub Total, Taxes, Services, Discount */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        $text .= sprintf($format, "Sub Total", Formatter::currency($pretax_total));
+        $text .= sprintf($format, "Tax {$sales_invoice->outlet->pajak_pertambahan_nilai}%", Formatter::currency($tax));
+        $text .= sprintf($format, "Service Charge {$sales_invoice->outlet->service_charge}%", Formatter::currency($service_charge));
+
+
+        /* Cash Paid */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        $text .= sprintf($format, "Cash", Formatter::currency($sales_invoice->cash));
+
+
+        /* Total Change */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        $text .= sprintf($format, "Total Change", Formatter::currency($sales_invoice->cash - $aftertax_total));
+
+
+        return $text;
+    }
+
+    private function cashierReceiptPrintRequest(SalesInvoiceModel $sales_invoice)
+    {
+        $commands = [
+            [
+                "name" => "setJustification",
+                "arguments" => [["data" => Printer::JUSTIFY_CENTER, "type" => "integer"]],
+            ],
+            [
+                "name" => "text",
+                "arguments" => [["data" => $this->cashierReceiptText($sales_invoice), "type" => "string"]],
+            ],
+            [
+                "name" => "cut",
+                "arguments" => [],
+            ]
+        ];
+
+        return [
+            "address" => $sales_invoice->outlet->cashier_printer->ipv4_address,
+            "port" => $sales_invoice->outlet->cashier_printer->port,
+            "commands" => $commands,
+        ];
+    }
+
+    private function receiptTextSeparator($len, $char = "-") {
+        $separator_text = "";
+        for ($i = 0; $i < $len; $i++) { 
+            $separator_text .= $char;
+        }
+        $separator_text .= "\n";
+        return $separator_text;
     }
 
     public function updateAndConfirm($sales_invoice_id)

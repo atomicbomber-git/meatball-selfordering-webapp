@@ -44093,6 +44093,64 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ["sales_invoice", "submit_url", "redirect_url"],
   components: {
@@ -44106,7 +44164,7 @@ var _default = {
   },
   methods: {
     get: _lodash.get,
-    number_format: _numeral_helpers.number_format,
+    currency_format: _numeral_helpers.currency_format,
     vsprintf: _sprintfJs.vsprintf,
     confirmTransaction: function confirmTransaction(e) {
       var _this = this;
@@ -44131,7 +44189,6 @@ var _default = {
       });
     },
     sendPrintRequest: function sendPrintRequest(request) {
-      console.log(request);
       $.post("".concat(this.sales_invoice.outlet.print_server_url, "/manual_print"), request).done(function (response) {
         swal({
           icon: "success"
@@ -44141,18 +44198,6 @@ var _default = {
           icon: "error"
         });
       });
-    },
-    printReceipt: function printReceipt() {
-      var receipt_text = "";
-    },
-    receiptSeparatorLine: function receiptSeparatorLine() {
-      var text = "";
-
-      for (var index = 0; index < 45; index++) {
-        text += "-";
-      }
-
-      return text + "\n";
     }
   },
   computed: {
@@ -44165,62 +44210,19 @@ var _default = {
       }, 0);
     },
     tax: function tax() {
-      return this.sales_invoice.outlet.pajak_pertambahan_nilai / 100 * this.pretax_sum;
+      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100;
     },
-    aftertax_sum: function aftertax_sum() {
-      return this.pretax_sum + this.tax;
+    service_charge: function service_charge() {
+      return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100;
     },
-    change: function change() {
-      return this.cash - this.aftertax_sum;
+    total: function total() {
+      return this.pretax_sum - (this.tax + this.service_charge);
     },
-    receipt_header: function receipt_header() {
-      var text = "";
-      text += this.sales_invoice.outlet.name + "\n";
-      text += this.sales_invoice.outlet.address + "\n";
-      text += this.sales_invoice.outlet.phone + "\n";
-      text += "Tax Invoice" + "\n";
-      text += (0, _sprintfJs.vsprintf)("No. %08d\n", this.sales_invoice.id);
-      text += this.receiptSeparatorLine();
-      return text;
+    rounding: function rounding() {
+      return Math.round(this.total / 100) * 100;
     },
-    receipt_body: function receipt_body() {
-      var text = "";
-      var column_01_padding = 30;
-      var column_02_padding = 14;
-      var format = "%-".concat(column_01_padding, ".").concat(column_01_padding, "s%").concat(column_02_padding, ".").concat(column_02_padding, "s\n");
-      /* Sales Invoice Items */
-
-      this.sales_invoice.sorted_planned_sales_invoice_items.forEach(function (psi_item) {
-        text += (0, _sprintfJs.vsprintf)(format, ["".concat(psi_item.quantity, "x ").concat(psi_item.menu_item.name), (0, _numeral_helpers.currency_format)(psi_item.menu_item.outlet_menu_item.price * psi_item.quantity)]);
-      });
-      /* Separator Line */
-
-      text += this.receiptSeparatorLine();
-      /* Sub Total / Pre-tax price sum */
-
-      text += (0, _sprintfJs.vsprintf)(format, ["Sub Total", (0, _numeral_helpers.currency_format)(this.pretax_sum)]);
-      /* Tax */
-
-      text += (0, _sprintfJs.vsprintf)(format, ["Tax ".concat(this.sales_invoice.outlet.pajak_pertambahan_nilai, "%"), (0, _numeral_helpers.currency_format)(this.tax)]);
-      /* Service Charge */
-
-      text += (0, _sprintfJs.vsprintf)(format, ["Service ".concat(this.sales_invoice.outlet.service_charge, "%"), (0, _numeral_helpers.currency_format)(this.sales_invoice.outlet.service_charge / 100 * this.pretax_sum)]);
-      /* Separator Line */
-
-      text += this.receiptSeparatorLine();
-      /* Cash Paid */
-
-      text += (0, _sprintfJs.vsprintf)(format, ["Cash", (0, _numeral_helpers.currency_format)(this.cash)]);
-      /* Separator Line */
-
-      text += this.receiptSeparatorLine();
-      /* Total Change */
-
-      text += (0, _sprintfJs.vsprintf)(format, ["Total Change", (0, _numeral_helpers.currency_format)(this.change)]);
-      return text;
-    },
-    receipt_text: function receipt_text() {
-      return this.receipt_header + this.receipt_body;
+    total_change: function total_change() {
+      return this.cash - this.rounding;
     }
   }
 };
@@ -44238,60 +44240,155 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "table",
-      { staticClass: "table table-sm table-striped table-bordered" },
-      [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.sales_invoice.sorted_planned_sales_invoice_items, function(
-            planned_sales_invoice_item
-          ) {
-            return _c("tr", { key: planned_sales_invoice_item.id }, [
-              _c("td", [
-                _vm._v(
-                  " " + _vm._s(planned_sales_invoice_item.menu_item.name) + " "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-right" }, [
-                _vm._v(" " + _vm._s(planned_sales_invoice_item.quantity) + " ")
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-right" }, [
-                _vm._v(
-                  " " +
-                    _vm._s(
-                      _vm.number_format(
+    _c("table", { staticClass: "table table-sm table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        { staticClass: "table-bordered" },
+        _vm._l(_vm.sales_invoice.sorted_planned_sales_invoice_items, function(
+          planned_sales_invoice_item
+        ) {
+          return _c("tr", { key: planned_sales_invoice_item.id }, [
+            _c("td", [
+              _vm._v(
+                " " + _vm._s(planned_sales_invoice_item.menu_item.name) + " "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(" " + _vm._s(planned_sales_invoice_item.quantity) + " ")
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                " " +
+                  _vm._s(
+                    _vm.currency_format(
+                      planned_sales_invoice_item.menu_item.outlet_menu_item
+                        .price
+                    )
+                  ) +
+                  " "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(
+                    _vm.currency_format(
+                      planned_sales_invoice_item.quantity *
                         planned_sales_invoice_item.menu_item.outlet_menu_item
                           .price
-                      )
-                    ) +
-                    " "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-right" }, [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(
-                      _vm.number_format(
-                        planned_sales_invoice_item.quantity *
-                          planned_sales_invoice_item.menu_item.outlet_menu_item
-                            .price
-                      )
-                    ) +
-                    "\n                "
-                )
-              ])
+                    )
+                  ) +
+                  "\n                "
+              )
             ])
-          }),
-          0
-        )
-      ]
-    ),
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("tfoot", { staticClass: "table-borderless" }, [
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Sub Total ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.pretax_sum)) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(
+              " Tax " +
+                _vm._s(_vm.sales_invoice.outlet.pajak_pertambahan_nilai) +
+                "% "
+            )
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.tax)) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(
+              " Service Charge " +
+                _vm._s(_vm.sales_invoice.outlet.service_charge) +
+                "% "
+            )
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.service_charge)) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Total ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.total)) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Cash ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.cash)) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Rounding ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.rounding)) + " ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Total Change ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(this.total_change)) + " ")
+          ])
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "text-right" }, [
       _c("h4", [
@@ -44304,48 +44401,68 @@ exports.default = _default;
         ])
       ]),
       _vm._v(" "),
-      _c("h4", [
-        _vm._v("\n            Total: \n            "),
+      _c("h5", [
+        _vm._v("\n            Jumlah yang Harus Dibayar: \n            "),
         _c("span", { staticClass: "text-danger" }, [
           _vm._v(
             "\n                Rp. " +
-              _vm._s(_vm.number_format(this.pretax_sum)) +
+              _vm._s(_vm.currency_format(this.rounding)) +
+              "\n            "
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "form-group d-inline-block",
+          staticStyle: { width: "300px" }
+        },
+        [
+          _c("label", { staticClass: "text-left", attrs: { for: "cash" } }, [
+            _vm._v(" Jumlah Terbayar: ")
+          ]),
+          _vm._v(" "),
+          _c("vue-cleave", {
+            staticClass: "form-control",
+            class: {
+              "is-invalid": _vm.get(this.error_data, "errors.cash", false)
+            },
+            attrs: {
+              placeholder: "Cash",
+              options: {
+                numeral: true,
+                numeralDecimalMark: ",",
+                delimiter: "."
+              }
+            },
+            model: {
+              value: _vm.cash,
+              callback: function($$v) {
+                _vm.cash = _vm._n($$v)
+              },
+              expression: "cash"
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "invalid-feedback" }, [
+            _vm._v(_vm._s(_vm.get(this.error_data, "errors.cash", false)))
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("h5", [
+        _vm._v("\n            Jumlah Kembalian: \n            "),
+        _c("span", { staticClass: "text-danger" }, [
+          _vm._v(
+            "\n                Rp. " +
+              _vm._s(_vm.currency_format(this.total_change)) +
               "\n            "
           )
         ])
       ])
     ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "form-group" },
-      [
-        _c("label", { attrs: { for: "cash" } }, [_vm._v(" Cash: ")]),
-        _vm._v(" "),
-        _c("vue-cleave", {
-          staticClass: "form-control",
-          class: {
-            "is-invalid": _vm.get(this.error_data, "errors.cash", false)
-          },
-          attrs: {
-            placeholder: "Cash",
-            options: { numeral: true, numeralDecimalMark: ",", delimiter: "." }
-          },
-          model: {
-            value: _vm.cash,
-            callback: function($$v) {
-              _vm.cash = _vm._n($$v)
-            },
-            expression: "cash"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "invalid-feedback" }, [
-          _vm._v(_vm._s(_vm.get(this.error_data, "errors.cash", false)))
-        ])
-      ],
-      1
-    ),
     _vm._v(" "),
     _c("div", { staticClass: "text-right mt-5" }, [
       _c(
@@ -44360,9 +44477,14 @@ exports.default = _default;
           }
         },
         [
-          _c("button", { staticClass: "btn btn-primary" }, [
-            _vm._v("\n                Konfirmasi Transaksi\n            ")
-          ])
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: { disabled: this.cash < this.rounding }
+            },
+            [_vm._v("\n                Konfirmasi Transaksi\n            ")]
+          )
         ]
       ),
       _vm._v(" "),
@@ -44375,7 +44497,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead thead-dark" }, [
+    return _c("thead", { staticClass: "thead thead-dark table-bordered" }, [
       _c("tr", [
         _c("th", [_vm._v(" Item ")]),
         _vm._v(" "),
@@ -44416,7 +44538,7 @@ render._withStripped = true
         
       }
     })();
-},{"sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","../numeral_helpers":"numeral_helpers.js","lodash":"../../node_modules/lodash/lodash.js","../order_types":"order_types.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js":[function(require,module,exports) {
+},{"sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","../numeral_helpers":"numeral_helpers.js","lodash":"../../node_modules/lodash/lodash.js","../order_types":"order_types.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js":[function(require,module,exports) {
 var define;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function (obj) { return typeof obj; }; } else { _typeof = function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 

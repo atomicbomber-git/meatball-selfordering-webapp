@@ -10,11 +10,15 @@ class SalesInvoice extends Model
     const FINISHED = 'FINISHED';
 
     public $fillable = [
-        "outlet_id", "waiter_id", "number", "type", "status", "cash"
+        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "finished_at"
     ];
 
     public $appends = [
         "pretax_total", "tax", "service_charge", "total", "rounding", "total_change"
+    ];
+
+    protected $dates = [
+        "finished_at",
     ];
 
     public function outlet()
@@ -30,6 +34,11 @@ class SalesInvoice extends Model
     public function planned_sales_invoice_items()
     {
         return $this->hasMany(PlannedSalesInvoiceItem::class);
+    }
+
+    public function cashier()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /* The `pretax_total` attrribute */

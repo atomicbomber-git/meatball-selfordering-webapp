@@ -11,6 +11,7 @@ use App\Policies\SalesInvoicePolicy;
 use App\EloquentModels\OutletMenuItem;
 use App\Helpers\Formatter;
 use Mike42\Escpos\Printer;
+use Carbon\Carbon as Date;
 
 class SalesInvoice extends BaseController {
 
@@ -100,6 +101,8 @@ class SalesInvoice extends BaseController {
                 $sales_invoice->update([
                     "status" => SalesInvoiceModel::FINISHED,
                     "cash" => $this->input->post("cash"),
+                    "cashier_id" => Auth::user()->id,
+                    "finished_at" => Date::now(),
                 ]);
 
                 foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
@@ -120,6 +123,7 @@ class SalesInvoice extends BaseController {
     private function cashierReceiptText(SalesInvoiceModel $sales_invoice)
     {
         $sales_invoice->loadMissing([
+            "cashier",
             "outlet",
             "sales_invoice_items",
         ]);
@@ -133,10 +137,17 @@ class SalesInvoice extends BaseController {
         $text .= "Tax Invoice" . "\n";
         $text .= sprintf("No %08d", $sales_invoice->id) . "\n";
 
+
         /* The row format */
         $column_01_length = self::RECEIPT_COLUMN_01_LENGTH;
         $column_02_length = self::RECEIPT_COLUMN_02_LENGTH;
         $format = "%-{$column_01_length}.{$column_01_length}s%{$column_02_length}.{$column_02_length}s\n";
+
+
+        /* Cashier info */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        $text .= sprintf($format, $sales_invoice->cashier->name, "");
+        $text .= sprintf($format, $sales_invoice->finished_at->format("m/d/Y H:i:s"), "");
 
 
         /* Receipt Items */
@@ -157,6 +168,11 @@ class SalesInvoice extends BaseController {
         $text .= sprintf($format, "Service Charge {$sales_invoice->outlet->service_charge}%", Formatter::currency($sales_invoice->service_charge));
 
 
+        /* Total */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        $text .= sprintf($format, "Total", Formatter::currency($sales_invoice->total));
+
+
         /* Cash Paid */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
         $text .= sprintf($format, "Cash", Formatter::currency($sales_invoice->cash));
@@ -164,12 +180,15 @@ class SalesInvoice extends BaseController {
         /* Rounding */
         $text .= sprintf($format, "Rounding", Formatter::currency($sales_invoice->rounding));
 
-        $text .= "\n";
-
         /* Total Change */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
         $text .= sprintf($format, "Total Change", Formatter::currency($sales_invoice->total_change));
 
+
+        /* Footer, thank you text and NPWPD */
+        $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
+        $text .= "NPWPD: {$sales_invoice->outlet->npwpd}\n";
+        $text .= "Terima Kasih Atas Kunjungannya\nSilahkan Datang Kembali\n";
 
         return $text;
     }
@@ -254,6 +273,7 @@ class SalesInvoice extends BaseController {
 
         DB::transaction(function() use ($sales_invoice, $outlet_menu_items) {
             $sales_invoice->update([
+                "cashier_id" => Auth::user()->id,
                 "status" => SalesInvoiceModel::FINISHED,
             ]);
 

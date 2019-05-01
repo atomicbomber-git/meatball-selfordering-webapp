@@ -44304,7 +44304,7 @@ exports.default = _default;
         ])
       ]),
       _vm._v(" "),
-      _c("h3", [
+      _c("h4", [
         _vm._v("\n            Total: \n            "),
         _c("span", { staticClass: "text-danger" }, [
           _vm._v(
@@ -80705,7 +80705,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41139" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33463" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

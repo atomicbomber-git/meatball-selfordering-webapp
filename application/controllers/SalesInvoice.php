@@ -14,8 +14,8 @@ use Mike42\Escpos\Printer;
 
 class SalesInvoice extends BaseController {
 
-    const RECEIPT_COLUMN_01_LENGTH = 20;
-    const RECEIPT_COLUMN_02_LENGTH = 20;
+    const RECEIPT_COLUMN_01_LENGTH = 29;
+    const RECEIPT_COLUMN_02_LENGTH = 11;
     const RECEIPT_SEPARATOR_LENGTH = 40;
 
     protected function allowedMethods()
@@ -119,24 +119,19 @@ class SalesInvoice extends BaseController {
 
     private function cashierReceiptText(SalesInvoiceModel $sales_invoice)
     {
-        $sales_invoice->load([
+        $sales_invoice->loadMissing([
             "outlet",
-            "outlet.cashier_printer",
-            "outlet.kitchen_printer",
             "sales_invoice_items",
         ]);
 
         $text = "";
 
-        /* Preliminary calculations */
-        $pretax_total = $sales_invoice->sales_invoice_items->sum(function ($sales_invoice_item) {
-            return $sales_invoice_item->quantity * $sales_invoice_item->price;
-        });
-
-        $tax = $pretax_total * ($sales_invoice->outlet->pajak_pertambahan_nilai / 100);
-        $service_charge = $pretax_total * ($sales_invoice->outlet->service_charge / 100);
-        $aftertax_total = $pretax_total - ($tax + $service_charge);
-
+        /* Generate header */
+        $text .= $sales_invoice->outlet->name . "\n";
+        $text .= $sales_invoice->outlet->address . "\n";
+        $text .= $sales_invoice->outlet->phone . "\n";
+        $text .= "Tax Invoice" . "\n";
+        $text .= sprintf("No %08d", $sales_invoice->id) . "\n";
 
         /* The row format */
         $column_01_length = self::RECEIPT_COLUMN_01_LENGTH;
@@ -157,19 +152,23 @@ class SalesInvoice extends BaseController {
 
         /* Sub Total, Taxes, Services, Discount */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
-        $text .= sprintf($format, "Sub Total", Formatter::currency($pretax_total));
-        $text .= sprintf($format, "Tax {$sales_invoice->outlet->pajak_pertambahan_nilai}%", Formatter::currency($tax));
-        $text .= sprintf($format, "Service Charge {$sales_invoice->outlet->service_charge}%", Formatter::currency($service_charge));
+        $text .= sprintf($format, "Sub Total", Formatter::currency($sales_invoice->pretax_total));
+        $text .= sprintf($format, "Tax {$sales_invoice->outlet->pajak_pertambahan_nilai}%", Formatter::currency($sales_invoice->tax));
+        $text .= sprintf($format, "Service Charge {$sales_invoice->outlet->service_charge}%", Formatter::currency($sales_invoice->service_charge));
 
 
         /* Cash Paid */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
         $text .= sprintf($format, "Cash", Formatter::currency($sales_invoice->cash));
 
+        /* Rounding */
+        $text .= sprintf($format, "Rounding", Formatter::currency($sales_invoice->rounding));
+
+        $text .= "\n";
 
         /* Total Change */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
-        $text .= sprintf($format, "Total Change", Formatter::currency($sales_invoice->cash - $aftertax_total));
+        $text .= sprintf($format, "Total Change", Formatter::currency($sales_invoice->total_change));
 
 
         return $text;
@@ -177,6 +176,11 @@ class SalesInvoice extends BaseController {
 
     private function cashierReceiptPrintRequest(SalesInvoiceModel $sales_invoice)
     {
+        $sales_invoice->loadMissing([
+            "outlet.cashier_printer",
+            "outlet.kitchen_printer",
+        ]);
+
         $commands = [
             [
                 "name" => "setJustification",

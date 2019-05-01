@@ -34,12 +34,12 @@
             </h4>
 
             <!-- Total Price -->
-            <h3>
+            <h4>
                 Total: 
                 <span class="text-danger">
                     Rp. {{ number_format(this.pretax_sum) }}
                 </span>
-            </h3>
+            </h4>
         </div>
 
         <div class='form-group'>

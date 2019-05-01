@@ -15,8 +15,8 @@ use Carbon\Carbon as Date;
 
 class SalesInvoice extends BaseController {
 
-    const RECEIPT_COLUMN_01_LENGTH = 29;
-    const RECEIPT_COLUMN_02_LENGTH = 11;
+    const RECEIPT_COLUMN_01_LENGTH = 27;
+    const RECEIPT_COLUMN_02_LENGTH = 13;
     const RECEIPT_SEPARATOR_LENGTH = 40;
 
     protected function allowedMethods()
@@ -44,6 +44,7 @@ class SalesInvoice extends BaseController {
         $sales_invoices = SalesInvoiceModel::query()
             ->whereDate("created_at", Carbon::today())
             ->where("status", SalesInvoiceModel::UNPAID)
+            ->orderBy("number")
             ->get();
 
         $this->template->render("sales_invoice/index", compact("sales_invoices"));
@@ -79,13 +80,13 @@ class SalesInvoice extends BaseController {
 
     public function processConfirm($sales_invoice_id)
     {
+        SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+
         $this->validate([
-            ["cash", "cash", "required|greater_than[0]"],
+            ["cash", "jumlah pembayaran", "required|greater_than_equal_to[{$sales_invoice->rounding}]"],
         ]);
 
-        SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
-
-        $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
         $outlet = Auth::user()->outlet ?: $this->error403();
 
         $sales_invoice->load([

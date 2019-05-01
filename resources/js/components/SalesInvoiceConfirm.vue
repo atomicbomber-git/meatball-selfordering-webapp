@@ -5,8 +5,8 @@
                 <tr>
                     <th> Item </th>
                     <th class="text-right"> Jumlah </th>
-                    <th class="text-right"> Harga </th>
-                    <th class="text-right"> Subtotal </th>
+                    <th class="text-right"> Harga Satuan </th>
+                    <th class="text-right"> Jumlah x Harga Satuan </th>
                 </tr>
             </thead>
             <tbody class="table-bordered">
@@ -84,42 +84,45 @@
                 </span>
             </h4>
 
-            <h5>
-                Jumlah yang Harus Dibayar: 
-                <span class="text-danger">
-                    Rp. {{ currency_format(this.rounding) }}
-                </span>
-            </h5>
+            <table class="table-sm table-borderless d-inline-block" style="witdh: 300px">
+                <tbody>
+                    <tr>
+                        <td> Jumlah Dibayar </td>
+                        <td>
+                            <vue-cleave
+                                class="form-control text-right"
+                                :class="{'is-invalid': get(this.error_data, 'errors.cash', false)}"
+                                v-model.number="cash"
+                                placeholder="Jumlah"
+                                :options="{ numeral: true, numeralDecimalScale: 2, stripLeadingZeroes: false, numeralDecimalMark: ',', delimiter: '.' }">
+                            </vue-cleave>
+                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Jumlah yang Harus Dibayar </td>
+                        <td class="text-danger">
+                            Rp. {{ currency_format(this.rounding) }}
+                        </td>
+                    </tr>
 
-            <div class='form-group d-inline-block' style="width: 300px">
-                <label class="text-left" for='cash'> Jumlah Terbayar: </label>
-
-                <vue-cleave
-                    class="form-control"
-                    :class="{'is-invalid': get(this.error_data, 'errors.cash', false)}"
-                    v-model.number="cash"
-                    placeholder="Cash"
-                    :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }">
-                </vue-cleave>
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
-            </div>
-
-            <h5>
-                Jumlah Kembalian: 
-                <span class="text-danger">
-                    Rp. {{ currency_format(this.total_change) }}
-                </span>
-            </h5>
+                    <tr>
+                        <td> Jumlah Kembalian </td>
+                        <td class="text-danger">
+                            Rp. {{ this.total_change < 0 ? "-,00" : currency_format(this.total_change) }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="text-right mt-5">
-            <form @submit.prevent="confirmTransaction" :action="submit_url" method="POST">
-                <button
-                    :disabled="this.cash < this.rounding"
-                    class="btn btn-primary">
-                    Konfirmasi Transaksi
-                </button>
-            </form>
+
+            <button
+                @click="confirmTransaction"
+                class="btn btn-primary">
+                Konfirmasi Transaksi
+            </button>
         <div>
     </div>
 </template>
@@ -151,40 +154,43 @@ export default {
         currency_format,
         vsprintf,
 
-        confirmTransaction(e) {
+        confirmTransaction() {
             swal({
                 icon: 'warning',
                 text: 'Apakah Anda yakin Anda hendak mengkonfirmasi transaksi ini?',
                 buttons: ['Tidak', 'Ya'],
             })
             .then(is_ok => {
+                if (is_ok) {
+                    $.post(this.submit_url, {cash: this.cash, token: window.token})
+                        .done(response => {
+                            this.error_data = null;
 
-                $.post(this.submit_url, {cash: this.cash, token: window.token})
-                    .done(response => {
-                        this.error_data = null;
+                            /* Send request to the print server */
+                            this.sendPrintRequest(response)
+                                .done(response => {
+                                    swal({ icon: "success", text: "Pembayaran berhasil" })
+                                        .then(is_ok => { window.location.replace(this.redirect_url) })
+                                })
+                                .fail((xhr, status, error) => {
+                                    console.log(xhr)
+                                    swal({ icon: "error", text: response });
+                                })
+                        })
+                        .fail((xhr, status, error) => {
+                            if (status !== 422) {
+                                Sentry.captureException(xhr)
+                            }
 
-                        /* Send request to the print server */
-                        this.sendPrintRequest(response)
-                    })
-                    .fail((xhr, status, error) => {
-                        let response = xhr.responseJSON;
-                        this.error_data = response.data;
-                    });
+                            let response = xhr.responseJSON;
+                            this.error_data = response.data;
+                        });
+                }
             })
         },
 
         sendPrintRequest(request) {
-            $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, request)
-                .done(response => {
-                    swal({
-                        icon: "success",
-                    });
-                })
-                .fail(response => {
-                    swal({
-                        icon: "error",
-                    });
-                })
+            return $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, request)
         },
     },
 

@@ -44151,6 +44151,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
 var _default = {
   props: ["sales_invoice", "submit_url", "redirect_url"],
   components: {
@@ -44166,7 +44169,7 @@ var _default = {
     get: _lodash.get,
     currency_format: _numeral_helpers.currency_format,
     vsprintf: _sprintfJs.vsprintf,
-    confirmTransaction: function confirmTransaction(e) {
+    confirmTransaction: function confirmTransaction() {
       var _this = this;
 
       swal({
@@ -44174,30 +44177,41 @@ var _default = {
         text: 'Apakah Anda yakin Anda hendak mengkonfirmasi transaksi ini?',
         buttons: ['Tidak', 'Ya']
       }).then(function (is_ok) {
-        $.post(_this.submit_url, {
-          cash: _this.cash,
-          token: window.token
-        }).done(function (response) {
-          _this.error_data = null;
-          /* Send request to the print server */
+        if (is_ok) {
+          $.post(_this.submit_url, {
+            cash: _this.cash,
+            token: window.token
+          }).done(function (response) {
+            _this.error_data = null;
+            /* Send request to the print server */
 
-          _this.sendPrintRequest(response);
-        }).fail(function (xhr, status, error) {
-          var response = xhr.responseJSON;
-          _this.error_data = response.data;
-        });
+            _this.sendPrintRequest(response).done(function (response) {
+              swal({
+                icon: "success",
+                text: "Pembayaran berhasil"
+              }).then(function (is_ok) {
+                window.location.replace(_this.redirect_url);
+              });
+            }).fail(function (xhr, status, error) {
+              console.log(xhr);
+              swal({
+                icon: "error",
+                text: response
+              });
+            });
+          }).fail(function (xhr, status, error) {
+            if (status !== 422) {
+              Sentry.captureException(xhr);
+            }
+
+            var response = xhr.responseJSON;
+            _this.error_data = response.data;
+          });
+        }
       });
     },
     sendPrintRequest: function sendPrintRequest(request) {
-      $.post("".concat(this.sales_invoice.outlet.print_server_url, "/manual_print"), request).done(function (response) {
-        swal({
-          icon: "success"
-        });
-      }).fail(function (response) {
-        swal({
-          icon: "error"
-        });
-      });
+      return $.post("".concat(this.sales_invoice.outlet.print_server_url, "/manual_print"), request);
     }
   },
   computed: {
@@ -44401,91 +44415,98 @@ exports.default = _default;
         ])
       ]),
       _vm._v(" "),
-      _c("h5", [
-        _vm._v("\n            Jumlah yang Harus Dibayar: \n            "),
-        _c("span", { staticClass: "text-danger" }, [
-          _vm._v(
-            "\n                Rp. " +
-              _vm._s(_vm.currency_format(this.rounding)) +
-              "\n            "
-          )
-        ])
-      ]),
-      _vm._v(" "),
       _c(
-        "div",
+        "table",
         {
-          staticClass: "form-group d-inline-block",
-          staticStyle: { width: "300px" }
+          staticClass: "table-sm table-borderless d-inline-block",
+          staticStyle: { witdh: "300px" }
         },
         [
-          _c("label", { staticClass: "text-left", attrs: { for: "cash" } }, [
-            _vm._v(" Jumlah Terbayar: ")
-          ]),
-          _vm._v(" "),
-          _c("vue-cleave", {
-            staticClass: "form-control",
-            class: {
-              "is-invalid": _vm.get(this.error_data, "errors.cash", false)
-            },
-            attrs: {
-              placeholder: "Cash",
-              options: {
-                numeral: true,
-                numeralDecimalMark: ",",
-                delimiter: "."
-              }
-            },
-            model: {
-              value: _vm.cash,
-              callback: function($$v) {
-                _vm.cash = _vm._n($$v)
-              },
-              expression: "cash"
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "invalid-feedback" }, [
-            _vm._v(_vm._s(_vm.get(this.error_data, "errors.cash", false)))
+          _c("tbody", [
+            _c("tr", [
+              _c("td", [_vm._v(" Jumlah Dibayar ")]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("vue-cleave", {
+                    staticClass: "form-control text-right",
+                    class: {
+                      "is-invalid": _vm.get(
+                        this.error_data,
+                        "errors.cash",
+                        false
+                      )
+                    },
+                    attrs: {
+                      placeholder: "Jumlah",
+                      options: {
+                        numeral: true,
+                        numeralDecimalScale: 2,
+                        stripLeadingZeroes: false,
+                        numeralDecimalMark: ",",
+                        delimiter: "."
+                      }
+                    },
+                    model: {
+                      value: _vm.cash,
+                      callback: function($$v) {
+                        _vm.cash = _vm._n($$v)
+                      },
+                      expression: "cash"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "invalid-feedback" }, [
+                    _vm._v(
+                      _vm._s(_vm.get(this.error_data, "errors.cash", false))
+                    )
+                  ])
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [_vm._v(" Jumlah yang Harus Dibayar ")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-danger" }, [
+                _vm._v(
+                  "\n                        Rp. " +
+                    _vm._s(_vm.currency_format(this.rounding)) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [_vm._v(" Jumlah Kembalian ")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-danger" }, [
+                _vm._v(
+                  "\n                        Rp. " +
+                    _vm._s(
+                      this.total_change < 0
+                        ? "-,00"
+                        : _vm.currency_format(this.total_change)
+                    ) +
+                    "\n                    "
+                )
+              ])
+            ])
           ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("h5", [
-        _vm._v("\n            Jumlah Kembalian: \n            "),
-        _c("span", { staticClass: "text-danger" }, [
-          _vm._v(
-            "\n                Rp. " +
-              _vm._s(_vm.currency_format(this.total_change)) +
-              "\n            "
-          )
-        ])
-      ])
+        ]
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "text-right mt-5" }, [
       _c(
-        "form",
+        "button",
         {
-          attrs: { action: _vm.submit_url, method: "POST" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.confirmTransaction($event)
-            }
-          }
+          staticClass: "btn btn-primary",
+          on: { click: _vm.confirmTransaction }
         },
-        [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary",
-              attrs: { disabled: this.cash < this.rounding }
-            },
-            [_vm._v("\n                Konfirmasi Transaksi\n            ")]
-          )
-        ]
+        [_vm._v("\n            Konfirmasi Transaksi\n        ")]
       ),
       _vm._v(" "),
       _c("div")
@@ -44503,9 +44524,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-right" }, [_vm._v(" Jumlah ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v(" Harga ")]),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Harga Satuan ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v(" Subtotal ")])
+        _c("th", { staticClass: "text-right" }, [
+          _vm._v(" Jumlah x Harga Satuan ")
+        ])
       ])
     ])
   }

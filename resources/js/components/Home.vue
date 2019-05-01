@@ -437,8 +437,6 @@ img.card-img-top {
 img.img-detail {
     width: 100%;
     height: auto;
-    /* width: auto;
-        height: 480px; */
 }
 
 .menu-fade-enter-active,

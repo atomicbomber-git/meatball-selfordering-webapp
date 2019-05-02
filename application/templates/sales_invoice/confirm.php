@@ -33,6 +33,7 @@ $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
                 :sales_invoice='<?= json_encode($sales_invoice) ?>'
                 submit_url="<?= base_url("salesInvoice/processConfirm/{$sales_invoice->id}") ?>"
                 redirect_url="<?= base_url("salesInvoice/index") ?>"
+                update_and_confirm_url="<?= base_url("salesInvoice/updateAndConfirm/{$sales_invoice->id}") ?>"
                 >
             </sales-invoice-confirm>
         </div>

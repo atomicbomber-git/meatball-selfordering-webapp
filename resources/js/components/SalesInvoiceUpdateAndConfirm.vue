@@ -215,11 +215,19 @@ export default {
                     $.post(this.submit_url, {token: window.token, ...this.form_data})
                         .done(response => {
                             this.error_data = null;
-                            window.location.replace(this.redirect_url);
+
+                            $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, response)
+                                .done(response => {
+                                    swal({ icon: 'success', text: 'Konfirmasi Berhasil' })
+                                })
+                                .fail((xhr, status, error) => {
+                                    if (xhr.status === 0 || xhr.status === 500) {
+                                        Sentry.captureException({ xhr, status, error });
+                                    }
+                                })
                         })
                         .fail((xhr, status, error) => {
                             let response = xhr.responseJSON;
-                            console.log(xhr.responseJSON)
                             this.error_data = response.data;
                             this.confirmTransaction()
                         });

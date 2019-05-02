@@ -82,7 +82,7 @@ export default {
                 buttons: false,
             })
 
-            $.post(`${this.print_server_url}/manual_print`, { token: window.token, ...data })
+            $.post(`${this.print_server_url}/manual_print`, data)
                 .done(response => {
                     this.error_data = null;
 
@@ -92,10 +92,16 @@ export default {
                     })
                 })
                 .fail((xhr, status, error) => {
-                    swal({
-                        icon: "error",
-                        text: `Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ${this.print_server_url}.`,
-                    })
+                    if (xhr.status === 0 || xhr.status === 500) {
+                        Sentry.captureException({xhr, status, error})
+                    }
+
+                    let error_text = `Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ${this.print_server_url}.`
+                    if (xhr.status !== 0) {
+                        error_text = xhr.responseJSON.message
+                    }
+
+                    swal({ icon: "error", text: error_text })
                 });
         }
     }

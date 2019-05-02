@@ -4,7 +4,6 @@ use App\BaseController;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\EloquentModels\SalesInvoice as SalesInvoiceModel;
 use App\Helpers\Auth;
-use Illuminate\Support\Carbon;
 use App\EloquentModels\PlannedSalesInvoiceItem;
 use App\EloquentModels\SalesInvoiceItem;
 use App\Policies\SalesInvoicePolicy;
@@ -42,7 +41,7 @@ class SalesInvoice extends BaseController {
         SalesInvoicePolicy::canIndex(Auth::user()) ?: $this->error403();
 
         $sales_invoices = SalesInvoiceModel::query()
-            ->whereDate("created_at", Carbon::today())
+            ->whereDate("created_at", Date::today())
             ->where("status", SalesInvoiceModel::UNPAID)
             ->orderBy("number")
             ->get();
@@ -87,25 +86,9 @@ class SalesInvoice extends BaseController {
             ["cash", "jumlah pembayaran", "required|greater_than_equal_to[{$sales_invoice->rounding}]"],
         ]);
 
-        $outlet = Auth::user()->outlet ?: $this->error403();
+        DB::transaction(function() use ($sales_invoice) {
 
-        $sales_invoice->load([
-            "planned_sales_invoice_items",
-            "planned_sales_invoice_items.menu_item",
-            "planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) use($outlet) {
-                $query->where("outlet_id", $outlet->id);
-            }
-        ]);
-
-        if ($sales_invoice->status !== SalesInvoiceModel::FINISHED) {
-            DB::transaction(function() use ($sales_invoice) {
-                $sales_invoice->update([
-                    "status" => SalesInvoiceModel::FINISHED,
-                    "cash" => $this->input->post("cash"),
-                    "cashier_id" => Auth::user()->id,
-                    "finished_at" => Date::now(),
-                ]);
-
+            if ($sales_invoice->status !== SalesInvoiceModel::FINISHED) {
                 foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
                     SalesInvoiceItem::create([
                         "sales_invoice_id" => $sales_invoice->id,
@@ -114,11 +97,17 @@ class SalesInvoice extends BaseController {
                         "quantity" => $sales_invoice_item->quantity,
                     ]);
                 }
-            });
-        }
+            }
 
-        $cashierReceiptText = $this->cashierReceiptPrintRequest($sales_invoice);
-        $this->jsonResponse($cashierReceiptText);
+            $sales_invoice->update([
+                "status" => SalesInvoiceModel::FINISHED,
+                "cash" => $this->input->post("cash"),
+                "cashier_id" => Auth::user()->id,
+                "finished_at" => Date::now(),
+            ]);
+        });
+
+        $this->jsonResponse($this->cashierReceiptPrintRequest($sales_invoice));
     }
 
     private function cashierReceiptText(SalesInvoiceModel $sales_invoice)
@@ -235,11 +224,16 @@ class SalesInvoice extends BaseController {
     public function updateAndConfirm($sales_invoice_id)
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $sales_invoice->load("planned_sales_invoice_items");
+        $sales_invoice->load([
+            "planned_sales_invoice_items", "outlet",
+        ]);
+        
+        $outlet = $sales_invoice->outlet;
+        $outlet->load([
+            "outlet_menu_items:outlet_id,menu_item_id,price",
+            "outlet_menu_items.menu_item"
+        ]);
 
-        $outlet = Auth::user()->outlet ?: $this->error403();
-        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
-        $outlet->load("outlet_menu_items.menu_item");
         $outlet_menu_items = $outlet->outlet_menu_items;
 
         $this->template->render("sales_invoice/update_and_confirm", compact("sales_invoice", "outlet_menu_items"));
@@ -274,10 +268,23 @@ class SalesInvoice extends BaseController {
 
         DB::transaction(function() use ($sales_invoice, $outlet_menu_items) {
             $sales_invoice->update([
-                "cashier_id" => Auth::user()->id,
                 "status" => SalesInvoiceModel::FINISHED,
+                "cash" => 1000000,
+                "cashier_id" => Auth::user()->id,
+                "finished_at" => Date::now(),
             ]);
 
+            PlannedSalesInvoiceItem::where("sales_invoice_id", $sales_invoice->id)->delete();
+            foreach ($this->input->post("menu_items") as $menu_item) {
+                PlannedSalesInvoiceItem::create([
+                    "sales_invoice_id" => $sales_invoice->id,
+                    "menu_item_id" => $menu_item["id"],
+                    "quantity" => $menu_item["quantity"],
+                ]);
+            }
+
+            SalesInvoiceItem::where("sales_invoice_id", $sales_invoice->id)->delete();
+            
             foreach ($this->input->post("menu_items") as $menu_item) {
                 SalesInvoiceItem::create([
                     "sales_invoice_id" => $sales_invoice->id,
@@ -289,6 +296,7 @@ class SalesInvoice extends BaseController {
         });
 
         $this->session->set_flashdata('message-success', 'Pesanan berhasil diselesaikan.');
+        $this->jsonResponse($this->cashierReceiptPrintRequest($sales_invoice));
     }
 
     public function store()

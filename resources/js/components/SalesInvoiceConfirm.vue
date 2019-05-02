@@ -118,6 +118,10 @@
 
         <div class="text-right mt-5">
 
+            <a :href="this.update_and_confirm_url" class="btn btn-warning">
+                Revisi Transaksi
+            </a>
+
             <button
                 @click="confirmTransaction"
                 class="btn btn-primary">
@@ -137,7 +141,7 @@ import VueCleave from "vue-cleave-component"
 
 export default {
     props: [
-        "sales_invoice", "submit_url", "redirect_url",
+        "sales_invoice", "submit_url", "redirect_url", "update_and_confirm_url",
     ],
 
     components: { VueCleave },
@@ -173,8 +177,8 @@ export default {
                                         .then(is_ok => { window.location.replace(this.redirect_url) })
                                 })
                                 .fail((xhr, status, error) => {
-                                    console.log(xhr)
-                                    swal({ icon: "error", text: response });
+                                    Sentry.captureException({xhr, status, error})
+                                    swal({ icon: "error", text: "Terjadi masalah pada saat menghubungi printing server / printer. Mohon periksa koneksi dengan printer Anda." });
                                 })
                         })
                         .fail((xhr, status, error) => {

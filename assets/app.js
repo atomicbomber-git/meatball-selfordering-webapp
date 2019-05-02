@@ -22719,11 +22719,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -22813,18 +22808,30 @@ var _default = {
         closeOnClickOutside: false,
         buttons: false
       });
-      $.post("".concat(this.print_server_url, "/manual_print"), _objectSpread({
-        token: window.token
-      }, data)).done(function (response) {
+      $.post("".concat(this.print_server_url, "/manual_print"), data).done(function (response) {
         _this.error_data = null;
         swal({
           icon: "success",
           text: "Pengujian printer berhasil."
         });
       }).fail(function (xhr, status, error) {
+        if (xhr.status === 0 || xhr.status === 500) {
+          Sentry.captureException({
+            xhr: xhr,
+            status: status,
+            error: error
+          });
+        }
+
+        var error_text = "Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ".concat(_this.print_server_url, ".");
+
+        if (xhr.status !== 0) {
+          error_text = xhr.responseJSON.message;
+        }
+
         swal({
           icon: "error",
-          text: "Pengujian printer gagal, mohon cek koneksi komputer ini ke alamat ".concat(_this.print_server_url, ".")
+          text: error_text
         });
       });
     }
@@ -44154,8 +44161,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
 var _default = {
-  props: ["sales_invoice", "submit_url", "redirect_url"],
+  props: ["sales_invoice", "submit_url", "redirect_url", "update_and_confirm_url"],
   components: {
     VueCleave: _vueCleaveComponent.default
   },
@@ -44193,10 +44204,14 @@ var _default = {
                 window.location.replace(_this.redirect_url);
               });
             }).fail(function (xhr, status, error) {
-              console.log(xhr);
+              Sentry.captureException({
+                xhr: xhr,
+                status: status,
+                error: error
+              });
               swal({
                 icon: "error",
-                text: response
+                text: "Terjadi masalah pada saat menghubungi printing server / printer. Mohon periksa koneksi dengan printer Anda."
               });
             });
           }).fail(function (xhr, status, error) {
@@ -44500,6 +44515,15 @@ exports.default = _default;
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "text-right mt-5" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-warning",
+          attrs: { href: this.update_and_confirm_url }
+        },
+        [_vm._v("\n            Revisi Transaksi\n        ")]
+      ),
+      _vm._v(" "),
       _c(
         "button",
         {
@@ -47073,10 +47097,22 @@ var _default = {
             token: window.token
           }, _this3.form_data)).done(function (response) {
             _this3.error_data = null;
-            window.location.replace(_this3.redirect_url);
+            $.post("".concat(_this3.sales_invoice.outlet.print_server_url, "/manual_print"), response).done(function (response) {
+              swal({
+                icon: 'success',
+                text: 'Konfirmasi Berhasil'
+              });
+            }).fail(function (xhr, status, error) {
+              if (xhr.status === 0 || xhr.status === 500) {
+                Sentry.captureException({
+                  xhr: xhr,
+                  status: status,
+                  error: error
+                });
+              }
+            });
           }).fail(function (xhr, status, error) {
             var response = xhr.responseJSON;
-            console.log(xhr.responseJSON);
             _this3.error_data = response.data;
 
             _this3.confirmTransaction();
@@ -80850,7 +80886,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33463" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34757" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

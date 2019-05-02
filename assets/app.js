@@ -44245,7 +44245,7 @@ var _default = {
       return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100;
     },
     total: function total() {
-      return this.pretax_sum - (this.tax + this.service_charge);
+      return this.pretax_sum + (this.tax + this.service_charge);
     },
     rounding: function rounding() {
       return Math.round(this.total / 100) * 100;
@@ -46976,6 +46976,8 @@ var _OrderQuantity = _interopRequireDefault(require("./OrderQuantity.vue"));
 
 var _vueMultiselect = require("vue-multiselect");
 
+var _vueCleaveComponent = _interopRequireDefault(require("vue-cleave-component"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -46994,12 +46996,14 @@ var _default = {
   props: ["outlet_menu_items", "sales_invoice", "submit_url", "redirect_url"],
   components: {
     OrderQuantity: _OrderQuantity.default,
-    Multiselect: _vueMultiselect.Multiselect
+    Multiselect: _vueMultiselect.Multiselect,
+    VueCleave: _vueCleaveComponent.default
   },
   data: function data() {
     var _this = this;
 
     return {
+      cash: null,
       password: null,
       p_sales_invoice: _objectSpread({}, this.sales_invoice, {
         planned_sales_invoice_items: _toConsumableArray(this.sales_invoice.planned_sales_invoice_items)
@@ -47066,14 +47070,37 @@ var _default = {
             quantity: added_item.quantity
           };
         }),
+        cash: this.cash,
         type: this.p_sales_invoice.type,
         password: this.password
       };
+    },
+    pretax_sum: function pretax_sum() {
+      return this.added_items.filter(function (added_item) {
+        return added_item.outlet_menu_item !== null;
+      }).reduce(function (prev, curr) {
+        return prev + curr.quantity * curr.outlet_menu_item.price;
+      }, 0);
+    },
+    tax: function tax() {
+      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100;
+    },
+    service_charge: function service_charge() {
+      return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100;
+    },
+    total: function total() {
+      return this.pretax_sum + (this.tax + this.service_charge);
+    },
+    rounding: function rounding() {
+      return Math.round(this.total / 100) * 100;
+    },
+    total_change: function total_change() {
+      return this.cash - this.rounding;
     }
   },
   methods: {
     get: _lodash.get,
-    number_format: _numeral_helpers.number_format,
+    currency_format: _numeral_helpers.currency_format,
     addItem: function addItem() {
       this.items.push({
         outlet_menu_item: null,
@@ -47121,8 +47148,6 @@ var _default = {
 
             _this3.confirmTransaction();
           });
-        } else {
-          _this3.error_data = null;
         }
       });
     }
@@ -47170,7 +47195,7 @@ exports.default = _default;
                         return (
                           om_item.menu_item.name +
                           " - Rp. " +
-                          _vm.number_format(om_item.price)
+                          _vm.currency_format(om_item.price)
                         )
                       },
                       options: _vm.item_options
@@ -47235,7 +47260,7 @@ exports.default = _default;
                 _vm._v(
                   " Rp. " +
                     _vm._s(
-                      _vm.number_format(
+                      _vm.currency_format(
                         _vm.get(item, "outlet_menu_item.price", 0)
                       )
                     ) +
@@ -47247,7 +47272,7 @@ exports.default = _default;
                 _vm._v(
                   " Rp. " +
                     _vm._s(
-                      _vm.number_format(
+                      _vm.currency_format(
                         item.quantity *
                           _vm.get(item.outlet_menu_item, "price", 0)
                       )
@@ -47362,12 +47387,88 @@ exports.default = _default;
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "text-right mt-5" }, [
-      _c("h3", [
-        _vm._v("\n            TOTAL:\n            "),
-        _c("span", { staticClass: "text-danger" }, [
-          _vm._v(" Rp. " + _vm._s(_vm.number_format(_vm.total_price)) + " ")
-        ])
-      ])
+      _c(
+        "table",
+        {
+          staticClass: "table-sm table-borderless d-inline-block",
+          staticStyle: { witdh: "300px" }
+        },
+        [
+          _c("tbody", [
+            _c("tr", [
+              _c("td", [_vm._v(" Jumlah Dibayar ")]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("vue-cleave", {
+                    staticClass: "form-control text-right",
+                    class: {
+                      "is-invalid": _vm.get(
+                        this.error_data,
+                        "errors.cash",
+                        false
+                      )
+                    },
+                    attrs: {
+                      placeholder: "Jumlah",
+                      options: {
+                        numeral: true,
+                        numeralDecimalScale: 2,
+                        stripLeadingZeroes: false,
+                        numeralDecimalMark: ",",
+                        delimiter: "."
+                      }
+                    },
+                    model: {
+                      value: _vm.cash,
+                      callback: function($$v) {
+                        _vm.cash = _vm._n($$v)
+                      },
+                      expression: "cash"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "invalid-feedback" }, [
+                    _vm._v(
+                      _vm._s(_vm.get(this.error_data, "errors.cash", false))
+                    )
+                  ])
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [_vm._v(" Jumlah yang Harus Dibayar ")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-danger" }, [
+                _vm._v(
+                  "\n                        Rp. " +
+                    _vm._s(_vm.currency_format(this.rounding)) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [_vm._v(" Jumlah Kembalian ")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-danger" }, [
+                _vm._v(
+                  "\n                        Rp. " +
+                    _vm._s(
+                      this.total_change < 0
+                        ? "-,00"
+                        : _vm.currency_format(this.total_change)
+                    ) +
+                    "\n                    "
+                )
+              ])
+            ])
+          ])
+        ]
+      )
     ]),
     _vm._v(" "),
     _c(
@@ -47446,9 +47547,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v(" Jumlah ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v(" Harga ")]),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Harga Satuan ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [_vm._v(" Subtotal ")]),
+        _c("th", { staticClass: "text-right" }, [
+          _vm._v(" Jumlah x Harga Satuan ")
+        ]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v(" Kendali ")])
       ])
@@ -47487,7 +47590,7 @@ render._withStripped = true
       
       }
     })();
-},{"../order_types.js":"order_types.js","../numeral_helpers.js":"numeral_helpers.js","lodash":"../../node_modules/lodash/lodash.js","./OrderQuantity.vue":"components/OrderQuantity.vue","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
+},{"../order_types.js":"order_types.js","../numeral_helpers.js":"numeral_helpers.js","lodash":"../../node_modules/lodash/lodash.js","./OrderQuantity.vue":"components/OrderQuantity.vue","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 

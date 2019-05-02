@@ -139,14 +139,48 @@ class SalesInvoice extends BaseController
             ["menu_items[*][id]", "id item menu", "required",],
             ["menu_items[*][quantity]", "jumlah item menu", "required",],
             ["type", "tipe pemesanan", "required",],
+            ["cash", "jumlah pembayaran", "required"],
         ]);
-
+        
+        /* Authenticates the supervisor */
         if (!password_verify($this->input->post('password'), $outlet->supervisor->password)) {
             $this->error(403, "Kata sandi keliru");
         }
 
+        /* It is important that the next three blocks are executed in this order */
         $print_requests = [];
-        $print_requests[] = $this->kitchenUpdateReceiptPrintRequest($sales_invoice, $this->input->post("menu_items"));
+        $kitchen_update_print_request = $this->kitchenUpdateReceiptPrintRequest($sales_invoice, $this->input->post("menu_items"));
+        if ($kitchen_update_print_request !== null) {
+            $print_requests[] = $kitchen_update_print_request;
+        }
+
+        /* Total price of the new set of items, with all the calcs performed */
+        $rounding = null;
+        DB::beginTransaction();
+
+        PlannedSalesInvoiceItem::where("sales_invoice_id", $sales_invoice->id)->delete();
+        foreach ($this->input->post("menu_items") as $menu_item) {
+            PlannedSalesInvoiceItem::create([
+                "sales_invoice_id" => $sales_invoice->id,
+                "menu_item_id" => $menu_item["id"],
+                "quantity" => $menu_item["quantity"],
+            ]);
+        }
+
+
+        $sales_invoice = SalesInvoiceModel::find($sales_invoice->id);
+        $rounding = $sales_invoice->rounding;
+
+        if ($this->input->post("cash") < $rounding) {
+            DB::rollback();
+        }
+        else {
+            DB::commit();
+        }
+
+        $this->validate([
+            ["cash", "jumlah pembayaran", "greater_than_equal_to[{$rounding}]"],
+        ]);
 
         $outlet_menu_items = OutletMenuItem::query()
             ->whereIn("menu_item_id", collect($this->input->post("menu_items"))->pluck("id"))
@@ -158,19 +192,10 @@ class SalesInvoice extends BaseController
         DB::transaction(function () use ($sales_invoice, $outlet_menu_items) {
             $sales_invoice->update([
                 "status" => SalesInvoiceModel::FINISHED,
-                "cash" => 1000000,
+                "cash" => $this->input->post("cash"),
                 "cashier_id" => Auth::user()->id,
                 "finished_at" => Date::now(),
             ]);
-
-            PlannedSalesInvoiceItem::where("sales_invoice_id", $sales_invoice->id)->delete();
-            foreach ($this->input->post("menu_items") as $menu_item) {
-                PlannedSalesInvoiceItem::create([
-                    "sales_invoice_id" => $sales_invoice->id,
-                    "menu_item_id" => $menu_item["id"],
-                    "quantity" => $menu_item["quantity"],
-                ]);
-            }
 
             SalesInvoiceItem::where("sales_invoice_id", $sales_invoice->id)->delete();
             foreach ($this->input->post("menu_items") as $menu_item) {
@@ -182,7 +207,6 @@ class SalesInvoice extends BaseController
                 ]);
             }
         });
-
 
         $print_requests[] = $this->cashierReceiptPrintRequest($sales_invoice);
         $this->jsonResponse($print_requests);
@@ -268,7 +292,7 @@ class SalesInvoice extends BaseController
             });
 
         if ($diffed_planned_sales_invoice_items->count() === 0) {
-            return "";
+            return null;
         }
 
         $text = "";
@@ -298,6 +322,11 @@ class SalesInvoice extends BaseController
     {
         $sales_invoice->loadMissing(["outlet.kitchen_printer",]);
 
+        $kitchen_update_receipt_text = $this->kitchenUpdateReceiptText($sales_invoice, $menu_item_input);
+        if ($kitchen_update_receipt_text === null) {
+            return null;
+        }
+
         $commands = [
             [
                 "name" => "setJustification",
@@ -305,7 +334,7 @@ class SalesInvoice extends BaseController
             ],
             [
                 "name" => "text",
-                "arguments" => [["data" => $this->kitchenUpdateReceiptText($sales_invoice, $menu_item_input), "type" => "string"]],
+                "arguments" => [["data" => $kitchen_update_receipt_text, "type" => "string"]],
             ],
             [
                 "name" => "cut",

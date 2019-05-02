@@ -218,7 +218,7 @@ export default {
         },
 
         total() {
-            return this.pretax_sum - (this.tax + this.service_charge)
+            return this.pretax_sum + (this.tax + this.service_charge)
         },
 
         rounding() {

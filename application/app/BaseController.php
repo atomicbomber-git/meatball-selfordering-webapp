@@ -39,8 +39,8 @@ class BaseController extends \CI_Controller
         $this->{$method}(...$args);
     }
 
-    public function validate($rules)
-    {        
+    public function runValidation($rules)
+    {
         foreach ($rules as $rule) {
 
             if (strpos($rule[0], "*")) {
@@ -63,22 +63,27 @@ class BaseController extends \CI_Controller
             }
         }
 
-        if ($this->form_validation->run()) {
-            return;
-        }
+        $this->form_validation->run();
+        return $this->form_validation->error_array();
+    }
 
-        // If regular request
-        if (! $this->input->is_ajax_request()) {
-            $this->session->set_flashdata('errors', $this->form_validation->error_array());
-            $this->saveOldFormData();
-            $this->redirectBack();
-        }
-        else {
-            http_response_code(422);
-            $this->jsonResponse(['data' => [
-                'message' => 'Terdapat kesalahan dalam data.',
-                'errors' => $this->form_validation->error_array()
-            ]]);
+    public function validate($rules)
+    {
+        $errors = $this->runValidation($rules);
+
+        if ($errors) {
+            if (! $this->input->is_ajax_request()) {
+                $this->session->set_flashdata('errors', $errors);
+                $this->saveOldFormData();
+                $this->redirectBack();
+            }
+            else {
+                http_response_code(422);
+                $this->jsonResponse(['data' => [
+                    'message' => 'Terdapat kesalahan dalam data.',
+                    'errors' => $errors,
+                ]]);
+            }
         }
     }
 

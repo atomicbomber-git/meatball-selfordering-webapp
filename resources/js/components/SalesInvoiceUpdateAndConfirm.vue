@@ -11,8 +11,8 @@
                 <tr>
                     <th>Nama Item</th>
                     <th class="text-center"> Jumlah </th>
-                    <th class="text-right"> Harga </th>
-                    <th class="text-right"> Subtotal </th>
+                    <th class="text-right"> Harga Satuan </th>
+                    <th class="text-right"> Jumlah x Harga Satuan </th>
                     <th class="text-center"> Kendali </th>
                 </tr>
             </thead>
@@ -25,7 +25,7 @@
                     <td> 
                         <multiselect
                             track-by="id"
-                            :custom-label="om_item => `${om_item.menu_item.name} - Rp. ${number_format(om_item.price)}`"
+                            :custom-label="om_item => `${om_item.menu_item.name} - Rp. ${currency_format(om_item.price)}`"
                             :options="item_options"
                             v-model="item.outlet_menu_item"
                             />
@@ -50,8 +50,8 @@
                             <i class="fa fa-plus"></i>
                         </button>
                     </td>
-                    <td class="text-right"> Rp. {{ number_format(get(item, "outlet_menu_item.price", 0)) }} </td>
-                    <td class="text-right"> Rp. {{ number_format(item.quantity * get(item.outlet_menu_item, "price", 0)) }} </td>
+                    <td class="text-right"> Rp. {{ currency_format(get(item, "outlet_menu_item.price", 0)) }} </td>
+                    <td class="text-right"> Rp. {{ currency_format(item.quantity * get(item.outlet_menu_item, "price", 0)) }} </td>
                     <td class="text-center">
                         <button @click="removeItem(item)" class="btn btn-danger btn-sm">
                             Hapus
@@ -72,12 +72,38 @@
                 <label class="custom-control-label" for="order_type_takeaway"> {{ order_types["TAKEAWAY"] }} </label>
             </div>
         </div>
-        
+
         <div class="text-right mt-5">
-            <h3>
-                TOTAL:
-                <span class="text-danger"> Rp. {{ number_format(total_price) }} </span>
-            </h3>
+            <table class="table-sm table-borderless d-inline-block" style="witdh: 300px">
+                <tbody>
+                    <tr>
+                        <td> Jumlah Dibayar </td>
+                        <td>
+                            <vue-cleave
+                                class="form-control text-right"
+                                :class="{'is-invalid': get(this.error_data, 'errors.cash', false)}"
+                                v-model.number="cash"
+                                placeholder="Jumlah"
+                                :options="{ numeral: true, numeralDecimalScale: 2, stripLeadingZeroes: false, numeralDecimalMark: ',', delimiter: '.' }">
+                            </vue-cleave>
+                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Jumlah yang Harus Dibayar </td>
+                        <td class="text-danger">
+                            Rp. {{ currency_format(this.rounding) }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td> Jumlah Kembalian </td>
+                        <td class="text-danger">
+                            Rp. {{ this.total_change < 0 ? "-,00" : currency_format(this.total_change) }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div @click="confirmTransaction" class="text-right mt-3">
@@ -111,17 +137,19 @@
 <script>
 
 import order_types from '../order_types.js'
-import { number_format } from "../numeral_helpers.js"
+import { currency_format } from "../numeral_helpers.js"
 import { get } from "lodash"
 import OrderQuantity from "./OrderQuantity.vue"
 import { Multiselect } from "vue-multiselect"
+import VueCleave from "vue-cleave-component"
 
 export default {
     props: ["outlet_menu_items", "sales_invoice", "submit_url", "redirect_url"],
-    components: { OrderQuantity, Multiselect },
+    components: { OrderQuantity, Multiselect, VueCleave },
 
     data() {
         return {
+            cash: null,
             password: null,
 
             p_sales_invoice: {
@@ -185,15 +213,44 @@ export default {
                         quantity: added_item.quantity,
                     })),
 
+                cash: this.cash,
                 type: this.p_sales_invoice.type,
                 password: this.password,
             }
+        },
+
+        pretax_sum() {
+            return this.added_items
+                .filter(added_item => added_item.outlet_menu_item !== null)
+                .reduce((prev, curr) => {
+                    return prev + (curr.quantity * curr.outlet_menu_item.price)
+                }, 0)
+        },
+
+        tax() {
+            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100
+        },
+
+        service_charge() {
+            return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100
+        },
+
+        total() {
+            return this.pretax_sum + (this.tax + this.service_charge)
+        },
+
+        rounding() {
+            return Math.round(this.total / 100) * 100
+        },
+
+        total_change() {
+            return this.cash - this.rounding
         }
     },
 
     methods: {
         get,
-        number_format,
+        currency_format,
 
         addItem() {
             this.items.push({ outlet_menu_item: null, quantity: 1 })
@@ -236,12 +293,9 @@ export default {
                             this.confirmTransaction()
                         });
                 }
-                else {
-                    this.error_data = null
-                }
             })
         },
-    }
+    },
 };
 </script>
 

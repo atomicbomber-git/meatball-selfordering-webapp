@@ -72,7 +72,7 @@ class SalesInvoice extends Model
     /* The `total` attribute */
     public function getTotalAttribute()
     {
-        return $this->pretax_total - ($this->tax + $this->service_charge);
+        return $this->pretax_total + ($this->tax + $this->service_charge);
     }
 
     /* The `rounding` attribute */

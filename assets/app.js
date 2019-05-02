@@ -47053,12 +47053,14 @@ var _default = {
     },
     total_price: function total_price() {
       return this.added_items.reduce(function (prev, curr) {
-        return prev + curr.quantity * curr.outlet_menu_item.price;
+        return prev + curr.quantity * (0, _lodash.get)(curr, "outlet_menu_item.price", 0);
       }, 0);
     },
     form_data: function form_data() {
       return {
-        menu_items: this.added_items.map(function (added_item) {
+        menu_items: this.added_items.filter(function (added_item) {
+          return added_item.outlet_menu_item !== null;
+        }).map(function (added_item) {
           return {
             id: added_item.outlet_menu_item.menu_item_id,
             quantity: added_item.quantity
@@ -47097,19 +47099,21 @@ var _default = {
             token: window.token
           }, _this3.form_data)).done(function (response) {
             _this3.error_data = null;
-            $.post("".concat(_this3.sales_invoice.outlet.print_server_url, "/manual_print"), response).done(function (response) {
-              swal({
-                icon: 'success',
-                text: 'Konfirmasi Berhasil'
-              });
-            }).fail(function (xhr, status, error) {
-              if (xhr.status === 0 || xhr.status === 500) {
-                Sentry.captureException({
-                  xhr: xhr,
-                  status: status,
-                  error: error
+            response.forEach(function (print_request_data) {
+              $.post("".concat(_this3.sales_invoice.outlet.print_server_url, "/manual_print"), print_request_data).done(function (response) {
+                swal({
+                  icon: 'success',
+                  text: 'Konfirmasi Berhasil'
                 });
-              }
+              }).fail(function (xhr, status, error) {
+                if (xhr.status === 0 || xhr.status === 500) {
+                  Sentry.captureException({
+                    xhr: xhr,
+                    status: status,
+                    error: error
+                  });
+                }
+              });
             });
           }).fail(function (xhr, status, error) {
             var response = xhr.responseJSON;
@@ -80886,7 +80890,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34757" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39943" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -172,16 +172,18 @@ export default {
 
         total_price() {
             return this.added_items.reduce((prev, curr) => {
-                return prev + (curr.quantity * curr.outlet_menu_item.price)
+                return prev + (curr.quantity * get(curr, "outlet_menu_item.price", 0))
             }, 0)
         },
 
         form_data() {
             return {
-                menu_items: this.added_items.map(added_item => ({
-                    id: added_item.outlet_menu_item.menu_item_id,
-                    quantity: added_item.quantity,
-                })),
+                menu_items: this.added_items
+                    .filter(added_item => added_item.outlet_menu_item !== null)
+                    .map(added_item => ({
+                        id: added_item.outlet_menu_item.menu_item_id,
+                        quantity: added_item.quantity,
+                    })),
 
                 type: this.p_sales_invoice.type,
                 password: this.password,
@@ -216,15 +218,17 @@ export default {
                         .done(response => {
                             this.error_data = null;
 
-                            $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, response)
-                                .done(response => {
-                                    swal({ icon: 'success', text: 'Konfirmasi Berhasil' })
-                                })
-                                .fail((xhr, status, error) => {
-                                    if (xhr.status === 0 || xhr.status === 500) {
-                                        Sentry.captureException({ xhr, status, error });
-                                    }
-                                })
+                            response.forEach(print_request_data => {
+                                $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, print_request_data)
+                                    .done(response => {
+                                        swal({ icon: 'success', text: 'Konfirmasi Berhasil' })
+                                    })
+                                    .fail((xhr, status, error) => {
+                                        if (xhr.status === 0 || xhr.status === 500) {
+                                            Sentry.captureException({ xhr, status, error });
+                                        }
+                                    })
+                            });
                         })
                         .fail((xhr, status, error) => {
                             let response = xhr.responseJSON;

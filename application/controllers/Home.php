@@ -3,6 +3,7 @@
 use App\BaseController;
 use App\EloquentModels\MenuCategory;
 use App\Helpers\Auth;
+use App\Helpers\DefaultRoute;
 
 class Home extends BaseController
 {
@@ -15,15 +16,24 @@ class Home extends BaseController
     protected function allowedMethods()
     {
         return [
+            'index' => ['get'],
             'show' => ['get'],
         ];
+    }
+
+    public function index()
+    {
+        redirect(base_url(DefaultRoute::get()));
     }
 
     public function show()
     {
         $outlet = Auth::user()->outlet ?: $this->error403();
-        $outlet->load("outlet_menu_items:outlet_id,menu_item_id,price");
-        
+
+        $outlet->load([
+            "outlet_menu_items:outlet_id,menu_item_id,price",
+        ]);
+
         $menu_item_price_map = $outlet->outlet_menu_items
             ->mapWithKeys(function ($menu_item) {
                 return [$menu_item->menu_item_id => $menu_item->price];
@@ -41,6 +51,6 @@ class Home extends BaseController
                 return $menu_category;
             });
 
-        $this->template->render("home/show", compact("menu_data"));
+        $this->template->render("home/show", compact("menu_data", "outlet"));
     }
 }

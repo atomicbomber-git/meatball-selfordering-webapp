@@ -21916,6 +21916,240 @@ module.exports = {
   DINE_IN: "Makan Disini",
   TAKEAWAY: "Bungkus / Bawa Pulang"
 };
+},{}],"../../node_modules/sprintf-js/src/sprintf.js":[function(require,module,exports) {
+var define;
+/* global window, exports, define */
+
+!function() {
+    'use strict'
+
+    var re = {
+        not_string: /[^s]/,
+        not_bool: /[^t]/,
+        not_type: /[^T]/,
+        not_primitive: /[^v]/,
+        number: /[diefg]/,
+        numeric_arg: /[bcdiefguxX]/,
+        json: /[j]/,
+        not_json: /[^j]/,
+        text: /^[^\x25]+/,
+        modulo: /^\x25{2}/,
+        placeholder: /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,
+        key: /^([a-z_][a-z_\d]*)/i,
+        key_access: /^\.([a-z_][a-z_\d]*)/i,
+        index_access: /^\[(\d+)\]/,
+        sign: /^[+-]/
+    }
+
+    function sprintf(key) {
+        // `arguments` is not an array, but should be fine for this call
+        return sprintf_format(sprintf_parse(key), arguments)
+    }
+
+    function vsprintf(fmt, argv) {
+        return sprintf.apply(null, [fmt].concat(argv || []))
+    }
+
+    function sprintf_format(parse_tree, argv) {
+        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, ph, pad, pad_character, pad_length, is_positive, sign
+        for (i = 0; i < tree_length; i++) {
+            if (typeof parse_tree[i] === 'string') {
+                output += parse_tree[i]
+            }
+            else if (typeof parse_tree[i] === 'object') {
+                ph = parse_tree[i] // convenience purposes only
+                if (ph.keys) { // keyword argument
+                    arg = argv[cursor]
+                    for (k = 0; k < ph.keys.length; k++) {
+                        if (arg == undefined) {
+                            throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
+                        }
+                        arg = arg[ph.keys[k]]
+                    }
+                }
+                else if (ph.param_no) { // positional argument (explicit)
+                    arg = argv[ph.param_no]
+                }
+                else { // positional argument (implicit)
+                    arg = argv[cursor++]
+                }
+
+                if (re.not_type.test(ph.type) && re.not_primitive.test(ph.type) && arg instanceof Function) {
+                    arg = arg()
+                }
+
+                if (re.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
+                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
+                }
+
+                if (re.number.test(ph.type)) {
+                    is_positive = arg >= 0
+                }
+
+                switch (ph.type) {
+                    case 'b':
+                        arg = parseInt(arg, 10).toString(2)
+                        break
+                    case 'c':
+                        arg = String.fromCharCode(parseInt(arg, 10))
+                        break
+                    case 'd':
+                    case 'i':
+                        arg = parseInt(arg, 10)
+                        break
+                    case 'j':
+                        arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width) : 0)
+                        break
+                    case 'e':
+                        arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential()
+                        break
+                    case 'f':
+                        arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg)
+                        break
+                    case 'g':
+                        arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg)
+                        break
+                    case 'o':
+                        arg = (parseInt(arg, 10) >>> 0).toString(8)
+                        break
+                    case 's':
+                        arg = String(arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 't':
+                        arg = String(!!arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'T':
+                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'u':
+                        arg = parseInt(arg, 10) >>> 0
+                        break
+                    case 'v':
+                        arg = arg.valueOf()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'x':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16)
+                        break
+                    case 'X':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
+                        break
+                }
+                if (re.json.test(ph.type)) {
+                    output += arg
+                }
+                else {
+                    if (re.number.test(ph.type) && (!is_positive || ph.sign)) {
+                        sign = is_positive ? '+' : '-'
+                        arg = arg.toString().replace(re.sign, '')
+                    }
+                    else {
+                        sign = ''
+                    }
+                    pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' '
+                    pad_length = ph.width - (sign + arg).length
+                    pad = ph.width ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
+                    output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
+                }
+            }
+        }
+        return output
+    }
+
+    var sprintf_cache = Object.create(null)
+
+    function sprintf_parse(fmt) {
+        if (sprintf_cache[fmt]) {
+            return sprintf_cache[fmt]
+        }
+
+        var _fmt = fmt, match, parse_tree = [], arg_names = 0
+        while (_fmt) {
+            if ((match = re.text.exec(_fmt)) !== null) {
+                parse_tree.push(match[0])
+            }
+            else if ((match = re.modulo.exec(_fmt)) !== null) {
+                parse_tree.push('%')
+            }
+            else if ((match = re.placeholder.exec(_fmt)) !== null) {
+                if (match[2]) {
+                    arg_names |= 1
+                    var field_list = [], replacement_field = match[2], field_match = []
+                    if ((field_match = re.key.exec(replacement_field)) !== null) {
+                        field_list.push(field_match[1])
+                        while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
+                            if ((field_match = re.key_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else {
+                                throw new SyntaxError('[sprintf] failed to parse named argument key')
+                            }
+                        }
+                    }
+                    else {
+                        throw new SyntaxError('[sprintf] failed to parse named argument key')
+                    }
+                    match[2] = field_list
+                }
+                else {
+                    arg_names |= 2
+                }
+                if (arg_names === 3) {
+                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
+                }
+
+                parse_tree.push(
+                    {
+                        placeholder: match[0],
+                        param_no:    match[1],
+                        keys:        match[2],
+                        sign:        match[3],
+                        pad_char:    match[4],
+                        align:       match[5],
+                        width:       match[6],
+                        precision:   match[7],
+                        type:        match[8]
+                    }
+                )
+            }
+            else {
+                throw new SyntaxError('[sprintf] unexpected placeholder')
+            }
+            _fmt = _fmt.substring(match[0].length)
+        }
+        return sprintf_cache[fmt] = parse_tree
+    }
+
+    /**
+     * export to either browser or node.js
+     */
+    /* eslint-disable quote-props */
+    if (typeof exports !== 'undefined') {
+        exports['sprintf'] = sprintf
+        exports['vsprintf'] = vsprintf
+    }
+    if (typeof window !== 'undefined') {
+        window['sprintf'] = sprintf
+        window['vsprintf'] = vsprintf
+
+        if (typeof define === 'function' && define['amd']) {
+            define(function() {
+                return {
+                    'sprintf': sprintf,
+                    'vsprintf': vsprintf
+                }
+            })
+        }
+    }
+    /* eslint-enable quote-props */
+}(); // eslint-disable-line
+
 },{}],"components/Home.vue":[function(require,module,exports) {
 "use strict";
 
@@ -21930,6 +22164,8 @@ var _OrderQuantity = _interopRequireDefault(require("./OrderQuantity.vue"));
 
 var _order_types2 = _interopRequireDefault(require("../order_types"));
 
+var _sprintfJs = require("sprintf-js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -21937,7 +22173,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
-  props: ["menu_data", "submit_url"],
+  props: ["outlet", "menu_data", "submit_url"],
   components: {
     OrderQuantity: _OrderQuantity.default
   },
@@ -21992,6 +22228,7 @@ var _default = {
     }
   },
   methods: {
+    sprintf: _sprintfJs.sprintf,
     number_format: _numeral_helpers.number_format,
     onOrderMenuCategoryButtonClick: function onOrderMenuCategoryButtonClick(menu_category) {
       this.selected_menu_category = menu_category;
@@ -22026,7 +22263,20 @@ var _default = {
         _this.$modal.hide("order-confirmation");
 
         _this.error_data = null;
-        _this.sales_invoice = response;
+        _this.sales_invoice = response.sales_invoice;
+        response.print_requests.forEach(function (print_request) {
+          $.post("".concat(_this.outlet.print_server_url, "/manual_print"), print_request).done(function (response) {}).fail(function (xhr, status, error) {
+            if (xhr.status === 500 || xhr.status === 0) {
+              Sentry.captureException({
+                xhr: xhr,
+                status: status,
+                error: error
+              });
+            }
+
+            _this.error_data = response.data;
+          });
+        });
         swal({
           icon: "success",
           content: _this.$refs.orderConfirmationStatusAlertContent
@@ -22038,8 +22288,12 @@ var _default = {
 
         _this.$modal.hide("order-confirmation");
 
-        if (xhr.status === 500) {
-          Sentry.captureException(xhr);
+        if (xhr.status === 500 || xhr.status === 0) {
+          Sentry.captureException({
+            xhr: xhr,
+            status: status,
+            error: error
+          });
         }
 
         swal({
@@ -22631,7 +22885,10 @@ exports.default = _default;
           _c("h1", { staticClass: "text-danger" }, [
             _vm._v(
               "\n                " +
-                _vm._s(_vm.sales_invoice && _vm.sales_invoice.number) +
+                _vm._s(
+                  _vm.sales_invoice &&
+                    _vm.sprintf("%04d", _vm.sales_invoice.number)
+                ) +
                 "\n            "
             )
           ])
@@ -22712,7 +22969,7 @@ render._withStripped = true
       
       }
     })();
-},{"../numeral_helpers.js":"numeral_helpers.js","./OrderQuantity.vue":"components/OrderQuantity.vue","../order_types":"order_types.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/ReceiptPrinterIndex.vue":[function(require,module,exports) {
+},{"../numeral_helpers.js":"numeral_helpers.js","./OrderQuantity.vue":"components/OrderQuantity.vue","../order_types":"order_types.js","sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/ReceiptPrinterIndex.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22963,241 +23220,7 @@ render._withStripped = true
         
       }
     })();
-},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/sprintf-js/src/sprintf.js":[function(require,module,exports) {
-var define;
-/* global window, exports, define */
-
-!function() {
-    'use strict'
-
-    var re = {
-        not_string: /[^s]/,
-        not_bool: /[^t]/,
-        not_type: /[^T]/,
-        not_primitive: /[^v]/,
-        number: /[diefg]/,
-        numeric_arg: /[bcdiefguxX]/,
-        json: /[j]/,
-        not_json: /[^j]/,
-        text: /^[^\x25]+/,
-        modulo: /^\x25{2}/,
-        placeholder: /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,
-        key: /^([a-z_][a-z_\d]*)/i,
-        key_access: /^\.([a-z_][a-z_\d]*)/i,
-        index_access: /^\[(\d+)\]/,
-        sign: /^[+-]/
-    }
-
-    function sprintf(key) {
-        // `arguments` is not an array, but should be fine for this call
-        return sprintf_format(sprintf_parse(key), arguments)
-    }
-
-    function vsprintf(fmt, argv) {
-        return sprintf.apply(null, [fmt].concat(argv || []))
-    }
-
-    function sprintf_format(parse_tree, argv) {
-        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, ph, pad, pad_character, pad_length, is_positive, sign
-        for (i = 0; i < tree_length; i++) {
-            if (typeof parse_tree[i] === 'string') {
-                output += parse_tree[i]
-            }
-            else if (typeof parse_tree[i] === 'object') {
-                ph = parse_tree[i] // convenience purposes only
-                if (ph.keys) { // keyword argument
-                    arg = argv[cursor]
-                    for (k = 0; k < ph.keys.length; k++) {
-                        if (arg == undefined) {
-                            throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
-                        }
-                        arg = arg[ph.keys[k]]
-                    }
-                }
-                else if (ph.param_no) { // positional argument (explicit)
-                    arg = argv[ph.param_no]
-                }
-                else { // positional argument (implicit)
-                    arg = argv[cursor++]
-                }
-
-                if (re.not_type.test(ph.type) && re.not_primitive.test(ph.type) && arg instanceof Function) {
-                    arg = arg()
-                }
-
-                if (re.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
-                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
-                }
-
-                if (re.number.test(ph.type)) {
-                    is_positive = arg >= 0
-                }
-
-                switch (ph.type) {
-                    case 'b':
-                        arg = parseInt(arg, 10).toString(2)
-                        break
-                    case 'c':
-                        arg = String.fromCharCode(parseInt(arg, 10))
-                        break
-                    case 'd':
-                    case 'i':
-                        arg = parseInt(arg, 10)
-                        break
-                    case 'j':
-                        arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width) : 0)
-                        break
-                    case 'e':
-                        arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential()
-                        break
-                    case 'f':
-                        arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg)
-                        break
-                    case 'g':
-                        arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg)
-                        break
-                    case 'o':
-                        arg = (parseInt(arg, 10) >>> 0).toString(8)
-                        break
-                    case 's':
-                        arg = String(arg)
-                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
-                        break
-                    case 't':
-                        arg = String(!!arg)
-                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
-                        break
-                    case 'T':
-                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
-                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
-                        break
-                    case 'u':
-                        arg = parseInt(arg, 10) >>> 0
-                        break
-                    case 'v':
-                        arg = arg.valueOf()
-                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
-                        break
-                    case 'x':
-                        arg = (parseInt(arg, 10) >>> 0).toString(16)
-                        break
-                    case 'X':
-                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
-                        break
-                }
-                if (re.json.test(ph.type)) {
-                    output += arg
-                }
-                else {
-                    if (re.number.test(ph.type) && (!is_positive || ph.sign)) {
-                        sign = is_positive ? '+' : '-'
-                        arg = arg.toString().replace(re.sign, '')
-                    }
-                    else {
-                        sign = ''
-                    }
-                    pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' '
-                    pad_length = ph.width - (sign + arg).length
-                    pad = ph.width ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
-                    output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
-                }
-            }
-        }
-        return output
-    }
-
-    var sprintf_cache = Object.create(null)
-
-    function sprintf_parse(fmt) {
-        if (sprintf_cache[fmt]) {
-            return sprintf_cache[fmt]
-        }
-
-        var _fmt = fmt, match, parse_tree = [], arg_names = 0
-        while (_fmt) {
-            if ((match = re.text.exec(_fmt)) !== null) {
-                parse_tree.push(match[0])
-            }
-            else if ((match = re.modulo.exec(_fmt)) !== null) {
-                parse_tree.push('%')
-            }
-            else if ((match = re.placeholder.exec(_fmt)) !== null) {
-                if (match[2]) {
-                    arg_names |= 1
-                    var field_list = [], replacement_field = match[2], field_match = []
-                    if ((field_match = re.key.exec(replacement_field)) !== null) {
-                        field_list.push(field_match[1])
-                        while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
-                            if ((field_match = re.key_access.exec(replacement_field)) !== null) {
-                                field_list.push(field_match[1])
-                            }
-                            else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
-                                field_list.push(field_match[1])
-                            }
-                            else {
-                                throw new SyntaxError('[sprintf] failed to parse named argument key')
-                            }
-                        }
-                    }
-                    else {
-                        throw new SyntaxError('[sprintf] failed to parse named argument key')
-                    }
-                    match[2] = field_list
-                }
-                else {
-                    arg_names |= 2
-                }
-                if (arg_names === 3) {
-                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
-                }
-
-                parse_tree.push(
-                    {
-                        placeholder: match[0],
-                        param_no:    match[1],
-                        keys:        match[2],
-                        sign:        match[3],
-                        pad_char:    match[4],
-                        align:       match[5],
-                        width:       match[6],
-                        precision:   match[7],
-                        type:        match[8]
-                    }
-                )
-            }
-            else {
-                throw new SyntaxError('[sprintf] unexpected placeholder')
-            }
-            _fmt = _fmt.substring(match[0].length)
-        }
-        return sprintf_cache[fmt] = parse_tree
-    }
-
-    /**
-     * export to either browser or node.js
-     */
-    /* eslint-disable quote-props */
-    if (typeof exports !== 'undefined') {
-        exports['sprintf'] = sprintf
-        exports['vsprintf'] = vsprintf
-    }
-    if (typeof window !== 'undefined') {
-        window['sprintf'] = sprintf
-        window['vsprintf'] = vsprintf
-
-        if (typeof define === 'function' && define['amd']) {
-            define(function() {
-                return {
-                    'sprintf': sprintf,
-                    'vsprintf': vsprintf
-                }
-            })
-        }
-    }
-    /* eslint-enable quote-props */
-}(); // eslint-disable-line
-
-},{}],"../../node_modules/base64-js/index.js":[function(require,module,exports) {
+},{"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/base64-js/index.js":[function(require,module,exports) {
 'use strict'
 
 exports.byteLength = byteLength
@@ -47175,136 +47198,244 @@ exports.default = _default;
       )
     ]),
     _vm._v(" "),
-    _c(
-      "table",
-      { staticClass: "table table-sm table-bordered table-striped" },
-      [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.added_items, function(item) {
-            return _c("tr", { key: item.id }, [
-              _c(
-                "td",
-                [
-                  _c("multiselect", {
-                    attrs: {
-                      "track-by": "id",
-                      "custom-label": function(om_item) {
-                        return (
-                          om_item.menu_item.name +
-                          " - Rp. " +
-                          _vm.currency_format(om_item.price)
-                        )
-                      },
-                      options: _vm.item_options
-                    },
-                    model: {
-                      value: item.outlet_menu_item,
-                      callback: function($$v) {
-                        _vm.$set(item, "outlet_menu_item", $$v)
-                      },
-                      expression: "item.outlet_menu_item"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                { staticClass: "text-center" },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-danger",
-                      on: {
-                        click: function($event) {
-                          --item.quantity
-                        }
-                      }
-                    },
-                    [_c("i", { staticClass: "fa fa-minus" })]
-                  ),
-                  _vm._v(" "),
-                  _c("order-quantity", {
-                    staticClass: "mx-2",
-                    model: {
-                      value: item.quantity,
-                      callback: function($$v) {
-                        _vm.$set(item, "quantity", $$v)
-                      },
-                      expression: "item.quantity"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-success",
-                      on: {
-                        click: function($event) {
-                          ++item.quantity
-                        }
-                      }
-                    },
-                    [_c("i", { staticClass: "fa fa-plus" })]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-right" }, [
-                _vm._v(
-                  " Rp. " +
-                    _vm._s(
-                      _vm.currency_format(
-                        _vm.get(item, "outlet_menu_item.price", 0)
+    _c("table", { staticClass: "table table-sm table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        { staticClass: "table-bordered" },
+        _vm._l(_vm.added_items, function(item) {
+          return _c("tr", { key: item.id }, [
+            _c(
+              "td",
+              [
+                _c("multiselect", {
+                  attrs: {
+                    "track-by": "id",
+                    "custom-label": function(om_item) {
+                      return (
+                        om_item.menu_item.name +
+                        " - Rp. " +
+                        _vm.currency_format(om_item.price)
                       )
-                    ) +
-                    " "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-right" }, [
-                _vm._v(
-                  " Rp. " +
-                    _vm._s(
-                      _vm.currency_format(
-                        item.quantity *
-                          _vm.get(item.outlet_menu_item, "price", 0)
-                      )
-                    ) +
-                    " "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-center" }, [
+                    },
+                    options: _vm.item_options
+                  },
+                  model: {
+                    value: item.outlet_menu_item,
+                    callback: function($$v) {
+                      _vm.$set(item, "outlet_menu_item", $$v)
+                    },
+                    expression: "item.outlet_menu_item"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "td",
+              { staticClass: "text-center" },
+              [
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-danger btn-sm",
+                    staticClass: "btn btn-sm btn-danger",
                     on: {
                       click: function($event) {
-                        return _vm.removeItem(item)
+                        --item.quantity
                       }
                     }
                   },
-                  [
-                    _vm._v(
-                      "\n                        Hapus\n                    "
-                    )
-                  ]
+                  [_c("i", { staticClass: "fa fa-minus" })]
+                ),
+                _vm._v(" "),
+                _c("order-quantity", {
+                  staticClass: "mx-2",
+                  model: {
+                    value: item.quantity,
+                    callback: function($$v) {
+                      _vm.$set(item, "quantity", $$v)
+                    },
+                    expression: "item.quantity"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    on: {
+                      click: function($event) {
+                        ++item.quantity
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-plus" })]
                 )
-              ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                " Rp. " +
+                  _vm._s(
+                    _vm.currency_format(
+                      _vm.get(item, "outlet_menu_item.price", 0)
+                    )
+                  ) +
+                  " "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                " Rp. " +
+                  _vm._s(
+                    _vm.currency_format(
+                      item.quantity * _vm.get(item.outlet_menu_item, "price", 0)
+                    )
+                  ) +
+                  " "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-center" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger btn-sm",
+                  on: {
+                    click: function($event) {
+                      return _vm.removeItem(item)
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        Hapus\n                    "
+                  )
+                ]
+              )
             ])
-          }),
-          0
-        )
-      ]
-    ),
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("tfoot", { staticClass: "table-borderless" }, [
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Sub Total ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.pretax_sum)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(
+              " Tax " +
+                _vm._s(_vm.sales_invoice.outlet.pajak_pertambahan_nilai) +
+                "% "
+            )
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.tax)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(
+              " Service Charge " +
+                _vm._s(_vm.sales_invoice.outlet.service_charge) +
+                "% "
+            )
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.service_charge)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Total ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.total)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Cash ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.cash)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Rounding ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(_vm.rounding)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [_vm._v(" Total Change ")]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(" " + _vm._s(_vm.currency_format(this.total_change)) + " ")
+          ]),
+          _vm._v(" "),
+          _c("th")
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "text-right" }, [
       _c(
@@ -47541,7 +47672,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead thead-dark" }, [
+    return _c("thead", { staticClass: "thead thead-dark table-bordered" }, [
       _c("tr", [
         _c("th", [_vm._v("Nama Item")]),
         _vm._v(" "),
@@ -80993,7 +81124,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39943" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34043" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -34,4 +34,11 @@ class Outlet extends Model
             ->where("type", ReceiptPrinter::KITCHEN_TYPE)
             ->where("is_active", 1);
     }
+
+    public function service_printer()
+    {
+        return $this->hasOne(ReceiptPrinter::class)
+            ->where("type", ReceiptPrinter::SERVICE_TYPE)
+            ->where("is_active", 1);
+    }
 }

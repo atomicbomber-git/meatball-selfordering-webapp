@@ -276,7 +276,7 @@
                     <strong> Nomor pesanan Anda adalah </strong>:
                 </p>
                 <h1 class="text-danger">
-                    {{ sales_invoice && sales_invoice.number }}
+                    {{ sales_invoice && sprintf("%04d", sales_invoice.number) }}
                 </h1>
             </div>
         </div>
@@ -287,9 +287,10 @@
 import { number_format } from "../numeral_helpers.js";
 import OrderQuantity from "./OrderQuantity.vue";
 import  order_types from "../order_types";
+import { sprintf } from "sprintf-js";
 
 export default {
-    props: ["menu_data", "submit_url"],
+    props: ["outlet", "menu_data", "submit_url"],
 
     components: { OrderQuantity },
 
@@ -352,6 +353,7 @@ export default {
     },
 
     methods: {
+        sprintf,
         number_format,
 
         onOrderMenuCategoryButtonClick(menu_category) {
@@ -389,7 +391,20 @@ export default {
                     this.is_submitting_sales_invoice = false
                     this.$modal.hide("order-confirmation");
                     this.error_data = null;
-                    this.sales_invoice = response
+
+                    this.sales_invoice = response.sales_invoice
+
+                    response.print_requests.forEach(print_request => {
+                        $.post(`${this.outlet.print_server_url}/manual_print`, print_request)
+                            .done(response => {
+                            })
+                            .fail((xhr, status, error) => {
+                                if (xhr.status === 500 || xhr.status === 0) {
+                                    Sentry.captureException({ xhr, status, error })
+                                }
+                                this.error_data = response.data;
+                            });
+                    })
 
                     swal({
                         icon: "success",
@@ -402,8 +417,8 @@ export default {
                     this.is_submitting_sales_invoice = false
                     this.$modal.hide("order-confirmation");
                     
-                    if (xhr.status === 500) {
-                        Sentry.captureException(xhr)
+                    if (xhr.status === 500 || xhr.status === 0) {
+                        Sentry.captureException({ xhr, status, error })
                     }
 
                     swal({

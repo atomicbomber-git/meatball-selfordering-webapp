@@ -6,8 +6,8 @@
             </button>
         </div>
 
-        <table class="table table-sm table-bordered table-striped">
-            <thead class="thead thead-dark">
+        <table class="table table-sm table-striped">
+            <thead class="thead thead-dark table-bordered">
                 <tr>
                     <th>Nama Item</th>
                     <th class="text-center"> Jumlah </th>
@@ -17,7 +17,7 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody class="table-bordered">
                 <tr
                     v-for="item in added_items"
                     :key="item.id">
@@ -59,6 +59,64 @@
                     </td>
                 </tr>
             </tbody>
+
+            <tfoot class="table-borderless">
+                <tr>
+                    <th>  </th>
+                    <th>  </th>
+                    <th class="text-right"> Sub Total </th>
+                    <th class="text-right"> {{ currency_format(pretax_sum) }} </th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Tax {{ sales_invoice.outlet.pajak_pertambahan_nilai }}% </th>
+                    <th class="text-right"> {{ currency_format(tax) }} </th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Service Charge {{ sales_invoice.outlet.service_charge }}% </th>
+                    <th class="text-right"> {{ currency_format(service_charge) }} </th>
+                    <th></th>
+                </tr>
+
+                <tr class="border-top">
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Total </th>
+                    <th class="text-right"> {{ currency_format(total) }} </th>
+                    <th></th>
+                </tr>
+
+                <tr class="border-top">
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Cash </th>
+                    <th class="text-right"> {{ currency_format(cash) }} </th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Rounding </th>
+                    <th class="text-right"> {{ currency_format(rounding) }} </th>
+                    <th></th>
+                </tr>
+
+                <tr class="border-top">
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Total Change </th>
+                    <th class="text-right"> {{ currency_format(this.total_change) }} </th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
 
         <div class="text-right">

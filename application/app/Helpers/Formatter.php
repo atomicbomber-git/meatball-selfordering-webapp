@@ -7,4 +7,9 @@ class Formatter {
     {
         return number_format($value, 2, ",", ".");
     }
+
+    public static function salesInvoiceNumber($value)
+    {
+        return sprintf("%04d", $value);
+    }
 }

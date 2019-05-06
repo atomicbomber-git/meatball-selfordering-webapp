@@ -7,6 +7,7 @@
         <home
             submit_url="<?= base_url('salesInvoice/store') ?>"
             :menu_data='<?= json_encode($menu_data) ?>'
+            :outlet='<?= json_encode($outlet) ?>'
             />
     </div>
 </div>

@@ -8,7 +8,7 @@ class ReceiptPrinter extends Model
 {
     const CASHIER_TYPE = "CASHIER";
     const KITCHEN_TYPE = "KITCHEN";
-    const QUEUE_TYPE = "QUEUE";
+    const SERVICE_TYPE = "SERVICE";
 
     public $fillable = [
         "name", "ipv4_address", "port",

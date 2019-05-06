@@ -224,7 +224,7 @@ class SalesInvoice extends BaseController
 
         DB::transaction(function () use ($data) {
             $sales_invoice_count = SalesInvoiceModel::query()
-                ->whereDate("created_at", "=", Carbon::today())
+                ->whereDate("created_at", "=", Date::today())
                 ->count();
 
             $this->sales_invoice = SalesInvoiceModel::create([
@@ -243,7 +243,13 @@ class SalesInvoice extends BaseController
             }
         });
 
-        $this->jsonResponse($this->sales_invoice);
+        $print_requests[] = $this->serviceInvoiceNumberPrintRequest($this->sales_invoice);
+        $print_requests[] = $this->kitcheReceiptPrintRequest($this->sales_invoice);
+
+        $this->jsonResponse([
+            "sales_invoice" => $this->sales_invoice,
+            "print_requests" => $print_requests,
+        ]);
     }
 
     private function kitchenUpdateReceiptText(SalesInvoiceModel $sales_invoice, $menu_item_input)
@@ -298,24 +304,101 @@ class SalesInvoice extends BaseController
         $text = "";
         $format = $this->receiptRowFormat();
 
-
-        /* Order additions */
-        $text .= sprintf($format, "PENAMBAHAN", "");
-        foreach ($additions as $menu_item_id => $quantity) {
-            $outlet_menu_item = $outlet_menu_items[$menu_item_id];
-            $text .= sprintf($format, "+{$quantity}x {$outlet_menu_item->menu_item->name}", "");
-        }
-
+        $text .= sprintf($format, "NOMOR PESANAN", Formatter::salesInvoiceNumber($sales_invoice->number));
         $text .= $this->receiptTextSeparator();
 
-        /* Order cancellations */
-        $text .= sprintf($format, "PEMBATALAN", "");
-        foreach ($cancellations as $menu_item_id => $quantity) {
-            $outlet_menu_item = $outlet_menu_items[$menu_item_id];
-            $text .= sprintf($format, "{$quantity}x {$outlet_menu_item->menu_item->name}", "");
+        /* Order additions */
+        if ($additions->count() > 0) {
+            $text .= sprintf($format, "PENAMBAHAN", "");
+            foreach ($additions as $menu_item_id => $quantity) {
+                $outlet_menu_item = $outlet_menu_items[$menu_item_id];
+                $text .= sprintf($format, "+{$quantity}x {$outlet_menu_item->menu_item->name}", "");
+            }
+        }
+
+        if ($cancellations->count() > 0) {
+            $text .= $this->receiptTextSeparator();
+
+            /* Order cancellations */
+            $text .= sprintf($format, "PEMBATALAN", "");
+            foreach ($cancellations as $menu_item_id => $quantity) {
+                $outlet_menu_item = $outlet_menu_items[$menu_item_id];
+                $text .= sprintf($format, "{$quantity}x {$outlet_menu_item->menu_item->name}", "");
+            }
         }
 
         return $text;
+    }
+
+    private function serviceInvoiceNumberPrintRequest(SalesInvoiceModel $sales_invoice)
+    {
+        $sales_invoice_number = Formatter::salesInvoiceNumber($sales_invoice->number);
+
+        $commands = [
+            [
+                "name" => "setJustification",
+                "arguments" => [["data" => Printer::JUSTIFY_CENTER, "type" => "integer"]],
+            ],
+            [
+                "name" => "setTextSize",
+                "arguments" => [["data" => 2, "type" => "integer"], ["data" => 2, "type" => "integer"]],
+            ],
+            [
+                "name" => "text",
+                "arguments" => [["data" => "Nomor Antrian Anda:\n\n\n", "type" => "string"]],
+            ],
+            [
+                "name" => "setTextSize",
+                "arguments" => [["data" => 4, "type" => "integer"], ["data" => 4, "type" => "integer"]],
+            ],
+            [
+                "name" => "text",
+                "arguments" => [["data" => "{$sales_invoice_number}\n\n\n", "type" => "string"]],
+            ],
+            [
+                "name" => "cut",
+                "arguments" => [],
+            ],
+        ];
+
+        return [
+            "address" => $sales_invoice->outlet->service_printer->ipv4_address,
+            "port" => $sales_invoice->outlet->service_printer->port,
+            "commands" => $commands,
+        ];
+    }
+
+    private function kitcheReceiptPrintRequest(SalesInvoiceModel $sales_invoice)
+    {
+        $sales_invoice->loadMissing(["planned_sales_invoice_items.menu_item"]);
+
+        $text = "";
+        $format = $this->receiptRowFormat();
+
+
+        $text .= sprintf($format, "NOMOR PESANAN", Formatter::salesInvoiceNumber($sales_invoice->number));
+        $text .= $this->receiptTextSeparator();
+
+        foreach ($sales_invoice->planned_sales_invoice_items as $psi_item) {
+            $text .= sprintf($format, $psi_item->menu_item->name, "x {$psi_item->quantity}");
+        }
+
+        $commands = [
+            [
+                "name" => "text",
+                "arguments" => [["data" => $text, "type" => "string"]],
+            ],
+            [
+                "name" => "cut",
+                "arguments" => [],
+            ]
+        ];
+
+        return [
+            "address" => $sales_invoice->outlet->kitchen_printer->ipv4_address,
+            "port" => $sales_invoice->outlet->kitchen_printer->port,
+            "commands" => $commands,
+        ];
     }
 
     private function kitchenUpdateReceiptPrintRequest(SalesInvoiceModel $sales_invoice, $menu_item_input)

@@ -125,10 +125,13 @@ class MenuCategory extends BaseController {
     public function delete($menu_category_id)
     {
         $menu_category = MenuCategoryModel::find($menu_category_id) ?: $this->error404();
-        MenuCategoryPolicy::canDelete(Auth::user(), $menu_category) ?: $this->error403();
-        
-        $menu_category->delete();
 
+        if (! MenuCategoryPolicy::canDelete(Auth::user(), $menu_category)) {
+            $this->session->set_flashdata('message-danger', 'Data tidak dapat dihapus.');
+            $this->redirectBack();
+        }
+
+        $menu_category->delete();
         $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
         $this->redirectBack();
     }

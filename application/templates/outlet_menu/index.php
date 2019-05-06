@@ -1,9 +1,9 @@
 <?php
-    use App\Helpers\DefaultRoute;
-    use App\Helpers\AppInfo;
+use App\Helpers\DefaultRoute;
+use App\Helpers\AppInfo;
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Transaksi"]) ?>
+<?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
 
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -14,35 +14,38 @@
                 </a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                <a href="<?= base_url("salesInvoice/index") ?>">
-                    Transaksi
-                </a>
+                Menu Outlet
             </li>
         </ol>
     </nav>
 
-    <h1 class="mb-1"> Transaksi / Kasir </h1>
-    <hr class="mt-0"/>
-
     <?php $this->insert("shared/message") ?>
+
+    <h3>
+        Menu Outlet
+    </h3>
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
-                        <th> Nomor Pesanan </th>
+                        <th> # </th>
+                        <th> Nama Outlet </th>
                         <th> Kendali </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php foreach($sales_invoices as $sales_invoice): ?>
+                    <?php foreach($outlets as $outlet): ?>
                     <tr>
-                        <td> <?= $sales_invoice->number ?> </td>
+                        <td> <?= $outlet->id ?> </td>
+                        <td> <?= $outlet->name ?> </td>
                         <td>
-                            <a href="<?= base_url("salesInvoice/confirm/{$sales_invoice->id}") ?>" class="btn btn-dark btn-sm">
-                                Konfirmasi
+                            <a
+                                href="<?= base_url("outletMenu/detail/{$outlet->id}") ?>"
+                                class="btn btn-dark btn-sm">
+                                Detail
                             </a>
                         </td>
                     </tr>

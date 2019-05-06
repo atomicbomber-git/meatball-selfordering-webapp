@@ -19,16 +19,16 @@ class MenuCategoryPolicy
 
     public static function canDelete(?User $user, MenuCategory $menuCategory)
     {
-        if ($user === null) {
+        if ($user === null || $user->level !== UserLevel::ADMIN) {
             return false;
         }
 
         $menuCategory->loadCount("menu_items");
 
         if ($menuCategory->menu_items_count > 0) {
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 }

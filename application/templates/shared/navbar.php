@@ -1,10 +1,10 @@
-<?php 
-    use App\Helpers\Auth;
-    use App\Policies\MenuCategoryPolicy;
-    use App\Helpers\DefaultRoute;
-    use App\Policies\SalesInvoicePolicy;
-    use App\Policies\ReceiptPrinterPolicy;
-    use App\Helpers\URL;
+<?php
+use App\Helpers\Auth;
+use App\Policies\MenuCategoryPolicy;
+use App\Helpers\DefaultRoute;
+use App\Policies\SalesInvoicePolicy;
+use App\Policies\ReceiptPrinterPolicy;
+use App\Helpers\URL;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -16,76 +16,86 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <?php if(Auth::check()): ?>
+        <?php if (Auth::check()) : ?>
 
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav mr-auto">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav mr-auto">
 
-                <?php if(Auth::check()): ?>
+                    <?php if (Auth::check()) : ?>
 
-                <?php if(MenuCategoryPolicy::canIndex(Auth::user())): ?>
-                
-                <li class='nav-item <?= URL::has("menuCategory") ? "active" : "" ?>'>
-                    <a class='nav-link' href="<?= base_url("menuCategory/index") ?>" >
-                        <i class='fa fa-cutlery'></i>
-                        Master Kategori Menu
-                    </a>
-                </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Master Data
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <?php if (MenuCategoryPolicy::canIndex(Auth::user())) : ?>
 
-                <?php endif ?>
+                                <a class="dropdown-item" href="<?= base_url("menuCategory/index") ?>">
+                                    <i class='fa fa-list'></i>
+                                    Kategori Menu & Menu
+                                </a>
+                                <?php endif ?>
 
-                <?php if(ReceiptPrinterPolicy::canIndex(Auth::user())): ?>
+                                <a href="<?= base_url("outletMenu/index") ?>" class="dropdown-item">
+                                    <i class="fa fa-cutlery"></i>
+                                    Menu Outlet
+                                </a>
 
-                <li class='nav-item <?= URL::has("receiptPrinter") ? "active" : "" ?>'>
-                    <a class='nav-link' href="<?= base_url("receiptPrinter/index") ?>" >
-                        <i class='fa fa-print'></i>
-                        Printer
-                    </a>
-                </li>
-                
-                <?php endif ?>
+                            </div>
+                        </li>
 
-                <?php if(SalesInvoicePolicy::canIndex(Auth::user()) ): ?>
-                
-                <li class='nav-item <?= URL::has("salesInvoice") ? "active" : "" ?>'>
-                    <a class='nav-link' href="<?= base_url("salesInvoice/index") ?>" >
-                        <i class='fa fa-usd'></i>
-                        Transaksi
-                    </a>
-                </li>
 
-                <?php endif ?>
 
-                <?php if(TRUE): ?>
-                
-                <li class='nav-item <?= URL::has("finishedSalesInvoice") ? "active" : "" ?>'>
-                    <a class='nav-link' href="<?= base_url("finishedSalesInvoice/index") ?>" >
-                        <i class='fa fa-book'></i>
-                        Histori Transaksi
-                    </a>
-                </li>
 
-                <?php endif ?>
+                        <?php if (ReceiptPrinterPolicy::canIndex(Auth::user())) : ?>
 
+                            <li class='nav-item <?= URL::has("receiptPrinter") ? "active" : "" ?>'>
+                                <a class='nav-link' href="<?= base_url("receiptPrinter/index") ?>">
+                                    <i class='fa fa-print'></i>
+                                    Printer
+                                </a>
+                            </li>
+
+                        <?php endif ?>
+
+                        <?php if (SalesInvoicePolicy::canIndex(Auth::user())) : ?>
+
+                            <li class='nav-item <?= URL::has("salesInvoice") ? "active" : "" ?>'>
+                                <a class='nav-link' href="<?= base_url("salesInvoice/index") ?>">
+                                    <i class='fa fa-usd'></i>
+                                    Transaksi
+                                </a>
+                            </li>
+
+                        <?php endif ?>
+
+                        <?php if (TRUE) : ?>
+
+                            <li class='nav-item <?= URL::has("finishedSalesInvoice") ? "active" : "" ?>'>
+                                <a class='nav-link' href="<?= base_url("finishedSalesInvoice/index") ?>">
+                                    <i class='fa fa-book'></i>
+                                    Histori Transaksi
+                                </a>
+                            </li>
+
+                        <?php endif ?>
+
+                    <?php endif ?>
+                </div>
+
+                <?php if (Auth::check()) : ?>
+
+                    <form method="POST" action="<?= base_url("logout") ?>">
+                        <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
+
+                        <button class="btn btn-danger">
+                            Log Out
+                            <i class="fa fa-sign-out"></i>
+                        </button>
+                    </form>
                 <?php endif ?>
             </div>
-
-            <?php if(Auth::check()): ?>
-
-            <form method="POST" action="<?= base_url("logout") ?>" >
-                <input type="hidden"
-                    name="<?= $this->csrf_name() ?>"
-                    value="<?= $this->csrf_token() ?>">
-                
-                <button class="btn btn-danger">
-                    Log Out
-                    <i class="fa fa-sign-out"></i>
-                </button>
-            </form>
-            <?php endif ?>
-        </div>
 
         <?php endif ?>
     </div>
 </nav>
-

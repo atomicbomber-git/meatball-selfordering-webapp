@@ -21868,14 +21868,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $8a4699 = exports.default || module.exports;
+        var $b6cefe = exports.default || module.exports;
       
-      if (typeof $8a4699 === 'function') {
-        $8a4699 = $8a4699.options;
+      if (typeof $b6cefe === 'function') {
+        $b6cefe = $b6cefe.options;
       }
     
         /* template */
-        Object.assign($8a4699, (function () {
+        Object.assign($b6cefe, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21902,9 +21902,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$8a4699', $8a4699);
+            api.createRecord('$b6cefe', $b6cefe);
           } else {
-            api.reload('$8a4699', $8a4699);
+            api.reload('$b6cefe', $b6cefe);
           }
         }
 
@@ -22314,14 +22314,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3ebacf = exports.default || module.exports;
+        var $5fd4d4 = exports.default || module.exports;
       
-      if (typeof $3ebacf === 'function') {
-        $3ebacf = $3ebacf.options;
+      if (typeof $5fd4d4 === 'function') {
+        $5fd4d4 = $5fd4d4.options;
       }
     
         /* template */
-        Object.assign($3ebacf, (function () {
+        Object.assign($5fd4d4, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22330,7 +22330,7 @@ exports.default = _default;
     "div",
     { staticClass: "row" },
     [
-      _c("div", { staticClass: "col-lg-8" }, [
+      _c("div", { staticClass: "col-lg-8 pr-2" }, [
         _c("div", { staticClass: "card" }, [
           _c(
             "div",
@@ -22557,7 +22557,7 @@ exports.default = _default;
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-lg-4" }, [
+      _c("div", { staticClass: "col-lg-4 pl-0" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
             _c("h1", { staticClass: "h5 text-info" }, [
@@ -22943,7 +22943,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-3ebacf",
+            _scopeId: "data-v-5fd4d4",
             functional: undefined
           };
         })());
@@ -22956,9 +22956,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$3ebacf', $3ebacf);
+            api.createRecord('$5fd4d4', $5fd4d4);
           } else {
-            api.reload('$3ebacf', $3ebacf);
+            api.reload('$5fd4d4', $5fd4d4);
           }
         }
 
@@ -23095,14 +23095,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $ebb93a = exports.default || module.exports;
+        var $cd7a60 = exports.default || module.exports;
       
-      if (typeof $ebb93a === 'function') {
-        $ebb93a = $ebb93a.options;
+      if (typeof $cd7a60 === 'function') {
+        $cd7a60 = $cd7a60.options;
       }
     
         /* template */
-        Object.assign($ebb93a, (function () {
+        Object.assign($cd7a60, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -23211,9 +23211,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$ebb93a', $ebb93a);
+            api.createRecord('$cd7a60', $cd7a60);
           } else {
-            api.reload('$ebb93a', $ebb93a);
+            api.reload('$cd7a60', $cd7a60);
           }
         }
 
@@ -44279,14 +44279,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $43f480 = exports.default || module.exports;
+        var $7098dc = exports.default || module.exports;
       
-      if (typeof $43f480 === 'function') {
-        $43f480 = $43f480.options;
+      if (typeof $7098dc === 'function') {
+        $7098dc = $7098dc.options;
       }
     
         /* template */
-        Object.assign($43f480, (function () {
+        Object.assign($7098dc, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -44599,9 +44599,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$43f480', $43f480);
+            api.createRecord('$7098dc', $7098dc);
           } else {
-            api.reload('$43f480', $43f480);
+            api.reload('$7098dc', $7098dc);
           }
         }
 
@@ -47177,14 +47177,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f6bf03 = exports.default || module.exports;
+        var $870b72 = exports.default || module.exports;
       
-      if (typeof $f6bf03 === 'function') {
-        $f6bf03 = $f6bf03.options;
+      if (typeof $870b72 === 'function') {
+        $870b72 = $870b72.options;
       }
     
         /* template */
-        Object.assign($f6bf03, (function () {
+        Object.assign($870b72, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -47708,9 +47708,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$f6bf03', $f6bf03);
+            api.createRecord('$870b72', $870b72);
           } else {
-            api.reload('$f6bf03', $f6bf03);
+            api.reload('$870b72', $870b72);
           }
         }
 
@@ -81124,7 +81124,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34043" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41341" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

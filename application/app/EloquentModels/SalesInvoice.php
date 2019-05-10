@@ -9,6 +9,14 @@ class SalesInvoice extends Model
     const UNPAID = 'UNPAID';
     const FINISHED = 'FINISHED';
 
+    const DINE_IN_TYPE = 'DINE_IN';
+    const TAKEAWAY_TYPE = 'TAKEAWAY';
+
+    const TYPES_EN = [
+        self::DINE_IN_TYPE => 'Dine In',
+        self::TAKEAWAY_TYPE => 'Takeway',
+    ];
+
     public $fillable = [
         "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "finished_at"
     ];

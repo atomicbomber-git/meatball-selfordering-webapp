@@ -11994,24 +11994,24 @@ h3 {
     border-color: #dee2e6;
   }
 }
-img.card-img-top[data-v-3ebacf] {
+img.card-img-top[data-v-5fd4d4] {
     width: 200px;
     height: 200px;
     object-fit: cover;
 }
-img.img-detail[data-v-3ebacf] {
+img.img-detail[data-v-5fd4d4] {
     width: 100%;
     height: auto;
 }
-.menu-fade-enter-active[data-v-3ebacf],
-.menu-fade-leave-active[data-v-3ebacf] {
+.menu-fade-enter-active[data-v-5fd4d4],
+.menu-fade-leave-active[data-v-5fd4d4] {
     transition: opacity 0.1s ease;
 }
-.menu-fade-enter[data-v-3ebacf], .menu-fade-leave-to[data-v-3ebacf]
+.menu-fade-enter[data-v-5fd4d4], .menu-fade-leave-to[data-v-5fd4d4]
     /* .menu-fade-leave-active below version 2.1.8 */ {
     opacity: 0;
 }
-div.total-price[data-v-3ebacf] {
+div.total-price[data-v-5fd4d4] {
     font-size: 24pt;
 }
 table.dataTable {

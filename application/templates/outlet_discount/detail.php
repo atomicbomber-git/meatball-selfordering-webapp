@@ -16,7 +16,7 @@ use App\Helpers\Formatter;
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <a href="<?= base_url("outletMenu/index") ?>">
+                <a href="<?= base_url("outletDiscount/index") ?>">
                     Diskon
                 </a>
             </li>

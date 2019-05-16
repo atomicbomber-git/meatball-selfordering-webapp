@@ -34,4 +34,9 @@ class Discount extends BaseController {
         $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
         $this->redirectBack();
     }
+
+    public function store($discount_id)
+    {
+        ;
+    }
 }

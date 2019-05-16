@@ -1,7 +1,6 @@
 <template>
     <div class="card">
         <div class="card-body">
-
             <div class='form-group'>
                 <label for='starts_at'> Waktu Mulai: </label>
 
@@ -69,8 +68,12 @@
                     </tbody>
                 </table>
 
+                <div class="d-flex justify-content-end mt-5">
+                    <button :disabled="!this.is_submittable" class="btn btn-primary">
+                        Tambah Diskon
+                    </button>
+                </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -82,6 +85,7 @@ import VueCleave from "vue-cleave-component"
 import CleaveRange from "./CleaveRange"
 import { get } from 'lodash';
 import { currency_format } from '../numeral_helpers'
+import moment from 'moment'
 
 export default {
     props: [
@@ -112,6 +116,7 @@ export default {
     methods: {
         get,
         currency_format,
+        moment,
     },
 
     computed: {
@@ -121,6 +126,20 @@ export default {
         
         added_outlet_menu_items() {
             return this.m_outlet.outlet_menu_items.filter(({ is_added }) => is_added)
+        },
+
+        is_submittable() {
+            return (this.final_form.starts_at !== null) &&
+                (this.final_form.ends_at !== null) &&
+                (this.final_form.outlet_menu_items.length !== 0)
+        },
+
+        final_form() {
+            return {
+                starts_at: this.starts_at ? moment(this.starts_at).format("Y-m-d h:mm:ss") : null,
+                ends_at: this.ends_at ? moment(this.ends_at).format("Y-m-d h:mm:ss") : null,
+                outlet_menu_items: this.added_outlet_menu_items.map(({ id, percentage }) => ({ id, percentage }))
+            }
         },
     },
 

@@ -17,12 +17,12 @@ use function GuzzleHttp\json_encode;
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <a href="<?= base_url("outletMenu/index") ?>">
+                <a href="<?= base_url("outletDiscount/index") ?>">
                     Diskon
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <a href="<?= base_url("outletMenu/detail/{$outlet->id}") ?>">
+                <a href="<?= base_url("outletDiscount/detail/{$outlet->id}") ?>">
                     '<?= $outlet->name ?>'
                 </a>
             </li>
@@ -41,6 +41,8 @@ use function GuzzleHttp\json_encode;
 
     <div id="app">
         <discount-create
+            :submit_url="<?= base_url("discount/store/{$outlet->id}") ?>"
+            :redirect_url="<?= base_url("outletDiscount/detail/{$outlet->id}") ?>"
             :outlet='<?= json_encode($outlet) ?>'
             />
     </div>

@@ -42,4 +42,14 @@ function currency_format(value) {
     return numeral(converted).format('0,0.00[00]')
 }
 
-module.exports = { numeral, number_format, currency_format }
+function percent_format(value) {
+    const orig_locale = numeral.locale()
+
+    numeral.locale('en')
+    const converted = numeral(value).value()
+    numeral.locale(orig_locale)
+
+    return numeral(converted).format('0.00%')
+}
+
+module.exports = { numeral, number_format, currency_format, percent_format }

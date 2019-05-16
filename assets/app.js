@@ -13132,10 +13132,23 @@ function currency_format(value) {
   return (0, _numeral.default)(converted).format('0,0.00[00]');
 }
 
+function percent_format(value) {
+  var orig_locale = _numeral.default.locale();
+
+  _numeral.default.locale('en');
+
+  var converted = (0, _numeral.default)(value).value();
+
+  _numeral.default.locale(orig_locale);
+
+  return (0, _numeral.default)(converted).format('0.00%');
+}
+
 module.exports = {
   numeral: _numeral.default,
   number_format: number_format,
-  currency_format: currency_format
+  currency_format: currency_format,
+  percent_format: percent_format
 };
 },{"numeral":"../../node_modules/numeral/numeral.js"}],"../../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
@@ -44188,6 +44201,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ["sales_invoice", "submit_url", "redirect_url", "update_and_confirm_url"],
   components: {
@@ -44202,6 +44227,7 @@ var _default = {
   methods: {
     get: _lodash.get,
     currency_format: _numeral_helpers.currency_format,
+    percent_format: _numeral_helpers.percent_format,
     vsprintf: _sprintfJs.vsprintf,
     confirmTransaction: function confirmTransaction() {
       var _this = this;
@@ -44329,10 +44355,38 @@ exports.default = _default;
               _vm._v(
                 "\n                    " +
                   _vm._s(
+                    _vm.percent_format(
+                      _vm.get(
+                        _vm.sales_invoice.discount_map[
+                          planned_sales_invoice_item.menu_item.outlet_menu_item
+                            .id
+                        ],
+                        "percentage",
+                        0
+                      )
+                    )
+                  ) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(
                     _vm.currency_format(
                       planned_sales_invoice_item.quantity *
                         planned_sales_invoice_item.menu_item.outlet_menu_item
-                          .price
+                          .price *
+                        (1 -
+                          _vm.get(
+                            _vm.sales_invoice.discount_map[
+                              planned_sales_invoice_item.menu_item
+                                .outlet_menu_item.id
+                            ],
+                            "percentage",
+                            0
+                          ))
                     )
                   ) +
                   "\n                "
@@ -44349,6 +44403,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [_vm._v(" Sub Total ")]),
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
@@ -44357,6 +44413,8 @@ exports.default = _default;
         ]),
         _vm._v(" "),
         _c("tr", [
+          _c("th"),
+          _vm._v(" "),
           _c("th"),
           _vm._v(" "),
           _c("th"),
@@ -44379,6 +44437,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
             _vm._v(
               " Service Charge " +
@@ -44397,6 +44457,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [_vm._v(" Total ")]),
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
@@ -44405,6 +44467,8 @@ exports.default = _default;
         ]),
         _vm._v(" "),
         _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
           _c("th"),
           _vm._v(" "),
           _c("th"),
@@ -44421,6 +44485,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [_vm._v(" Rounding ")]),
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
@@ -44429,6 +44495,8 @@ exports.default = _default;
         ]),
         _vm._v(" "),
         _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
           _c("th"),
           _vm._v(" "),
           _c("th"),
@@ -44573,9 +44641,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-right" }, [_vm._v(" Harga Satuan ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [
-          _vm._v(" Jumlah x Harga Satuan ")
-        ])
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Diskon ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" })
       ])
     ])
   }
@@ -81124,7 +81192,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34043" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46497" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

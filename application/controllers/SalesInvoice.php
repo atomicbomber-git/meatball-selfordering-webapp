@@ -11,6 +11,7 @@ use App\EloquentModels\OutletMenuItem;
 use App\Helpers\Formatter;
 use Mike42\Escpos\Printer;
 use Carbon\Carbon as Date;
+use App\EloquentModels\Item;
 
 class SalesInvoice extends BaseController
 {
@@ -67,6 +68,8 @@ class SalesInvoice extends BaseController
                 $query->where("outlet_id", $outlet->id);
             }
         ]);
+
+        $sales_invoice->append("discount_map");
 
         $sales_invoice->sorted_planned_sales_invoice_items = $sales_invoice->planned_sales_invoice_items
             ->sortBy(function ($psi_item) {
@@ -141,7 +144,7 @@ class SalesInvoice extends BaseController
             ["type", "tipe pemesanan", "required",],
             ["cash", "jumlah pembayaran", "required"],
         ]);
-        
+
         /* Authenticates the supervisor */
         if (!password_verify($this->input->post('password'), $outlet->supervisor->password)) {
             $this->error(403, "Kata sandi keliru");
@@ -173,8 +176,7 @@ class SalesInvoice extends BaseController
 
         if ($this->input->post("cash") < $rounding) {
             DB::rollback();
-        }
-        else {
+        } else {
             DB::commit();
         }
 
@@ -539,7 +541,8 @@ class SalesInvoice extends BaseController
         return $separator_text;
     }
 
-    private function receiptRowFormat() {
+    private function receiptRowFormat()
+    {
         $column_01_length = self::RECEIPT_COLUMN_01_LENGTH;
         $column_02_length = self::RECEIPT_COLUMN_02_LENGTH;
         return "%-{$column_01_length}.{$column_01_length}s%{$column_02_length}.{$column_02_length}s\n";

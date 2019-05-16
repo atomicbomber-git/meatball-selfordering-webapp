@@ -32,6 +32,7 @@
                 <thead class="thead thead-dark">
                     <tr>
                         <th> Nomor Pesanan </th>
+                        <th> Waktu </th>
                         <th> Kendali </th>
                     </tr>
                 </thead>
@@ -40,6 +41,7 @@
                     <?php foreach($sales_invoices as $sales_invoice): ?>
                     <tr>
                         <td> <?= $sales_invoice->number ?> </td>
+                        <td> <?= $sales_invoice->created_at ?> </td>
                         <td>
                             <a href="<?= base_url("salesInvoice/confirm/{$sales_invoice->id}") ?>" class="btn btn-dark btn-sm">
                                 Konfirmasi

@@ -6,7 +6,8 @@
                     <th> Item </th>
                     <th class="text-right"> Jumlah </th>
                     <th class="text-right"> Harga Satuan </th>
-                    <th class="text-right"> Jumlah x Harga Satuan </th>
+                    <th class="text-right"> Diskon </th>
+                    <th class="text-right"> </th>
                 </tr>
             </thead>
             <tbody class="table-bordered">
@@ -17,22 +18,28 @@
                     <td class="text-right"> {{ planned_sales_invoice_item.quantity }} </td>
                     <td class="text-right"> {{ currency_format(planned_sales_invoice_item.menu_item.outlet_menu_item.price) }} </td>
                     <td class="text-right">
+                        {{ percent_format( get(sales_invoice.discount_map[planned_sales_invoice_item.menu_item.outlet_menu_item.id], "percentage", 0) ) }}
+                    </td>
+                    <td class="text-right">
                         {{ currency_format(
                             planned_sales_invoice_item.quantity *
-                            planned_sales_invoice_item.menu_item.outlet_menu_item.price) }}
+                            planned_sales_invoice_item.menu_item.outlet_menu_item.price *
+                            (1 - get(sales_invoice.discount_map[planned_sales_invoice_item.menu_item.outlet_menu_item.id], "percentage", 0))) }}
                     </td>
                 </tr>
             </tbody>
 
             <tfoot class="table-borderless">
                 <tr>
-                    <th>  </th>
-                    <th>  </th>
+                    <th> </th>
+                    <th> </th>
+                    <th> </th>
                     <th class="text-right"> Sub Total </th>
                     <th class="text-right"> {{ currency_format(pretax_sum) }} </th>
                 </tr>
 
                 <tr>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th class="text-right"> Tax {{ sales_invoice.outlet.pajak_pertambahan_nilai }}% </th>
@@ -42,11 +49,13 @@
                 <tr>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th class="text-right"> Service Charge {{ sales_invoice.outlet.service_charge }}% </th>
                     <th class="text-right"> {{ currency_format(service_charge) }} </th>
                 </tr>
 
                 <tr class="border-top">
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th class="text-right"> Total </th>
@@ -56,6 +65,7 @@
                 <tr class="border-top">
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th class="text-right"> Cash </th>
                     <th class="text-right"> {{ currency_format(cash) }} </th>
                 </tr>
@@ -63,11 +73,13 @@
                 <tr>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th class="text-right"> Rounding </th>
                     <th class="text-right"> {{ currency_format(rounding) }} </th>
                 </tr>
 
                 <tr class="border-top">
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th class="text-right"> Total Change </th>
@@ -134,7 +146,7 @@
 <script>
 
 import { vsprintf } from "sprintf-js"
-import { currency_format } from "../numeral_helpers"
+import { currency_format, percent_format } from "../numeral_helpers"
 import { get } from "lodash"
 import order_types from "../order_types"
 import VueCleave from "vue-cleave-component"
@@ -156,6 +168,7 @@ export default {
     methods: {
         get,
         currency_format,
+        percent_format,
         vsprintf,
 
         confirmTransaction() {
@@ -205,6 +218,8 @@ export default {
 
         pretax_sum() {
             return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
+                
+                
                 return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
             }, 0)
         },

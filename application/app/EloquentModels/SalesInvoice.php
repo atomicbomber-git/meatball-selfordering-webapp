@@ -3,6 +3,8 @@
 namespace App\EloquentModels;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Capsule\Manager as DB;
+use Carbon\Carbon;
 
 class SalesInvoice extends Model
 {
@@ -41,6 +43,24 @@ class SalesInvoice extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class, "outlet_id", "outlet_id");
+    }
+
+    public function getDiscountMapAttribute()
+    {
+        $this->loadMissing(["discounts" => function ($query) {
+            $query->whereTime("starts_at", "<", $this->created_at);
+            $query->whereTime("ends_at", ">", $this->created_at);
+        }, "discounts.discount_menu_items"]);
+
+        return $this->discounts->reduce(function ($curr, $next) {
+            return $curr->merge($next->discount_menu_items);
+        }, collect())
+        ->keyBy("outlet_menu_item_id");
+    }
+
     /* The `pretax_total` attrribute */
     public function getPretaxTotalAttribute()
     {
@@ -51,7 +71,9 @@ class SalesInvoice extends Model
         }]);
 
         return $this->planned_sales_invoice_items->sum(function ($sales_invoice_item) {
-            return $sales_invoice_item->quantity * $sales_invoice_item->menu_item->outlet_menu_item->price;
+            return $sales_invoice_item->quantity *
+                $sales_invoice_item->menu_item->outlet_menu_item->price *
+                1 - ($this->discount_map[$sales_invoice_item->menu_item->outlet_menu_item->id]->percentage ?? 1);
         });
     }
 

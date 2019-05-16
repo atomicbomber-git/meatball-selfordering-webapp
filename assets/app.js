@@ -22349,7 +22349,7 @@ exports.default = _default;
     "div",
     { staticClass: "row" },
     [
-      _c("div", { staticClass: "col-lg-8" }, [
+      _c("div", { staticClass: "col-lg-8 pr-2" }, [
         _c("div", { staticClass: "card" }, [
           _c(
             "div",
@@ -22576,7 +22576,7 @@ exports.default = _default;
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-lg-4" }, [
+      _c("div", { staticClass: "col-lg-4 pl-0" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
             _c("h1", { staticClass: "h5 text-info" }, [

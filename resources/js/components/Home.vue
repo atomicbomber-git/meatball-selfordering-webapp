@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-8 pr-2">
             <div class="card">
                 <div class="card-body">
                     <transition name="menu-fade" mode="out-in">
@@ -109,7 +109,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4 pl-0">
             <div class="card">
                 <div class="card-body">
                     <h1 class="h5 text-info">DAFTAR PESANAN</h1>

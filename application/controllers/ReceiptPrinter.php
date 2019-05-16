@@ -33,7 +33,7 @@ class ReceiptPrinter extends BaseController
         $outlet = Auth::user()->outlet ?: $this->error403();
         $receipt_printers = $outlet->receipt_printers;
 
-        $print_server_url = "http://localhost:8002";
+        $print_server_url = $outlet->print_server_url;
         $this->template->render("receipt_printer/index", compact("receipt_printers", "print_server_url"));
     }
     

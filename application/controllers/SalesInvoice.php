@@ -382,10 +382,26 @@ class SalesInvoice extends BaseController
         $text .= $this->receiptTextSeparator();
 
         foreach ($sales_invoice->planned_sales_invoice_items as $psi_item) {
-            $text .= sprintf($format, $psi_item->menu_item->name, "x {$psi_item->quantity}");
+            $item_quantity = sprintf("%2s%s", $psi_item->quantity, "x {$psi_item->menu_item->name}");
+            $text .= sprintf($format, $item_quantity, "");
         }
 
+        $type_text = (SalesInvoiceModel::TYPES_EN[$sales_invoice->type] ?? "-") . "\n";
+        $type_text .= $this->receiptTextSeparator();
+
         $commands = [
+            [
+                "name" => "selectPrintMode",
+                "arguments" => [["data" => Printer::MODE_EMPHASIZED, "type" => "integer"]],
+            ],
+            [
+                "name" => "text",
+                "arguments" => [["data" => $type_text, "type" => "string"]],
+            ],
+            [
+                "name" => "selectPrintMode",
+                "arguments" => [["data" => Printer::MODE_FONT_A, "type" => "integer"]],
+            ],
             [
                 "name" => "text",
                 "arguments" => [["data" => $text, "type" => "string"]],
@@ -393,7 +409,7 @@ class SalesInvoice extends BaseController
             [
                 "name" => "cut",
                 "arguments" => [],
-            ]
+            ],
         ];
 
         return [
@@ -461,9 +477,12 @@ class SalesInvoice extends BaseController
         /* Receipt Items */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
         foreach ($sales_invoice->sales_invoice_items as $sales_invoice_item) {
+            
+            $item_quantity = sprintf("%2s%s", $sales_invoice_item->quantity, "x {$sales_invoice_item->name}");
+
             $text .= sprintf(
                 $format,
-                "{$sales_invoice_item->name} x{$sales_invoice_item->quantity}",
+                $item_quantity,
                 Formatter::currency($sales_invoice_item->price * $sales_invoice_item->quantity)
             );
         }

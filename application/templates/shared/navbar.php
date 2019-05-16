@@ -41,6 +41,11 @@ use App\Helpers\URL;
                                     Menu Outlet
                                 </a>
 
+                                <a href="<?= base_url("outletDiscount/index") ?>" class="dropdown-item">
+                                    <i class="fa fa-percent"></i>
+                                    Diskon
+                                </a>
+
                             </div>
                         </li>
 

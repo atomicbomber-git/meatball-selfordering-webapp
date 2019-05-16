@@ -6,3 +6,10 @@
 
 // Vue Multiselect
 @import '../../node_modules/vue-multiselect/dist/vue-multiselect.min.css';
+
+// Vue Datetime
+@import '../../node_modules/vue-datetime/dist//vue-datetime.css';
+
+td, th {
+    vertical-align: middle !important
+}

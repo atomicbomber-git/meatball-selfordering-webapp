@@ -38,7 +38,7 @@ use App\Helpers\AppInfo;
                     <tr>
                         <th> # </th>
                         <th> Kategori Menu </th>
-                        <th> Kendali </th>
+                        <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -47,7 +47,7 @@ use App\Helpers\AppInfo;
                     <tr>
                         <td> <?= $menu_category->id ?> </td>
                         <td> <?= $menu_category->name ?> </td>
-                        <td>
+                        <td class="text-center">
                             <a class="btn btn-dark btn-sm" href="<?= base_url("outletMenuItem/index/{$outlet->id}/{$menu_category->id}") ?>">
                                 Detail
                             </a>

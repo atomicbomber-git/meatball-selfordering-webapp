@@ -62616,7 +62616,361 @@ render._withStripped = true
         
       }
     })();
-},{"vue-datetime":"../../node_modules/vue-datetime/dist/vue-datetime.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","./CleaveRange":"components/CleaveRange.vue","lodash":"../../node_modules/lodash/lodash.js","../numeral_helpers":"numeral_helpers.js","moment":"../../node_modules/moment/moment.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
+},{"vue-datetime":"../../node_modules/vue-datetime/dist/vue-datetime.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","./CleaveRange":"components/CleaveRange.vue","lodash":"../../node_modules/lodash/lodash.js","../numeral_helpers":"numeral_helpers.js","moment":"../../node_modules/moment/moment.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/OutletMenuItemCreate.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vueMultiselect = require("vue-multiselect");
+
+var _vueCleaveComponent = _interopRequireDefault(require("vue-cleave-component"));
+
+var _lodash = require("lodash");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: ["menu_category", "submit_url", "redirect_url"],
+  components: {
+    Multiselect: _vueMultiselect.Multiselect,
+    VueCleave: _vueCleaveComponent.default
+  },
+  data: function data() {
+    return {
+      selected_menu_item: null,
+      price: null,
+      error_data: null
+    };
+  },
+  computed: {
+    final_form: function final_form() {
+      return {
+        menu_item_id: (0, _lodash.get)(this.selected_menu_item, "id", null),
+        price: this.price
+      };
+    }
+  },
+  methods: {
+    get: _lodash.get,
+    submitForm: function submitForm() {
+      var _this = this;
+
+      $.post(this.submit_url, _objectSpread({
+        token: window.token
+      }, this.final_form)).done(function (response) {
+        _this.error_data = null;
+        window.location.replace(_this.redirect_url);
+      }).fail(function (xhr, status, error) {
+        var response = JSON.parse(xhr.responseText);
+        _this.error_data = response.data;
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $ab210d = exports.default || module.exports;
+      
+      if (typeof $ab210d === 'function') {
+        $ab210d = $ab210d.options;
+      }
+    
+        /* template */
+        Object.assign($ab210d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          _c("label", { attrs: { for: "menu_item" } }, [
+            _vm._v(" Menu Item: ")
+          ]),
+          _vm._v(" "),
+          _c("multiselect", {
+            attrs: {
+              placeholder: "Nama Menu",
+              selectLabel: "",
+              deselectLabel: "",
+              "track-by": "id",
+              label: "name",
+              options: _vm.menu_category.menu_items,
+              "preselect-first": false
+            },
+            model: {
+              value: _vm.selected_menu_item,
+              callback: function($$v) {
+                _vm.selected_menu_item = $$v
+              },
+              expression: "selected_menu_item"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          _c("label", { attrs: { for: "price" } }, [_vm._v(" Harga (Rp.): ")]),
+          _vm._v(" "),
+          _c(
+            "vue-cleave",
+            {
+              staticClass: "form-control",
+              attrs: {
+                options: {
+                  numeral: true,
+                  numeralDecimalMark: ",",
+                  delimiter: "."
+                }
+              },
+              model: {
+                value: _vm.price,
+                callback: function($$v) {
+                  _vm.price = _vm._n($$v)
+                },
+                expression: "price"
+              }
+            },
+            [
+              _c("div", { staticClass: "invalid-feedback" }, [
+                _vm._v(_vm._s(_vm.get(this.error_data, "errors.price", false)))
+              ])
+            ]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex justify-content-end" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", on: { click: _vm.submitForm } },
+          [_vm._v("\n                Tambahkan Menu Baru\n            ")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$ab210d', $ab210d);
+          } else {
+            api.reload('$ab210d', $ab210d);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","lodash":"../../node_modules/lodash/lodash.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/OutletMenuItemEdit.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vueMultiselect = require("vue-multiselect");
+
+var _vueCleaveComponent = _interopRequireDefault(require("vue-cleave-component"));
+
+var _lodash = require("lodash");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: ["menu_category", "submit_url", "redirect_url"],
+  components: {
+    Multiselect: _vueMultiselect.Multiselect,
+    VueCleave: _vueCleaveComponent.default
+  },
+  data: function data() {
+    return {
+      selected_menu_item: null,
+      price: null,
+      error_data: null
+    };
+  },
+  computed: {
+    final_form: function final_form() {
+      return {
+        menu_item_id: (0, _lodash.get)(this.selected_menu_item, "id", null),
+        price: this.price
+      };
+    }
+  },
+  methods: {
+    get: _lodash.get,
+    submitForm: function submitForm() {
+      var _this = this;
+
+      $.post(this.submit_url, _objectSpread({
+        token: window.token
+      }, this.final_form)).done(function (response) {
+        _this.error_data = null;
+        window.location.replace(_this.redirect_url);
+      }).fail(function (xhr, status, error) {
+        var response = JSON.parse(xhr.responseText);
+        _this.error_data = response.data;
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $6ef7f0 = exports.default || module.exports;
+      
+      if (typeof $6ef7f0 === 'function') {
+        $6ef7f0 = $6ef7f0.options;
+      }
+    
+        /* template */
+        Object.assign($6ef7f0, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          _c("label", { attrs: { for: "menu_item" } }, [
+            _vm._v(" Menu Item: ")
+          ]),
+          _vm._v(" "),
+          _c("multiselect", {
+            attrs: {
+              placeholder: "Nama Menu",
+              selectLabel: "",
+              deselectLabel: "",
+              "track-by": "id",
+              label: "name",
+              options: _vm.menu_category.menu_items,
+              "preselect-first": false
+            },
+            model: {
+              value: _vm.selected_menu_item,
+              callback: function($$v) {
+                _vm.selected_menu_item = $$v
+              },
+              expression: "selected_menu_item"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          _c("label", { attrs: { for: "price" } }, [_vm._v(" Harga (Rp.): ")]),
+          _vm._v(" "),
+          _c(
+            "vue-cleave",
+            {
+              staticClass: "form-control",
+              attrs: {
+                options: {
+                  numeral: true,
+                  numeralDecimalMark: ",",
+                  delimiter: "."
+                }
+              },
+              model: {
+                value: _vm.price,
+                callback: function($$v) {
+                  _vm.price = _vm._n($$v)
+                },
+                expression: "price"
+              }
+            },
+            [
+              _c("div", { staticClass: "invalid-feedback" }, [
+                _vm._v(_vm._s(_vm.get(this.error_data, "errors.price", false)))
+              ])
+            ]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex justify-content-end" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", on: { click: _vm.submitForm } },
+          [_vm._v("\n                Tambahkan Menu Baru\n            ")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$6ef7f0', $6ef7f0);
+          } else {
+            api.reload('$6ef7f0', $6ef7f0);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","lodash":"../../node_modules/lodash/lodash.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -95979,6 +96333,10 @@ _vue.default.component("discount-create", require("./components/DiscountCreate.v
 
 _vue.default.component("discount-edit", require("./components/DiscountEdit.vue").default);
 
+_vue.default.component("outlet-menu-item-create", require("./components/OutletMenuItemCreate.vue").default);
+
+_vue.default.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.vue").default);
+
 try {
   window.Popper = require('popper.js').default;
   window.$ = window.jQuery = require('jquery');
@@ -95995,7 +96353,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","./components/DiscountCreate.vue":"components/DiscountCreate.vue","./components/DiscountEdit.vue":"components/DiscountEdit.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","./components/DiscountCreate.vue":"components/DiscountCreate.vue","./components/DiscountEdit.vue":"components/DiscountEdit.vue","./components/OutletMenuItemCreate.vue":"components/OutletMenuItemCreate.vue","./components/OutletMenuItemEdit.vue":"components/OutletMenuItemEdit.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -96023,7 +96381,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34229" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35237" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

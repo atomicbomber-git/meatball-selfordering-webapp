@@ -33,7 +33,7 @@ use App\Helpers\AppInfo;
                     <tr>
                         <th> # </th>
                         <th> Nama Outlet </th>
-                        <th> Kendali </th>
+                        <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -42,7 +42,7 @@ use App\Helpers\AppInfo;
                     <tr>
                         <td> <?= $outlet->id ?> </td>
                         <td> <?= $outlet->name ?> </td>
-                        <td>
+                        <td class="text-center">
                             <a
                                 href="<?= base_url("outletMenu/detail/{$outlet->id}") ?>"
                                 class="btn btn-dark btn-sm">

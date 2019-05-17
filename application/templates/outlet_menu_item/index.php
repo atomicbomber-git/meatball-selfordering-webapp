@@ -21,7 +21,9 @@ use App\Helpers\Formatter;
                 </a>
             </li>
             <li class="breadcrumb-item">
-                '<?= $outlet->name ?>'
+                <a href="<?= base_url("outletMenu/detail/{$outlet->id}") ?>">
+                    '<?= $outlet->name ?>'
+                </a>
             </li>
             <li class="breadcrumb-item">
                 '<?= $menu_category->name ?>'
@@ -30,7 +32,7 @@ use App\Helpers\Formatter;
     </nav>
 
     <div class="text-right my-3">
-        <a href="<?= base_url("outletMenuItem/create/{$outlet->id}") ?>" class="btn btn-dark">
+        <a href="<?= base_url("outletMenuItem/create/{$outlet->id}/{$menu_category->id}") ?>" class="btn btn-dark">
             Tambahkan Menu
         </a>
     </div>
@@ -51,20 +53,35 @@ use App\Helpers\Formatter;
                         <th> # </th>
                         <th> Menu </th>
                         <th class="text-right"> Harga (Rp.) </th>
-                        <th> Kendali </th>
+                        <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php foreach($outlet_menu_items as $outlet_menu_item): ?>
+                    <?php foreach($outlet_menu_items as $key => $outlet_menu_item): ?>
                     <tr>
-                        <td> <?= $outlet_menu_item->id ?> </td>
+                        <td> <?= $key + 1 ?>. </td>
                         <td> <?= $outlet_menu_item->menu_item->name ?> </td>
                         <td class="text-right"> <?= Formatter::currency($outlet_menu_item->price) ?> </td>
-                        <td>
-                            <button class="btn btn-sm btn-dark">
+                        <td class="text-center">
+                            <a
+                                href="<?= base_url("outletMenuItem/edit/{$outlet_menu_item->id}") ?>"
+                                class="btn btn-sm btn-dark">
                                 Ubah
-                            </button>
+                            </a>
+                            
+                            <form
+                                class="d-inline-block confirmed"
+                                method="POST"
+                                action="<?= base_url("outletMenuItem/delete/{$outlet_menu_item->id}") ?>"
+                                >
+                                <input type="hidden"
+                                    name="<?= $this->csrf_name() ?>"
+                                    value="<?= $this->csrf_token() ?>">
+                                <button class="btn btn-danger btn-sm">
+                                    Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     <?php endforeach ?>

@@ -61,8 +61,8 @@ use App\Helpers\Formatter;
                         <td> <?= Formatter::datetime($discount->starts_at) ?> </td>
                         <td> <?= Formatter::datetime($discount->ends_at) ?> </td>
                         <td>
-                            <a class="btn btn-dark btn-sm" href="">
-                                Ubah
+                            <a class="btn btn-dark btn-sm" href="<?= base_url("discount/edit/{$discount->id}") ?>">
+                                Detail / Ubah
                             </a>
 
                             <form class="d-inline-block confirmed" method="POST" action="<?= base_url("discount/delete/{$discount->id}") ?>" >

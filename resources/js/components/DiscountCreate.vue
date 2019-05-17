@@ -1,25 +1,36 @@
 <template>
     <div class="card">
         <div class="card-body">
+
+            <div class='form-group'>
+                <label for='name'> Nama Program Diskon: </label>
+                <input
+                    v-model='name'
+                    class='form-control'
+                    :class="{'is-invalid': get(this.error_data, 'errors.name', false)}"
+                    type='text' id='name' placeholder='Nama Program Diskon'>
+                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.name', false) }}</div>
+            </div>
+
             <div class='form-group'>
                 <label for='starts_at'> Waktu Mulai: </label>
 
                 <datetime
-                    :input-class="{'form-control': true, 'is-invalid': get(this.error_data, 'errors.starts_at[0]', false)}"
+                    :input-class="{'form-control': true, 'is-invalid': get(this.error_data, 'errors.starts_at', false)}"
                     placeholder="Waktu Mulai"
                     type="datetime" v-model="starts_at"></datetime>
 
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.starts_at[0]', false) }}</div>
+                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.starts_at', false) }}</div>
             </div>
 
             <div class='form-group'>
                 <label for='ends_at'> Waktu Selesai: </label>
 
                 <datetime
-                    :input-class="{'form-control': true, 'is-invalid': get(this.error_data, 'errors.ends_at[0]', false)}"
+                    :input-class="{'form-control': true, 'is-invalid': get(this.error_data, 'errors.ends_at', false)}"
                     placeholder="Waktu Selesai"
                     type="datetime" v-model="ends_at"></datetime>
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.ends_at[0]', false) }}</div>
+                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.ends_at', false) }}</div>
             </div>
 
             <div class="form-group">
@@ -69,7 +80,7 @@
                 </table>
 
                 <div class="d-flex justify-content-end mt-5">
-                    <button :disabled="!this.is_submittable" class="btn btn-primary">
+                    <button @click="submitForm" :disabled="!this.is_submittable" class="btn btn-primary">
                         Tambah Diskon
                     </button>
                 </div>
@@ -95,6 +106,7 @@ export default {
 
     data() {
         return {
+            name: null,
             starts_at: null,
             ends_at: null,
             error_data: null,
@@ -117,6 +129,18 @@ export default {
         get,
         currency_format,
         moment,
+
+        submitForm() {
+            $.post(this.submit_url, {token: window.token, ...this.final_form})
+                .done(response => {
+                    this.error_data = null;
+                    window.location.replace(this.redirect_url);
+                })
+                .fail((xhr, status, error) => {
+                    let response = xhr.responseJSON;
+                    this.error_data = response.data;
+                });
+        }
     },
 
     computed: {
@@ -136,8 +160,9 @@ export default {
 
         final_form() {
             return {
-                starts_at: this.starts_at ? moment(this.starts_at).format("Y-m-d h:mm:ss") : null,
-                ends_at: this.ends_at ? moment(this.ends_at).format("Y-m-d h:mm:ss") : null,
+                name: this.name,
+                starts_at: this.starts_at ? moment(this.starts_at).format("YYYY-MM-DD HH:mm:ss") : null,
+                ends_at: this.ends_at ? moment(this.ends_at).format("YYYY-MM-DD HH:mm:ss") : null,
                 outlet_menu_items: this.added_outlet_menu_items.map(({ id, percentage }) => ({ id, percentage }))
             }
         },

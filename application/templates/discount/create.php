@@ -41,8 +41,8 @@ use function GuzzleHttp\json_encode;
 
     <div id="app">
         <discount-create
-            :submit_url="<?= base_url("discount/store/{$outlet->id}") ?>"
-            :redirect_url="<?= base_url("outletDiscount/detail/{$outlet->id}") ?>"
+            submit_url="<?= base_url("discount/store/{$outlet->id}") ?>"
+            redirect_url="<?= base_url("outletDiscount/detail/{$outlet->id}") ?>"
             :outlet='<?= json_encode($outlet) ?>'
             />
     </div>

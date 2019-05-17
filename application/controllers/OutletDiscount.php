@@ -9,6 +9,7 @@ class OutletDiscount extends BaseController {
         return [
             'index' => ['get'],
             'detail' => ['get'],
+            'edit' => ['get'],
         ];
     }
 
@@ -22,7 +23,10 @@ class OutletDiscount extends BaseController {
     {
         $outlet = Outlet::find($outlet_id) ?: $this->error404();
 
-        $outlet->load("discounts");
+        $outlet->load(["discounts" => function ($query) {
+            $query->orderByDesc("starts_at");
+            $query->orderByDesc("ends_at");
+        }]);
 
         $this->template->render("outlet_discount/detail", compact("outlet"));
     }

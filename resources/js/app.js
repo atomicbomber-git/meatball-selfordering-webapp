@@ -12,6 +12,7 @@ Vue.component("receipt-printer-index", require("./components/ReceiptPrinterIndex
 Vue.component("sales-invoice-confirm", require("./components/SalesInvoiceConfirm.vue").default)
 Vue.component("sales-invoice-update-and-confirm", require("./components/SalesInvoiceUpdateAndConfirm.vue").default)
 Vue.component("discount-create", require("./components/DiscountCreate.vue").default)
+Vue.component("discount-edit", require("./components/DiscountEdit.vue").default)
 
 try {
     window.Popper = require('popper.js').default;

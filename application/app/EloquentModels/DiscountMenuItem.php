@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class DiscountMenuItem extends Model
 {
     public $fillable = [
-        "discount_id", "sales_menu_item",
+        "discount_id",
+        "percentage",
+        "outlet_menu_item_id",
     ];
+
+    public function outlet_menu_item()
+    {
+        return $this->belongsTo(OutletMenuItem::class);
+    }
 }

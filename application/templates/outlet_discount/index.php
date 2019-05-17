@@ -38,9 +38,9 @@ use App\Helpers\AppInfo;
                 </thead>
 
                 <tbody>
-                    <?php foreach($outlets as $outlet): ?>
+                    <?php foreach($outlets as $key => $outlet): ?>
                     <tr>
-                        <td> <?= $outlet->id ?> </td>
+                        <td> <?= $key + 1 ?>. </td>
                         <td> <?= $outlet->name ?> </td>
                         <td>
                             <a

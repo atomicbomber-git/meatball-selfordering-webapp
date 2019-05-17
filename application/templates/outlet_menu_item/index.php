@@ -38,7 +38,9 @@ use App\Helpers\Formatter;
     <?php $this->insert("shared/message") ?>
 
     <h3>
-        Menu Outlet
+        <i class="fa fa-cutlery"></i>
+        Detail Menu Outlet '<?= $outlet->name ?>' <br/>
+        Kategori '<?= $menu_category->name ?>'
     </h3>
 
     <div class="card">

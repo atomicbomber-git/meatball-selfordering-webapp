@@ -21,8 +21,10 @@
         </ol>
     </nav>
 
-    <h1 class="mb-1"> Transaksi / Kasir </h1>
-    <hr class="mt-0"/>
+    <h3>
+        <i class="fa fa-usd"></i>
+        Transaksi / Kasir
+    </h3>
 
     <?php $this->insert("shared/message") ?>
 

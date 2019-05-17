@@ -33,6 +33,7 @@ class OutletMenuItem extends BaseController {
     public function create($outlet_id)
     {
         $outlet = Outlet::find($outlet_id);
-        $this->jsonResponse($outlet);
+
+        
     }
 }

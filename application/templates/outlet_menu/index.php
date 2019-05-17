@@ -22,6 +22,7 @@ use App\Helpers\AppInfo;
     <?php $this->insert("shared/message") ?>
 
     <h3>
+        <i class="fa fa-cutlery"></i>
         Menu Outlet
     </h3>
 

@@ -26,7 +26,7 @@ use App\Helpers\AppInfo;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3>
+    <h3 class="mb-3">
         <i class="fa fa-cutlery"></i>
         Detail Menu Outlet '<?= $outlet->name ?>'
     </h3>

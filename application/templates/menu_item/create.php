@@ -32,8 +32,9 @@
 
     <?php $this->insert("shared/message") ?>
 
-    <h3>
-        Detail Kategori Menu '<?= $menu_category->name ?>'
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
+        Tambahkan Menu Baru pada Kategori '<?= $menu_category->name ?>'
     </h3>
 
     <div class="card">

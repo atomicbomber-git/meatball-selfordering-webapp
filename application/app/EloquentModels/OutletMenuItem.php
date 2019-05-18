@@ -10,6 +10,11 @@ class OutletMenuItem extends Model
         "outlet_id", "menu_item_id", "price"
     ];
 
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
+
     public function menu_item()
     {
         return $this->belongsTo(MenuItem::class);

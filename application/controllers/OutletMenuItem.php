@@ -12,6 +12,8 @@ class OutletMenuItem extends BaseController {
             'index' => ['get'],
             'create' => ['get'],
             'store' => ['post'],
+            'edit' => ['get'],
+            'update' => ['post'],
             'delete' => ['post'],
         ];
     }
@@ -67,7 +69,30 @@ class OutletMenuItem extends BaseController {
     public function edit($outlet_menu_item_id)
     {
         $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+        
+        $outlet_menu_item->load([
+            "outlet:id,name",
+            "menu_item:id,name,menu_category_id",
+            "menu_item.menu_category:id,name",
+        ]);
+
         $this->template->render("outlet_menu_item/edit", compact("outlet_menu_item"));
+    }
+
+    public function update($outlet_menu_item_id)
+    {
+        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+
+        $this->validate([
+            ["price", "harga", "required"],
+        ]);
+
+        $outlet_menu_item->update([
+            "price" => $this->input->post("price"),
+        ]);
+
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+        $this->redirectBack();
     }
 
     public function delete($outlet_menu_item_id)

@@ -14,15 +14,21 @@
                     :options="menu_category.menu_items"
                     v-model="selected_menu_item"
                     :preselect-first="false"
-                />
+                >
+                </multiselect>
+                <div v-if="get(this.error_data, 'errors.menu_item_id', false)" class="text-danger small">
+                    {{ get(this.error_data, 'errors.menu_item_id', false) }}
+                </div>
             </div>
 
             <div class='form-group'>
                 <label for='price'> Harga (Rp.): </label>
                 <vue-cleave
                     class="form-control"
+                    :class="{'is-invalid': get(this.error_data, 'errors.price', false)}"
                     v-model.number="price"
-                    :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }" />
+                    :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }">
+                </vue-cleave>
                 <div class='invalid-feedback'>{{ get(this.error_data, 'errors.price', false) }}</div>
             </div>
 

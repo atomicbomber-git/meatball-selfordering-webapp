@@ -39,7 +39,7 @@ use App\Helpers\Formatter;
 
     <h3>
         <i class="fa fa-cutlery"></i>
-        Tambahkan Menu Outlet '<?= $outlet->name ?>' <br/>
+        Tambahkan Menu Outlet '<?= $outlet->name ?>'
         Kategori '<?= $menu_category->name ?>'
     </h3>
 

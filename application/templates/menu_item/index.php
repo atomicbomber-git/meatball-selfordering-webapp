@@ -35,7 +35,8 @@ use App\Helpers\Auth;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3>
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
         Detail Kategori Menu '<?= $menu_category->name ?>'
     </h3>
 
@@ -46,7 +47,7 @@ use App\Helpers\Auth;
                     <tr>
                         <th> # </th>
                         <th> Nama </th>
-                        <th> Kendali </th>
+                        <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -55,7 +56,7 @@ use App\Helpers\Auth;
                         <tr>
                             <td> <?= $key + 1 ?> </td>
                             <td> <?= $menu_item->name ?> </td>
-                            <td>
+                            <td class="text-center">
                                 <form class="confirmed d-inline-block" method="POST" action="<?= base_url("menuItem/delete/{$menu_item->id}") ?>">
                                     <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
 

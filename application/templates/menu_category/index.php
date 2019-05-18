@@ -29,7 +29,8 @@ use App\Helpers\Auth;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3>
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
         Kategori Menu
     </h3>
 
@@ -41,7 +42,7 @@ use App\Helpers\Auth;
                         <th> # </th>
                         <th> Nama </th>
                         <th> Gambar </th>
-                        <th> Kendali </th>
+                        <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -53,7 +54,7 @@ use App\Helpers\Auth;
                             <td>
                                 <img style="width: 320px; height: 240px; object-fit: cover" src="<?= base_url("menuCategory/image/{$menu_category->id}") ?>" alt="<?= $menu_category->name ?>">
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <a href="<?= base_url("menuCategory/edit/{$menu_category->id}") ?>" class="btn btn-sm btn-dark">
                                     Ubah
                                 </a>

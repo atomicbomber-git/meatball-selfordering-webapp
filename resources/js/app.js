@@ -16,6 +16,9 @@ Vue.component("discount-edit", require("./components/DiscountEdit.vue").default)
 Vue.component("outlet-menu-item-create", require("./components/OutletMenuItemCreate.vue").default)
 Vue.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.vue").default)
 
+// Load cleave.js
+require('cleave.js/dist/cleave')
+
 try {
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');

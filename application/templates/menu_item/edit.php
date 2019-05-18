@@ -30,6 +30,11 @@
         </ol>
     </nav>
 
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
+        Ubah Menu Item '<?= $menu_item->name ?>'
+    </h3>
+
     <?php $this->insert("shared/message") ?>
 
     <div class="card">

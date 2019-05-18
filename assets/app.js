@@ -62714,7 +62714,19 @@ exports.default = _default;
               },
               expression: "selected_menu_item"
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.get(this.error_data, "errors.menu_item_id", false)
+            ? _c("div", { staticClass: "text-danger small" }, [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(
+                      _vm.get(this.error_data, "errors.menu_item_id", false)
+                    ) +
+                    "\n            "
+                )
+              ])
+            : _vm._e()
         ],
         1
       ),
@@ -62725,31 +62737,30 @@ exports.default = _default;
         [
           _c("label", { attrs: { for: "price" } }, [_vm._v(" Harga (Rp.): ")]),
           _vm._v(" "),
-          _c(
-            "vue-cleave",
-            {
-              staticClass: "form-control",
-              attrs: {
-                options: {
-                  numeral: true,
-                  numeralDecimalMark: ",",
-                  delimiter: "."
-                }
-              },
-              model: {
-                value: _vm.price,
-                callback: function($$v) {
-                  _vm.price = _vm._n($$v)
-                },
-                expression: "price"
+          _c("vue-cleave", {
+            staticClass: "form-control",
+            class: {
+              "is-invalid": _vm.get(this.error_data, "errors.price", false)
+            },
+            attrs: {
+              options: {
+                numeral: true,
+                numeralDecimalMark: ",",
+                delimiter: "."
               }
             },
-            [
-              _c("div", { staticClass: "invalid-feedback" }, [
-                _vm._v(_vm._s(_vm.get(this.error_data, "errors.price", false)))
-              ])
-            ]
-          )
+            model: {
+              value: _vm.price,
+              callback: function($$v) {
+                _vm.price = _vm._n($$v)
+              },
+              expression: "price"
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "invalid-feedback" }, [
+            _vm._v(_vm._s(_vm.get(this.error_data, "errors.price", false)))
+          ])
         ],
         1
       ),
@@ -96335,7 +96346,10 @@ _vue.default.component("discount-edit", require("./components/DiscountEdit.vue")
 
 _vue.default.component("outlet-menu-item-create", require("./components/OutletMenuItemCreate.vue").default);
 
-_vue.default.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.vue").default);
+_vue.default.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.vue").default); // Load cleave.js
+
+
+require('cleave.js/dist/cleave');
 
 try {
   window.Popper = require('popper.js').default;
@@ -96353,7 +96367,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","./components/DiscountCreate.vue":"components/DiscountCreate.vue","./components/DiscountEdit.vue":"components/DiscountEdit.vue","./components/OutletMenuItemCreate.vue":"components/OutletMenuItemCreate.vue","./components/OutletMenuItemEdit.vue":"components/OutletMenuItemEdit.vue","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","./components/DiscountCreate.vue":"components/DiscountCreate.vue","./components/DiscountEdit.vue":"components/DiscountEdit.vue","./components/OutletMenuItemCreate.vue":"components/OutletMenuItemCreate.vue","./components/OutletMenuItemEdit.vue":"components/OutletMenuItemEdit.vue","cleave.js/dist/cleave":"../../node_modules/cleave.js/dist/cleave.js","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -96381,7 +96395,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35237" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41731" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -14,6 +14,11 @@ class Formatter {
     {
         return sprintf("%04d", $value);
     }
+    
+    public static function number($value)
+    {
+        return number_format($value, 2, ",", ".");
+    }
 
     public static function datetime($value)
     {

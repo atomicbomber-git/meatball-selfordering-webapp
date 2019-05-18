@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Outlet extends Model
 {
+    public $fillable = [
+        "id", "name", "address", "brand", "phone",
+        "pajak_pertambahan_nilai", "service_charge", "print_server_url",
+        "npwpd", "storage_manager_id", "supervisor_id"
+    ];
+
+    public $timestamps = false;
+
     public function supervisor()
     {
         return $this->belongsTo(User::class);

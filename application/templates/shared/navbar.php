@@ -28,6 +28,12 @@ use App\Helpers\URL;
                                 Master Data
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a href="<?= base_url("outlet/index") ?>" class="dropdown-item">
+                                    <i class="fa fa-building"></i>
+                                    Outlet
+                                </a>
+
                                 <?php if (MenuCategoryPolicy::canIndex(Auth::user())) : ?>
 
                                 <a class="dropdown-item" href="<?= base_url("menuCategory/index") ?>">
@@ -48,9 +54,6 @@ use App\Helpers\URL;
 
                             </div>
                         </li>
-
-
-
 
                         <?php if (ReceiptPrinterPolicy::canIndex(Auth::user())) : ?>
 

@@ -27,6 +27,11 @@ use App\Helpers\Auth;
         </ol>
     </nav>
 
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
+        Detail Kategori Menu '<?= $menu_category->name ?>'
+    </h3>
+
     <div class="text-right my-3">
         <a href="<?= base_url("menuItem/create/{$menu_category->id}") ?>" class="btn btn-dark">
             Tambahkan Menu Baru
@@ -34,11 +39,6 @@ use App\Helpers\Auth;
     </div>
 
     <?php $this->insert("shared/message") ?>
-
-    <h3 class="mb-3">
-        <i class="fa fa-list"></i>
-        Detail Kategori Menu '<?= $menu_category->name ?>'
-    </h3>
 
     <div class="card">
         <div class="card-body">

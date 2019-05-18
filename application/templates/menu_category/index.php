@@ -21,6 +21,11 @@ use App\Helpers\Auth;
         </ol>
     </nav>
 
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
+        Kategori Menu
+    </h3>
+
     <div class="text-right my-3">
         <a href="<?= base_url('menuCategory/create') ?>" class="btn btn-dark">
             Tambahkan Kategori Menu Baru
@@ -28,11 +33,6 @@ use App\Helpers\Auth;
     </div>
 
     <?php $this->insert("shared/message") ?>
-
-    <h3 class="mb-3">
-        <i class="fa fa-list"></i>
-        Kategori Menu
-    </h3>
 
     <div class="card">
         <div class="card-body">

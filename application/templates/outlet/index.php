@@ -1,8 +1,6 @@
 <?php
 use App\Helpers\DefaultRoute;
 use App\Helpers\AppInfo;
-use App\Helpers\Formatter;
-
 ?>
 
 <?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
@@ -15,30 +13,24 @@ use App\Helpers\Formatter;
                     <?= AppInfo::name() ?>
                 </a>
             </li>
-            <li class="breadcrumb-item">
-                <a href="<?= base_url("outletDiscount/index") ?>">
-                    Diskon
-                </a>
-            </li>
-            <li class="breadcrumb-item active">
-                '<?= $outlet->name ?>'
+            <li class="breadcrumb-item active" aria-current="page">
+                Outlet
             </li>
         </ol>
     </nav>
 
-    <h3 class="mb-4">
-        <i class="fa fa-percent"></i>
-        Detail Diskon Outlet '<?= $outlet->name ?>'
+    <?php $this->insert("shared/message") ?>
+
+    <h3 class="mb-3">
+        <i class="fa fa-cutlery"></i>
+        Menu Outlet
     </h3>
 
-    <div class="d-flex justify-content-end">
-        <a class="btn btn-dark my-2" href="<?= base_url("discount/create/{$outlet->id}") ?>">
-            Tambah Diskon Baru
-            <i class="fa fa-plus"></i>
+    <div class="d-flex justify-content-end my-3">
+        <a href="<?= base_url("outlet/create") ?>" class="btn btn-dark">
+            Tambahkan Outlet Baru
         </a>
     </div>
-
-    <?php $this->insert("shared/message") ?>
 
     <div class="card">
         <div class="card-body">
@@ -46,30 +38,27 @@ use App\Helpers\Formatter;
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
-                        <th> Nama Program Diskon </th>
-                        <th> Waktu Mulai Berlaku </th>
-                        <th> Waktu Selesai Berlaku </th>
+                        <th> Nama </th>
+                        <th> Alamat </th>
                         <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php foreach($outlet->discounts as $key => $discount): ?>
+                    <?php foreach($outlets as $key => $outlet): ?>
                     <tr>
-                        <td> <?= $key + 1 ?>. </td>
-                        <td> <?= $discount->name ?> </td>
-                        <td> <?= Formatter::datetime($discount->starts_at) ?> </td>
-                        <td> <?= Formatter::datetime($discount->ends_at) ?> </td>
+                        <td> <?= $key + 1 ?> </td>
+                        <td> <?= $outlet->name ?> </td>
+                        <td> <?= $outlet->address ?> </td>
                         <td class="text-center">
-                            <a class="btn btn-dark btn-sm" href="<?= base_url("discount/edit/{$discount->id}") ?>">
-                                Detail / Ubah
+                            <a class="btn btn-dark btn-sm" href="<?= base_url("outlet/edit/{$outlet->id}") ?>">
+                                Ubah
                             </a>
 
-                            <form class="d-inline-block confirmed" method="POST" action="<?= base_url("discount/delete/{$discount->id}") ?>" >
+                            <form class="d-inline-block" method="POST" action="<?= base_url("outlet/delete/{$outlet->id}") ?>" >
                                 <input type="hidden"
                                     name="<?= $this->csrf_name() ?>"
                                     value="<?= $this->csrf_token() ?>">
-
                                 <button class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>

@@ -31,6 +31,12 @@ use App\Helpers\Formatter;
         </ol>
     </nav>
 
+    <h3 class="mb-3">
+        <i class="fa fa-cutlery"></i>
+        Detail Menu Outlet '<?= $outlet->name ?>'
+        Kategori '<?= $menu_category->name ?>'
+    </h3>
+
     <div class="text-right my-3">
         <a href="<?= base_url("outletMenuItem/create/{$outlet->id}/{$menu_category->id}") ?>" class="btn btn-dark">
             Tambahkan Menu
@@ -38,12 +44,6 @@ use App\Helpers\Formatter;
     </div>
 
     <?php $this->insert("shared/message") ?>
-
-    <h3 class="mb-3">
-        <i class="fa fa-cutlery"></i>
-        Detail Menu Outlet '<?= $outlet->name ?>'
-        Kategori '<?= $menu_category->name ?>'
-    </h3>
 
     <div class="card">
         <div class="card-body">

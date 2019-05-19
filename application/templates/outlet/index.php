@@ -22,8 +22,8 @@ use App\Helpers\AppInfo;
     <?php $this->insert("shared/message") ?>
 
     <h3 class="mb-3">
-        <i class="fa fa-cutlery"></i>
-        Menu Outlet
+        <i class="fa fa-building"></i>
+        Outlet
     </h3>
 
     <div class="d-flex justify-content-end my-3">

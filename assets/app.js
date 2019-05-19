@@ -44294,10 +44294,10 @@ var _default = {
       }, 0);
     },
     tax: function tax() {
-      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100;
+      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai;
     },
     service_charge: function service_charge() {
-      return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100;
+      return this.pretax_sum * this.sales_invoice.outlet.service_charge;
     },
     total: function total() {
       return this.pretax_sum + (this.tax + this.service_charge);
@@ -44428,8 +44428,12 @@ exports.default = _default;
           _c("th", { staticClass: "text-right" }, [
             _vm._v(
               " Tax " +
-                _vm._s(_vm.sales_invoice.outlet.pajak_pertambahan_nilai) +
-                "% "
+                _vm._s(
+                  _vm.percent_format(
+                    _vm.sales_invoice.outlet.pajak_pertambahan_nilai
+                  )
+                ) +
+                " "
             )
           ]),
           _vm._v(" "),
@@ -44448,8 +44452,10 @@ exports.default = _default;
           _c("th", { staticClass: "text-right" }, [
             _vm._v(
               " Service Charge " +
-                _vm._s(_vm.sales_invoice.outlet.service_charge) +
-                "% "
+                _vm._s(
+                  _vm.percent_format(_vm.sales_invoice.outlet.service_charge)
+                ) +
+                " "
             )
           ]),
           _vm._v(" "),
@@ -47180,10 +47186,10 @@ var _default = {
       }, 0);
     },
     tax: function tax() {
-      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100;
+      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai;
     },
     service_charge: function service_charge() {
-      return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100;
+      return this.pretax_sum * this.sales_invoice.outlet.service_charge;
     },
     total: function total() {
       return this.pretax_sum + (this.tax + this.service_charge);
@@ -47198,6 +47204,7 @@ var _default = {
   methods: {
     get: _lodash.get,
     currency_format: _numeral_helpers.currency_format,
+    percent_format: _numeral_helpers.percent_format,
     addItem: function addItem() {
       this.items.push({
         outlet_menu_item: null,
@@ -47363,6 +47370,8 @@ exports.default = _default;
               )
             ]),
             _vm._v(" "),
+            _c("td", { staticClass: "text-right" }, [_vm._v(" Diskon ")]),
+            _vm._v(" "),
             _c("td", { staticClass: "text-right" }, [
               _vm._v(
                 " Rp. " +
@@ -47404,6 +47413,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [_vm._v(" Sub Total ")]),
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
@@ -47418,11 +47429,17 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
             _vm._v(
               " Tax " +
-                _vm._s(_vm.sales_invoice.outlet.pajak_pertambahan_nilai) +
-                "% "
+                _vm._s(
+                  _vm.percent_format(
+                    _vm.sales_invoice.outlet.pajak_pertambahan_nilai
+                  )
+                ) +
+                " "
             )
           ]),
           _vm._v(" "),
@@ -47438,11 +47455,15 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
             _vm._v(
               " Service Charge " +
-                _vm._s(_vm.sales_invoice.outlet.service_charge) +
-                "% "
+                _vm._s(
+                  _vm.percent_format(_vm.sales_invoice.outlet.service_charge)
+                ) +
+                " "
             )
           ]),
           _vm._v(" "),
@@ -47454,6 +47475,8 @@ exports.default = _default;
         ]),
         _vm._v(" "),
         _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
           _c("th"),
           _vm._v(" "),
           _c("th"),
@@ -47472,6 +47495,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [_vm._v(" Cash ")]),
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
@@ -47486,6 +47511,8 @@ exports.default = _default;
           _vm._v(" "),
           _c("th"),
           _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [_vm._v(" Rounding ")]),
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
@@ -47496,6 +47523,8 @@ exports.default = _default;
         ]),
         _vm._v(" "),
         _c("tr", { staticClass: "border-top" }, [
+          _c("th"),
+          _vm._v(" "),
           _c("th"),
           _vm._v(" "),
           _c("th"),
@@ -47754,9 +47783,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-right" }, [_vm._v(" Harga Satuan ")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-right" }, [
-          _vm._v(" Jumlah x Harga Satuan ")
-        ]),
+        _c("th", { staticClass: "text-right" }, [_vm._v(" Diskon ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }),
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v(" Kendali ")])
       ])
@@ -96395,7 +96424,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41731" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36265" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

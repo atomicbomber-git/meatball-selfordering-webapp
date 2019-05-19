@@ -117,9 +117,8 @@ class SalesInvoice extends BaseController
     public function updateAndConfirm($sales_invoice_id)
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $sales_invoice->load([
-            "planned_sales_invoice_items", "outlet",
-        ]);
+        $sales_invoice->load(["planned_sales_invoice_items", "outlet",]);
+        $sales_invoice->append("discount_map");
 
         $outlet = $sales_invoice->outlet;
         $outlet->load([

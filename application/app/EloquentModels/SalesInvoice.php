@@ -89,14 +89,14 @@ class SalesInvoice extends Model
     public function getTaxAttribute()
     {
         $this->loadMissing("outlet");
-        return $this->pretax_total * ($this->outlet->pajak_pertambahan_nilai / 100);
+        return $this->pretax_total * ($this->outlet->pajak_pertambahan_nilai);
     }
 
     /* The `service_charge` attribute */
     public function getServiceChargeAttribute()
     {
         $this->loadMissing("outlet");
-        return $this->pretax_total * ($this->outlet->service_charge / 100);
+        return $this->pretax_total * ($this->outlet->service_charge);
     }
 
     /* The `total` attribute */

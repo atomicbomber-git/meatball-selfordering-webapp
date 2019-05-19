@@ -61,16 +61,18 @@ use App\Helpers\Auth;
                                 Ubah
                             </a>
 
-                            <?php if(UserPolicy::canDelete(Auth::user(), $user)): ?>
-                            <form class="d-inline-block" method="POST" action="<?= base_url("user/delete/{$user->id}") ?>" >
+                            
+                            <form
+                                class="d-inline-block" method="POST" action="<?= base_url("user/delete/{$user->id}") ?>" >
                                 <input type="hidden"
                                     name="<?= $this->csrf_name() ?>"
                                     value="<?= $this->csrf_token() ?>">
-                                <button class="btn btn-danger btn-sm">
+                                <button
+                                    <?= UserPolicy::canDelete(Auth::user(), $user) ? '' : 'disabled' ?>
+                                    class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>
                             </form>
-                            <?php endif ?>
                         </td>
                     </tr>
                     <?php endforeach ?>

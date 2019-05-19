@@ -12,7 +12,8 @@
                     <th>Nama Item</th>
                     <th class="text-center"> Jumlah </th>
                     <th class="text-right"> Harga Satuan </th>
-                    <th class="text-right"> Jumlah x Harga Satuan </th>
+                    <th class="text-right"> Diskon </th>
+                    <th class="text-right"> </th>
                     <th class="text-center"> Kendali </th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                     v-for="item in added_items"
                     :key="item.id">
                     
+                    <!-- Nama Item -->
                     <td> 
                         <multiselect
                             track-by="id"
@@ -31,6 +33,7 @@
                             />
                     </td>
 
+                    <!-- Jumlah -->
                     <td class="text-center">
                         <button
                             @click="--item.quantity"
@@ -50,7 +53,12 @@
                             <i class="fa fa-plus"></i>
                         </button>
                     </td>
+
+                    <!-- Harga Satuan -->
                     <td class="text-right"> Rp. {{ currency_format(get(item, "outlet_menu_item.price", 0)) }} </td>
+
+                    <td class="text-right"> Diskon </td>
+
                     <td class="text-right"> Rp. {{ currency_format(item.quantity * get(item.outlet_menu_item, "price", 0)) }} </td>
                     <td class="text-center">
                         <button @click="removeItem(item)" class="btn btn-danger btn-sm">
@@ -64,6 +72,7 @@
                 <tr>
                     <th>  </th>
                     <th>  </th>
+                    <th>  </th>
                     <th class="text-right"> Sub Total </th>
                     <th class="text-right"> {{ currency_format(pretax_sum) }} </th>
                     <th></th>
@@ -72,7 +81,8 @@
                 <tr>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Tax {{ sales_invoice.outlet.pajak_pertambahan_nilai }}% </th>
+                    <th></th>
+                    <th class="text-right"> Tax {{ percent_format(sales_invoice.outlet.pajak_pertambahan_nilai) }} </th>
                     <th class="text-right"> {{ currency_format(tax) }} </th>
                     <th></th>
                 </tr>
@@ -80,12 +90,14 @@
                 <tr>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Service Charge {{ sales_invoice.outlet.service_charge }}% </th>
+                    <th></th>
+                    <th class="text-right"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
                     <th class="text-right"> {{ currency_format(service_charge) }} </th>
                     <th></th>
                 </tr>
 
                 <tr class="border-top">
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th class="text-right"> Total </th>
@@ -96,6 +108,7 @@
                 <tr class="border-top">
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th class="text-right"> Cash </th>
                     <th class="text-right"> {{ currency_format(cash) }} </th>
                     <th></th>
@@ -104,12 +117,14 @@
                 <tr>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th class="text-right"> Rounding </th>
                     <th class="text-right"> {{ currency_format(rounding) }} </th>
                     <th></th>
                 </tr>
 
                 <tr class="border-top">
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th class="text-right"> Total Change </th>
@@ -195,7 +210,7 @@
 <script>
 
 import order_types from '../order_types.js'
-import { currency_format } from "../numeral_helpers.js"
+import { currency_format, percent_format } from "../numeral_helpers.js"
 import { get } from "lodash"
 import OrderQuantity from "./OrderQuantity.vue"
 import { Multiselect } from "vue-multiselect"
@@ -286,11 +301,11 @@ export default {
         },
 
         tax() {
-            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100
+            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai
         },
 
         service_charge() {
-            return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100
+            return this.pretax_sum * this.sales_invoice.outlet.service_charge
         },
 
         total() {
@@ -309,6 +324,7 @@ export default {
     methods: {
         get,
         currency_format,
+        percent_format,
 
         addItem() {
             this.items.push({ outlet_menu_item: null, quantity: 1 })

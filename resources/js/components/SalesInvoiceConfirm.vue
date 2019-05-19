@@ -42,7 +42,7 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Tax {{ sales_invoice.outlet.pajak_pertambahan_nilai }}% </th>
+                    <th class="text-right"> Tax {{ percent_format(sales_invoice.outlet.pajak_pertambahan_nilai) }} </th>
                     <th class="text-right"> {{ currency_format(tax) }} </th>
                 </tr>
 
@@ -50,7 +50,7 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Service Charge {{ sales_invoice.outlet.service_charge }}% </th>
+                    <th class="text-right"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
                     <th class="text-right"> {{ currency_format(service_charge) }} </th>
                 </tr>
 
@@ -225,11 +225,11 @@ export default {
         },
 
         tax() {
-            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai / 100
+            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai
         },
 
         service_charge() {
-            return this.pretax_sum * this.sales_invoice.outlet.service_charge / 100
+            return this.pretax_sum * this.sales_invoice.outlet.service_charge
         },
 
         total() {

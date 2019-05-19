@@ -23,6 +23,7 @@ class User extends BaseController {
     {
         $users = UserModel::query()
             ->select("id", "name", "username", "level")
+            ->withCount(UserModel::RELATED_ENTITIES)
             ->get();
 
         $this->template->render("user/index", compact("users"));
@@ -91,10 +92,6 @@ class User extends BaseController {
     {
         $user = UserModel::find($user_id) ?: $this->error404();
 
-        // $user->append("related_entities_count");
-        $user->load(UserModel::RELATED_ENTITIES);
-        $this->jsonResponse($user);
-        
         if (!UserPolicy::canDelete(Auth::user(), $user)) {
             $this->session->set_flashdata('message-success', 'Data tidak dapat dihapus.');
             $this->redirectBack();

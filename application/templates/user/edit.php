@@ -98,7 +98,7 @@ use App\Enums\UserLevel;
                     <input
                         name="password"
                         id="password"
-                        type="text"
+                        type="password"
                         class="form-control <?= $this->has_error("password") ? "is-invalid" : "" ?>"
                         placeholder="Kata Sandi"
                         value="<?= $this->old("password") ?>"

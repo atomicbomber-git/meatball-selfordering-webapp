@@ -13,6 +13,10 @@ class UserPolicy
             return false;
         }
 
+        if ($target_user->related_entities_count !== 0) {
+            return false;
+        }
+
         return true;
     }
 }

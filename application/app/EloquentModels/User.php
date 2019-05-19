@@ -19,6 +19,7 @@ class User extends Model
     ];
 
     const RELATED_ENTITIES = [
+        "supervised_outlet",
         "outlet_user",
         "waited_sales_invoices",
         "cashiered_sales_invoices",

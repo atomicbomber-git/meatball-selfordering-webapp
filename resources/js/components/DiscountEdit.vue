@@ -166,8 +166,7 @@ export default {
 
         is_submittable() {
             return (this.final_form.starts_at !== null) &&
-                (this.final_form.ends_at !== null) &&
-                (this.final_form.outlet_menu_items.length !== 0)
+                (this.final_form.ends_at !== null)
         },
 
         final_form() {

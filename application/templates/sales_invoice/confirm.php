@@ -24,8 +24,14 @@ $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
 
     <?php $this->insert("shared/message") ?>
 
-    <h1 class="mb-1"> Konfirmasi Transaksi </h1>
-    <hr class="mt-0"/>
+    <h3 class="mb-3">
+        <i class="fa fa-usd"></i>
+        Konfirmasi Transaksi
+        <p class="lead">
+            #<?= Formatter::salesInvoiceNumber($sales_invoice->number) ?> <br/>
+            <?= $sales_invoice->created_at ?>
+        </p>
+    </h3>
 
     <div class="card">
         <div class="card-body" id="app">

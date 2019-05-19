@@ -122,7 +122,7 @@ class SalesInvoice extends BaseController
 
         $outlet = $sales_invoice->outlet;
         $outlet->load([
-            "outlet_menu_items:outlet_id,menu_item_id,price",
+            "outlet_menu_items:id,outlet_id,menu_item_id,price",
             "outlet_menu_items.menu_item"
         ]);
 

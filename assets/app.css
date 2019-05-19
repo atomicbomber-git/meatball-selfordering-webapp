@@ -14117,6 +14117,9 @@ img.img-detail[data-v-3ebacf] {
 div.total-price[data-v-3ebacf] {
     font-size: 24pt;
 }
+span.multiselect__single {
+    text-align: right
+}
 table.dataTable {
   clear: both;
   margin-top: 6px !important;

@@ -6,7 +6,7 @@
                     <th> Item </th>
                     <th class="text-right"> Jumlah </th>
                     <th class="text-right"> Harga Satuan </th>
-                    <th class="text-right"> Diskon </th>
+                    <th class="text-right"> Diskon Item </th>
                     <th class="text-right"> </th>
                 </tr>
             </thead>
@@ -52,6 +52,16 @@
                     <th></th>
                     <th class="text-right"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
                     <th class="text-right"> {{ currency_format(service_charge) }} </th>
+                </tr>
+
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
+                    <th class="text-right">
+                        {{ currency_format(special_discount) }}
+                    </th>
                 </tr>
 
                 <tr class="border-top">
@@ -111,6 +121,22 @@
                             <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td> Diskon Khusus </td>
+                        <td>
+                            <multiselect
+                                placheholder="Placeholder"
+                                selectLabel=""
+                                deselectLabel=""
+                                :custom-label="val => percent_format(val)"
+                                :options="special_discount_percentages"
+                                v-model="special_discount_percentage"
+                                :preselect-first="true"
+                            />
+                        </td>
+                    </tr>
+
                     <tr>
                         <td> Jumlah yang Harus Dibayar </td>
                         <td class="text-danger">
@@ -147,6 +173,8 @@
 
 import { vsprintf } from "sprintf-js"
 import { currency_format, percent_format } from "../numeral_helpers"
+import special_discount_percentages from "../special_discount_percentages"
+import { Multiselect } from "vue-multiselect"
 import { get } from "lodash"
 import order_types from "../order_types"
 import VueCleave from "vue-cleave-component"
@@ -156,11 +184,12 @@ export default {
         "sales_invoice", "submit_url", "redirect_url", "update_and_confirm_url",
     ],
 
-    components: { VueCleave },
+    components: { VueCleave, Multiselect },
 
     data() {
         return {
             cash: null,
+            special_discount_percentage: null,
             error_data: null,
         }
     },
@@ -212,16 +241,33 @@ export default {
     },
 
     computed: {
+        special_discount_percentages() {
+            return special_discount_percentages
+        },
+        
         order_types() {
             return order_types
         },
 
         pretax_sum() {
             return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
-                
-                
                 return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
             }, 0)
+        },
+
+        undiscounted_sales_invoice_items() {
+            return this.sales_invoice.sorted_planned_sales_invoice_items
+                .filter(item => get(this.sales_invoice.discount_map[item.menu_item.outlet_menu_item.id], "percentage", 0) == 0) 
+        },
+
+        undiscounted_pretax_sum() {
+            return this.undiscounted_sales_invoice_items.reduce((prev, curr) => {
+                return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
+            }, 0)
+        },
+
+        special_discount() {
+            return this.undiscounted_pretax_sum * this.special_discount_percentage
         },
 
         tax() {
@@ -246,3 +292,9 @@ export default {
     },
 }
 </script>
+
+<style>
+    span.multiselect__single {
+        text-align: right
+    }
+</style>

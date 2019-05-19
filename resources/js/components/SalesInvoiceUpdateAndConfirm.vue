@@ -57,7 +57,9 @@
                     <!-- Harga Satuan -->
                     <td class="text-right"> Rp. {{ currency_format(get(item, "outlet_menu_item.price", 0)) }} </td>
 
-                    <td class="text-right"> Diskon </td>
+                    <td class="text-right">
+                        {{ percent_format( get(sales_invoice.discount_map[item.outlet_menu_item.id], "percentage", 0) ) }}
+                    </td>
 
                     <td class="text-right"> Rp. {{ currency_format(item.quantity * get(item.outlet_menu_item, "price", 0)) }} </td>
                     <td class="text-center">
@@ -253,6 +255,7 @@ export default {
 
         added_items() {
             return this.items
+                .sort((a, b) => a.outlet_menu_item.menu_item.name.localeCompare(b.outlet_menu_item.menu_item.name))
                 .filter(({ quantity }) => quantity > 0)
         },
 

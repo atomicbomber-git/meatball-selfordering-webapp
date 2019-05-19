@@ -4,12 +4,27 @@ namespace App\EloquentModels;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\UserLevel;
+use App\Traits\HasRelatedEntitiesCount;
 
 class User extends Model
 {
+    use HasRelatedEntitiesCount;
+
+    public $fillable = [
+        "name", "username", "nik", "password", "level"
+    ];
+
     public $hidden = [
         "password"
     ];
+
+    const RELATED_ENTITIES = [
+        "outlet_user",
+        "waited_sales_invoices",
+        "cashiered_sales_invoices",
+    ];
+
+    public $timestamps = false;
 
     public function supervised_outlet()
     {
@@ -19,6 +34,16 @@ class User extends Model
     public function outlet_user()
     {
         return $this->hasOne(OutletUser::class);
+    }
+
+    public function waited_sales_invoices()
+    {
+        return $this->hasMany(SalesInvoice::class, "waiter_id");
+    }
+
+    public function cashiered_sales_invoices()
+    {
+        return $this->hasMany(SalesInvoice::class, "cashier_id");
     }
 
     // This is not an Eloquent relationship method
@@ -34,5 +59,10 @@ class User extends Model
         }
 
         return $outlet;
+    }
+
+    public function getFormattedLevelAttribute()
+    {
+        return UserLevel::LEVELS[$this->level] ?? '-';
     }
 }

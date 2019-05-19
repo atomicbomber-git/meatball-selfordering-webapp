@@ -38,7 +38,7 @@
                         type="password"
                         class="form-control <?= $this->has_error("password") ? "is-invalid" : "" ?>"
                         placeholder="Kata Sandi"
-                        value="<?= $this->old("password") ?>"
+                        value=""
                         >
                     <?php if($this->has_error("password")): ?>
                     <div class="invalid-feedback">

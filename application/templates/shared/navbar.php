@@ -34,6 +34,11 @@ use App\Helpers\URL;
                                     Outlet
                                 </a>
 
+                                <a href="<?= base_url("user/index") ?>" class="dropdown-item">
+                                    <i class="fa fa-users"></i>
+                                    Pengguna
+                                </a>
+
                                 <?php if (MenuCategoryPolicy::canIndex(Auth::user())) : ?>
 
                                 <a class="dropdown-item" href="<?= base_url("menuCategory/index") ?>">

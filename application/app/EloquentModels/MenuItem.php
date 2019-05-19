@@ -29,9 +29,4 @@ class MenuItem extends Model
     {
         return $this->hasMany(PlannedSalesInvoiceItem::class);
     }
-
-    public function discount()
-    {
-        ;
-    }
 }

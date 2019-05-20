@@ -11,7 +11,6 @@ use App\EloquentModels\OutletMenuItem;
 use App\Helpers\Formatter;
 use Mike42\Escpos\Printer;
 use Carbon\Carbon as Date;
-use App\EloquentModels\Item;
 
 class SalesInvoice extends BaseController
 {
@@ -54,13 +53,9 @@ class SalesInvoice extends BaseController
     public function confirm($sales_invoice_id)
     {
         SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
-
-        $outlet = Auth::user()->outlet ?: $this->error403();
-
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
 
-        $this->jsonResponse($sales_invoice);
-
+        $outlet = Auth::user()->outlet ?: $this->error403();
         $sales_invoice->load([
             "outlet",
             "outlet.cashier_printer",
@@ -72,8 +67,6 @@ class SalesInvoice extends BaseController
             }
         ]);
 
-        $sales_invoice->append("discount_map");
-
         $sales_invoice->sorted_planned_sales_invoice_items = $sales_invoice->planned_sales_invoice_items
             ->sortBy(function ($psi_item) {
                 return $psi_item->menu_item->name;
@@ -81,6 +74,7 @@ class SalesInvoice extends BaseController
             ->values()
             ->all();
 
+        $sales_invoice->append("discount_map", "undiscounted_pretax_total", "special_discount_total");
         $this->template->render("sales_invoice/confirm", compact("sales_invoice"));
     }
 

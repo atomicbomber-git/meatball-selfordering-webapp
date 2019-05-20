@@ -93,7 +93,7 @@
                     <th></th>
                     <th></th>
                     <th class="text-right"> Total Change </th>
-                    <th class="text-right"> {{ currency_format(this.total_change) }} </th>
+                    <th class="text-right"> {{ currency_format(total_change) }} </th>
                 </tr>
             </tfoot>
         </table>
@@ -256,37 +256,46 @@ export default {
             return order_types
         },
 
-        pretax_sum() {
-            return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
-                return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
-            }, 0)
-        },
-
         undiscounted_sales_invoice_items() {
             return this.sales_invoice.sorted_planned_sales_invoice_items
                 .filter(item => get(this.sales_invoice.discount_map[item.menu_item.outlet_menu_item.id], "percentage", 0) == 0) 
         },
 
-        undiscounted_pretax_sum() {
+        /* Pretax sum with item discount included */
+        pretax_sum() {
+            return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
+                return prev + (
+                    curr.quantity * curr.menu_item.outlet_menu_item.price * (1 - get(this.sales_invoice.discount_map[curr.menu_item.outlet_menu_item.id], "percentage", 0))
+                )
+            }, 0)
+        },
+
+        prediscount_pretax_sum() {
+            return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
+                return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
+            }, 0)
+        },
+
+        undiscounted_total() {
             return this.undiscounted_sales_invoice_items.reduce((prev, curr) => {
                 return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
             }, 0)
         },
 
         special_discount() {
-            return this.undiscounted_pretax_sum * this.special_discount_percentage
+            return this.undiscounted_total * this.special_discount_percentage
         },
 
         tax() {
-            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai
+            return this.prediscount_pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai
         },
 
         service_charge() {
-            return this.pretax_sum * this.sales_invoice.outlet.service_charge
+            return this.prediscount_pretax_sum * this.sales_invoice.outlet.service_charge
         },
 
         total() {
-            return this.pretax_sum + (this.tax + this.service_charge)
+            return this.pretax_sum + (this.tax + this.service_charge - this.special_discount)
         },
 
         rounding() {

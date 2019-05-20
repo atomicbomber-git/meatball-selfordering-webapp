@@ -84,8 +84,17 @@ class SalesInvoice extends Model
         return $items;
     }
 
+    /* Sum of total price * qtys of undiscounted items */
     public function getUndiscountedPretaxTotalAttribute() {
+        return $this->undiscounted_items->sum(function ($item) {
+            return $item->quantity * $item->menu_item->outlet_menu_item->price;
+        });
+    }
 
+    /* Calculated special discount */
+    public function getSpecialDiscountTotalAttribute()
+    {
+        return $this->undiscounted_pretax_total * $this->special_discount;
     }
 
     /* The `pretax_total` attrribute */

@@ -3,9 +3,12 @@
 namespace App\EloquentModels;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasRelatedEntitiesCount;
 
 class Outlet extends Model
 {
+    use HasRelatedEntitiesCount;
+
     public $fillable = [
         "id", "name", "address", "brand", "phone",
         "pajak_pertambahan_nilai", "service_charge", "print_server_url",
@@ -13,6 +16,12 @@ class Outlet extends Model
     ];
 
     public $timestamps = false;
+
+    const RELATED_ENTITIES = [
+        "outlet_menu_items",
+        "receipt_printers",
+        "discounts",
+    ];
 
     public function supervisor()
     {

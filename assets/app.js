@@ -21887,14 +21887,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b6cefe = exports.default || module.exports;
+        var $8a4699 = exports.default || module.exports;
       
-      if (typeof $b6cefe === 'function') {
-        $b6cefe = $b6cefe.options;
+      if (typeof $8a4699 === 'function') {
+        $8a4699 = $8a4699.options;
       }
     
         /* template */
-        Object.assign($b6cefe, (function () {
+        Object.assign($8a4699, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21921,9 +21921,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$b6cefe', $b6cefe);
+            api.createRecord('$8a4699', $8a4699);
           } else {
-            api.reload('$b6cefe', $b6cefe);
+            api.reload('$8a4699', $8a4699);
           }
         }
 
@@ -22333,14 +22333,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $5fd4d4 = exports.default || module.exports;
+        var $3ebacf = exports.default || module.exports;
       
-      if (typeof $5fd4d4 === 'function') {
-        $5fd4d4 = $5fd4d4.options;
+      if (typeof $3ebacf === 'function') {
+        $3ebacf = $3ebacf.options;
       }
     
         /* template */
-        Object.assign($5fd4d4, (function () {
+        Object.assign($3ebacf, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22962,7 +22962,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-5fd4d4",
+            _scopeId: "data-v-3ebacf",
             functional: undefined
           };
         })());
@@ -22975,9 +22975,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$5fd4d4', $5fd4d4);
+            api.createRecord('$3ebacf', $3ebacf);
           } else {
-            api.reload('$5fd4d4', $5fd4d4);
+            api.reload('$3ebacf', $3ebacf);
           }
         }
 
@@ -23114,14 +23114,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $cd7a60 = exports.default || module.exports;
+        var $ebb93a = exports.default || module.exports;
       
-      if (typeof $cd7a60 === 'function') {
-        $cd7a60 = $cd7a60.options;
+      if (typeof $ebb93a === 'function') {
+        $ebb93a = $ebb93a.options;
       }
     
         /* template */
-        Object.assign($cd7a60, (function () {
+        Object.assign($ebb93a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -23230,9 +23230,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$cd7a60', $cd7a60);
+            api.createRecord('$ebb93a', $ebb93a);
           } else {
-            api.reload('$cd7a60', $cd7a60);
+            api.reload('$ebb93a', $ebb93a);
           }
         }
 
@@ -46504,9 +46504,7 @@ var _default = {
               swal({
                 icon: "success",
                 text: "Pembayaran berhasil"
-              }).then(function (is_ok) {
-                window.location.replace(_this.redirect_url);
-              });
+              }); // .then(is_ok => { window.location.replace(this.redirect_url) })
             }).fail(function (xhr, status, error) {
               Sentry.captureException({
                 xhr: xhr,
@@ -46553,6 +46551,11 @@ var _default = {
         return (0, _lodash.get)(_this2.sales_invoice.discount_map[item.menu_item.outlet_menu_item.id], "percentage", 0) == 0;
       });
     },
+    undiscounted_total: function undiscounted_total() {
+      return this.undiscounted_sales_invoice_items.reduce(function (prev, curr) {
+        return prev + curr.quantity * curr.menu_item.outlet_menu_item.price;
+      }, 0);
+    },
 
     /* Pretax sum with item discount included */
     pretax_sum: function pretax_sum() {
@@ -46564,11 +46567,6 @@ var _default = {
     },
     prediscount_pretax_sum: function prediscount_pretax_sum() {
       return this.sales_invoice.sorted_planned_sales_invoice_items.reduce(function (prev, curr) {
-        return prev + curr.quantity * curr.menu_item.outlet_menu_item.price;
-      }, 0);
-    },
-    undiscounted_total: function undiscounted_total() {
-      return this.undiscounted_sales_invoice_items.reduce(function (prev, curr) {
         return prev + curr.quantity * curr.menu_item.outlet_menu_item.price;
       }, 0);
     },
@@ -46593,14 +46591,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $7098dc = exports.default || module.exports;
+        var $43f480 = exports.default || module.exports;
       
-      if (typeof $7098dc === 'function') {
-        $7098dc = $7098dc.options;
+      if (typeof $43f480 === 'function') {
+        $43f480 = $43f480.options;
       }
     
         /* template */
-        Object.assign($7098dc, (function () {
+        Object.assign($43f480, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -46763,7 +46761,7 @@ exports.default = _default;
           _vm._v(" "),
           _c("th", { staticClass: "text-right" }, [
             _vm._v(
-              "\n                    " +
+              "\n                    -" +
                 _vm._s(_vm.currency_format(_vm.special_discount)) +
                 "\n                "
             )
@@ -46899,7 +46897,7 @@ exports.default = _default;
                 [
                   _c("multiselect", {
                     attrs: {
-                      placheholder: "Placeholder",
+                      placheholder: "Diskon Khusus",
                       selectLabel: "",
                       deselectLabel: "",
                       "custom-label": function(val) {
@@ -47015,9 +47013,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$7098dc', $7098dc);
+            api.createRecord('$43f480', $43f480);
           } else {
-            api.reload('$7098dc', $7098dc);
+            api.reload('$43f480', $43f480);
           }
         }
 
@@ -47038,7 +47036,9 @@ exports.default = void 0;
 
 var _order_types2 = _interopRequireDefault(require("../order_types.js"));
 
-var _numeral_helpers = require("../numeral_helpers.js");
+var _numeral_helpers = require("../numeral_helpers");
+
+var _special_discount_percentages2 = _interopRequireDefault(require("../special_discount_percentages"));
 
 var _lodash = require("lodash");
 
@@ -47075,6 +47075,7 @@ var _default = {
     return {
       cash: null,
       password: null,
+      special_discount_percentage: null,
       p_sales_invoice: _objectSpread({}, this.sales_invoice, {
         planned_sales_invoice_items: _toConsumableArray(this.sales_invoice.planned_sales_invoice_items)
       }),
@@ -47099,6 +47100,9 @@ var _default = {
     };
   },
   computed: {
+    special_discount_percentages: function special_discount_percentages() {
+      return _special_discount_percentages2.default;
+    },
     order_types: function order_types() {
       return _order_types2.default;
     },
@@ -47144,10 +47148,34 @@ var _default = {
         }),
         cash: this.cash,
         type: this.p_sales_invoice.type,
+        special_discount: this.special_discount_percentage,
         password: this.password
       };
     },
+    undiscounted_sales_invoice_items: function undiscounted_sales_invoice_items() {
+      var _this3 = this;
+
+      return this.added_items.filter(function (added_item) {
+        return added_item.outlet_menu_item !== null;
+      }).filter(function (item) {
+        return (0, _lodash.get)(_this3.sales_invoice.discount_map[item.outlet_menu_item.id], "percentage", 0) == 0;
+      });
+    },
+    undiscounted_total: function undiscounted_total() {
+      return this.undiscounted_sales_invoice_items.reduce(function (prev, curr) {
+        return prev + curr.quantity * curr.outlet_menu_item.price;
+      }, 0);
+    },
     pretax_sum: function pretax_sum() {
+      var _this4 = this;
+
+      return this.added_items.filter(function (added_item) {
+        return added_item.outlet_menu_item !== null;
+      }).reduce(function (prev, curr) {
+        return prev + curr.quantity * curr.outlet_menu_item.price * (1 - (0, _lodash.get)(_this4.sales_invoice.discount_map[curr.outlet_menu_item.id], "percentage", 0));
+      }, 0);
+    },
+    prediscount_pretax_sum: function prediscount_pretax_sum() {
       return this.added_items.filter(function (added_item) {
         return added_item.outlet_menu_item !== null;
       }).reduce(function (prev, curr) {
@@ -47155,13 +47183,16 @@ var _default = {
       }, 0);
     },
     tax: function tax() {
-      return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai;
+      return this.prediscount_pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai;
     },
     service_charge: function service_charge() {
-      return this.pretax_sum * this.sales_invoice.outlet.service_charge;
+      return this.prediscount_pretax_sum * this.sales_invoice.outlet.service_charge;
+    },
+    special_discount_total: function special_discount_total() {
+      return this.undiscounted_total * this.special_discount_percentage;
     },
     total: function total() {
-      return this.pretax_sum + (this.tax + this.service_charge);
+      return this.pretax_sum + (this.tax + this.service_charge - this.special_discount_total);
     },
     rounding: function rounding() {
       return Math.round(this.total / 100) * 100;
@@ -47185,7 +47216,7 @@ var _default = {
       item.quantity = 0;
     },
     confirmTransaction: function confirmTransaction() {
-      var _this3 = this;
+      var _this5 = this;
 
       swal({
         icon: "warning",
@@ -47195,12 +47226,12 @@ var _default = {
         buttons: ["Kembali", "Konfirmasi"]
       }).then(function (will_submit) {
         if (will_submit) {
-          $.post(_this3.submit_url, _objectSpread({
+          $.post(_this5.submit_url, _objectSpread({
             token: window.token
-          }, _this3.form_data)).done(function (response) {
-            _this3.error_data = null;
+          }, _this5.form_data)).done(function (response) {
+            _this5.error_data = null;
             response.forEach(function (print_request_data) {
-              $.post("".concat(_this3.sales_invoice.outlet.print_server_url, "/manual_print"), print_request_data).done(function (response) {
+              $.post("".concat(_this5.sales_invoice.outlet.print_server_url, "/manual_print"), print_request_data).done(function (response) {
                 swal({
                   icon: 'success',
                   text: 'Konfirmasi Berhasil'
@@ -47217,9 +47248,9 @@ var _default = {
             });
           }).fail(function (xhr, status, error) {
             var response = xhr.responseJSON;
-            _this3.error_data = response.data;
+            _this5.error_data = response.data;
 
-            _this3.confirmTransaction();
+            _this5.confirmTransaction();
           });
         }
       });
@@ -47227,14 +47258,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $870b72 = exports.default || module.exports;
+        var $f6bf03 = exports.default || module.exports;
       
-      if (typeof $870b72 === 'function') {
-        $870b72 = $870b72.options;
+      if (typeof $f6bf03 === 'function') {
+        $f6bf03 = $f6bf03.options;
       }
     
         /* template */
-        Object.assign($870b72, (function () {
+        Object.assign($f6bf03, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -47359,13 +47390,22 @@ exports.default = _default;
             _vm._v(" "),
             _c("td", { staticClass: "text-right" }, [
               _vm._v(
-                " Rp. " +
+                "\n                    Rp. " +
                   _vm._s(
                     _vm.currency_format(
-                      item.quantity * _vm.get(item.outlet_menu_item, "price", 0)
+                      item.quantity *
+                        _vm.get(item.outlet_menu_item, "price", 0) *
+                        (1 -
+                          _vm.get(
+                            _vm.sales_invoice.discount_map[
+                              item.outlet_menu_item.id
+                            ],
+                            "percentage",
+                            0
+                          ))
                     )
                   ) +
-                  " "
+                  "\n                "
               )
             ]),
             _vm._v(" "),
@@ -47457,6 +47497,30 @@ exports.default = _default;
           ]),
           _vm._v(" "),
           _c("th")
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(
+              " Diskon Khusus " +
+                _vm._s(_vm.percent_format(_vm.special_discount_percentage)) +
+                " "
+            )
+          ]),
+          _vm._v(" "),
+          _c("th", { staticClass: "text-right" }, [
+            _vm._v(
+              "\n                    -" +
+                _vm._s(_vm.currency_format(_vm.special_discount_total)) +
+                "\n                "
+            )
+          ])
         ]),
         _vm._v(" "),
         _c("tr", { staticClass: "border-top" }, [
@@ -47659,6 +47723,36 @@ exports.default = _default;
             ]),
             _vm._v(" "),
             _c("tr", [
+              _c("td", [_vm._v(" Diskon Khusus ")]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("multiselect", {
+                    attrs: {
+                      placheholder: "Diskon Khusus",
+                      selectLabel: "",
+                      deselectLabel: "",
+                      "custom-label": function(val) {
+                        return _vm.percent_format(val)
+                      },
+                      options: _vm.special_discount_percentages,
+                      "preselect-first": true
+                    },
+                    model: {
+                      value: _vm.special_discount_percentage,
+                      callback: function($$v) {
+                        _vm.special_discount_percentage = $$v
+                      },
+                      expression: "special_discount_percentage"
+                    }
+                  })
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", [
               _c("td", [_vm._v(" Jumlah yang Harus Dibayar ")]),
               _vm._v(" "),
               _c("td", { staticClass: "text-danger" }, [
@@ -47796,9 +47890,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$870b72', $870b72);
+            api.createRecord('$f6bf03', $f6bf03);
           } else {
-            api.reload('$870b72', $870b72);
+            api.reload('$f6bf03', $f6bf03);
           }
         }
 
@@ -47809,7 +47903,7 @@ render._withStripped = true
       
       }
     })();
-},{"../order_types.js":"order_types.js","../numeral_helpers.js":"numeral_helpers.js","lodash":"../../node_modules/lodash/lodash.js","./OrderQuantity.vue":"components/OrderQuantity.vue","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/luxon/build/cjs-browser/luxon.js":[function(require,module,exports) {
+},{"../order_types.js":"order_types.js","../numeral_helpers":"numeral_helpers.js","../special_discount_percentages":"special_discount_percentages.js","lodash":"../../node_modules/lodash/lodash.js","./OrderQuantity.vue":"components/OrderQuantity.vue","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"../../node_modules/luxon/build/cjs-browser/luxon.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -57126,14 +57220,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $28aa41 = exports.default || module.exports;
+        var $4b0577 = exports.default || module.exports;
       
-      if (typeof $28aa41 === 'function') {
-        $28aa41 = $28aa41.options;
+      if (typeof $4b0577 === 'function') {
+        $4b0577 = $4b0577.options;
       }
     
         /* template */
-        Object.assign($28aa41, (function () {
+        Object.assign($4b0577, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -57174,9 +57268,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$28aa41', $28aa41);
+            api.createRecord('$4b0577', $4b0577);
           } else {
-            api.reload('$28aa41', $28aa41);
+            api.reload('$4b0577', $4b0577);
           }
         }
 
@@ -61902,14 +61996,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $6b8b58 = exports.default || module.exports;
+        var $0f4ea2 = exports.default || module.exports;
       
-      if (typeof $6b8b58 === 'function') {
-        $6b8b58 = $6b8b58.options;
+      if (typeof $0f4ea2 === 'function') {
+        $0f4ea2 = $0f4ea2.options;
       }
     
         /* template */
-        Object.assign($6b8b58, (function () {
+        Object.assign($0f4ea2, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -62194,9 +62288,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$6b8b58', $6b8b58);
+            api.createRecord('$0f4ea2', $0f4ea2);
           } else {
-            api.reload('$6b8b58', $6b8b58);
+            api.reload('$0f4ea2', $0f4ea2);
           }
         }
 
@@ -62329,14 +62423,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f8212b = exports.default || module.exports;
+        var $5e57d3 = exports.default || module.exports;
       
-      if (typeof $f8212b === 'function') {
-        $f8212b = $f8212b.options;
+      if (typeof $5e57d3 === 'function') {
+        $5e57d3 = $5e57d3.options;
       }
     
         /* template */
-        Object.assign($f8212b, (function () {
+        Object.assign($5e57d3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -62621,9 +62715,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$f8212b', $f8212b);
+            api.createRecord('$5e57d3', $5e57d3);
           } else {
-            api.reload('$f8212b', $f8212b);
+            api.reload('$5e57d3', $5e57d3);
           }
         }
 
@@ -62689,14 +62783,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $9061ff = exports.default || module.exports;
+        var $ab210d = exports.default || module.exports;
       
-      if (typeof $9061ff === 'function') {
-        $9061ff = $9061ff.options;
+      if (typeof $ab210d === 'function') {
+        $ab210d = $ab210d.options;
       }
     
         /* template */
-        Object.assign($9061ff, (function () {
+        Object.assign($ab210d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -62809,9 +62903,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$9061ff', $9061ff);
+            api.createRecord('$ab210d', $ab210d);
           } else {
-            api.reload('$9061ff', $9061ff);
+            api.reload('$ab210d', $ab210d);
           }
         }
 
@@ -62877,14 +62971,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $453cdd = exports.default || module.exports;
+        var $6ef7f0 = exports.default || module.exports;
       
-      if (typeof $453cdd === 'function') {
-        $453cdd = $453cdd.options;
+      if (typeof $6ef7f0 === 'function') {
+        $6ef7f0 = $6ef7f0.options;
       }
     
         /* template */
-        Object.assign($453cdd, (function () {
+        Object.assign($6ef7f0, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -62986,9 +63080,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$453cdd', $453cdd);
+            api.createRecord('$6ef7f0', $6ef7f0);
           } else {
-            api.reload('$453cdd', $453cdd);
+            api.reload('$6ef7f0', $6ef7f0);
           }
         }
 
@@ -96409,7 +96503,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35059" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36557" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

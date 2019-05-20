@@ -10,6 +10,11 @@ class Formatter {
         return number_format($value, 2, ",", ".");
     }
 
+    public static function percent($value)
+    {
+        return number_format($value * 100, 2, ",", ".") . "%";
+    }
+
     public static function salesInvoiceNumber($value)
     {
         return sprintf("%04d", $value);

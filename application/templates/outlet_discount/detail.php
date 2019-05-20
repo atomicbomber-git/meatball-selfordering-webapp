@@ -42,7 +42,7 @@ use App\Helpers\Formatter;
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-sm table-bordered table-striped">
+            <table class="datatable table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
@@ -82,3 +82,7 @@ use App\Helpers\Formatter;
         </div>
     </div>
 </div>
+
+<?php $this->start("extra-scripts") ?>
+    <?php $this->insert("shared/datatable") ?>
+<?php $this->stop() ?>

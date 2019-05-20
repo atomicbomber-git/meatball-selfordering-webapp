@@ -21,6 +21,8 @@ class User extends BaseController {
 
     public function index()
     {
+        UserPolicy::canIndex(Auth::user()) ?: $this->error403();
+
         $users = UserModel::query()
             ->select("id", "name", "username", "level")
             ->withCount(UserModel::RELATED_ENTITIES)
@@ -31,11 +33,15 @@ class User extends BaseController {
 
     public function create()
     {
+        UserPolicy::canCreate(Auth::user()) ?: $this->error403();
+
         $this->template->render("user/create");
     }
 
     public function store()
     {
+        UserPolicy::canCreate(Auth::user()) ?: $this->error403();
+
         $this->validate([
             ["name", "nama", "required"],
             ["username", "nama pengguna", "required|is_unique[users.username]"],
@@ -56,12 +62,15 @@ class User extends BaseController {
 
     public function edit($user_id)
     {
+        UserPolicy::canUpdate(Auth::user()) ?: $this->error403();
+
         $user = UserModel::find($user_id) ?: $this->error404();
         $this->template->render('user/edit', compact('user'));
     }
 
     public function update($user_id)
     {
+        UserPolicy::canUpdate(Auth::user()) ?: $this->error403();
         $user = UserModel::find($user_id) ?: $this->error404();
 
         $this->validate([

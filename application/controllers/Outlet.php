@@ -2,6 +2,8 @@
 
 use App\BaseController;
 use App\EloquentModels\Outlet as OutletModel;
+use App\Policies\OutletPolicy;
+use App\Helpers\Auth;
 
 class Outlet extends BaseController {
     protected function allowedMethods()
@@ -18,8 +20,11 @@ class Outlet extends BaseController {
 
     public function index()
     {
+        OutletPolicy::canIndex(Auth::user()) ?: $this->error403();
+
         $outlets = OutletModel::query()
             ->select("id", "name", "address")
+            ->withCount(OutletModel::RELATED_ENTITIES)
             ->get();
 
         $this->template->render("outlet/index", compact("outlets"));
@@ -27,11 +32,15 @@ class Outlet extends BaseController {
 
     public function create()
     {
+        OutletPolicy::canCreate(Auth::user()) ?: $this->error403();
+
         $this->template->render("outlet/create");
     }
 
     public function store()
     {
+        OutletPolicy::canCreate(Auth::user()) ?: $this->error403();
+
         $this->validate([
             ["name", "nama", "required"],
             ["address", "alamat", "required"],
@@ -59,6 +68,8 @@ class Outlet extends BaseController {
 
     public function edit($outlet_id)
     {
+        OutletPolicy::canUpdate(Auth::user()) ?: $this->error403();
+
         $outlet = OutletModel::find($outlet_id) ?: $this->error404();
         $this->template->render("outlet/edit", compact("outlet"));
     }
@@ -66,6 +77,7 @@ class Outlet extends BaseController {
     public function update($outlet_id)
     {
         $outlet = OutletModel::find($outlet_id) ?: $this->error404();
+        OutletPolicy::canCreate(Auth::user()) ?: $this->error403();
 
         $this->validate([
             ["name", "nama", "required"],
@@ -94,9 +106,9 @@ class Outlet extends BaseController {
     public function delete($outlet_id)
     {
         $outlet = OutletModel::find($outlet_id) ?: $this->error404();
+        OutletPolicy::canDelete(Auth::user(), $outlet) ?: $this->error403();
 
         $outlet->delete();
-
         $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
         $this->redirectBack();
     }

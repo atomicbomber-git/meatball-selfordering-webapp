@@ -1,6 +1,9 @@
 <?php
 use App\Helpers\DefaultRoute;
 use App\Helpers\AppInfo;
+use App\Policies\OutletPolicy;
+use App\Helpers\Auth;
+
 ?>
 
 <?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
@@ -34,7 +37,7 @@ use App\Helpers\AppInfo;
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-sm table-bordered table-striped">
+            <table class="datatable table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
@@ -59,7 +62,9 @@ use App\Helpers\AppInfo;
                                 <input type="hidden"
                                     name="<?= $this->csrf_name() ?>"
                                     value="<?= $this->csrf_token() ?>">
-                                <button class="btn btn-danger btn-sm">
+                                <button
+                                    <?= OutletPolicy::canDelete(Auth::user(), $outlet) ?: 'disabled' ?>
+                                    class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>
                             </form>
@@ -71,3 +76,7 @@ use App\Helpers\AppInfo;
         </div>
     </div>
 </div>
+
+<?php $this->start("extra-scripts") ?>
+    <?php $this->insert("shared/datatable") ?>
+<?php $this->stop() ?>

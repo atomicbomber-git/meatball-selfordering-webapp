@@ -36,11 +36,15 @@ class MenuCategory extends BaseController {
 
     public function create()
     {
+        MenuCategoryPolicy::canCreate(Auth::user()) ?: $this->error403();
+
         $this->template->render("menu_category/create");
     }
 
     public function store()
     {
+        MenuCategoryPolicy::canCreate(Auth::user()) ?: $this->error403();
+
         $this->validate([
             ["name", "nama", "required|is_unique[menu_categories.name]"]
         ]);
@@ -81,12 +85,16 @@ class MenuCategory extends BaseController {
 
     public function edit($menu_category_id)
     {
+        MenuCategoryPolicy::canUpdate(Auth::user()) ?: $this->error403();
+
         $menu_category = MenuCategoryModel::find($menu_category_id) ?: $this->error404();
         $this->template->render("menu_category/edit", compact("menu_category"));
     }
 
     public function update($menu_category_id)
     {
+        MenuCategoryPolicy::canUpdate(Auth::user()) ?: $this->error403();
+        
         $menu_category = MenuCategoryModel::find($menu_category_id) ?: $this->error404();
 
         Capsule::transaction(function() use($menu_category) {

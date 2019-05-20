@@ -5,6 +5,9 @@ use App\Helpers\DefaultRoute;
 use App\Policies\SalesInvoicePolicy;
 use App\Policies\ReceiptPrinterPolicy;
 use App\Helpers\URL;
+use App\Policies\OutletPolicy;
+use App\Policies\UserPolicy;
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,15 +32,19 @@ use App\Helpers\URL;
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
+                                <?php if(OutletPolicy::canIndex(Auth::user())): ?>
                                 <a href="<?= base_url("outlet/index") ?>" class="dropdown-item">
                                     <i class="fa fa-building"></i>
                                     Outlet
                                 </a>
-
+                                <?php endif ?>
+                                
+                                <?php if(UserPolicy::canIndex(Auth::user())): ?>
                                 <a href="<?= base_url("user/index") ?>" class="dropdown-item">
                                     <i class="fa fa-users"></i>
                                     Pengguna
                                 </a>
+                                <?php endif ?>
 
                                 <?php if (MenuCategoryPolicy::canIndex(Auth::user())) : ?>
 

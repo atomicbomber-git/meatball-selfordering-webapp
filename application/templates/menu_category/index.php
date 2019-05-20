@@ -41,7 +41,7 @@ use App\Helpers\Auth;
                     <tr>
                         <th> # </th>
                         <th> Nama </th>
-                        <th> Gambar </th>
+                        <th class="text-center"> Gambar </th>
                         <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
@@ -51,7 +51,7 @@ use App\Helpers\Auth;
                         <tr>
                             <td> <?= $key + 1 ?> </td>
                             <td> <?= $menu_category->name ?> </td>
-                            <td>
+                            <td class="text-center">
                                 <img style="width: 320px; height: 240px; object-fit: cover" src="<?= base_url("menuCategory/image/{$menu_category->id}") ?>" alt="<?= $menu_category->name ?>">
                             </td>
                             <td class="text-center">

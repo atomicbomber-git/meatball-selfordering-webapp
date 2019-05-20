@@ -61,7 +61,15 @@
                         {{ percent_format( get(sales_invoice.discount_map[item.outlet_menu_item.id], "percentage", 0) ) }}
                     </td>
 
-                    <td class="text-right"> Rp. {{ currency_format(item.quantity * get(item.outlet_menu_item, "price", 0)) }} </td>
+                    <td class="text-right">
+                        Rp. {{
+                            currency_format(
+                                item.quantity *
+                                get(item.outlet_menu_item, "price", 0) *
+                                (1 - get(sales_invoice.discount_map[item.outlet_menu_item.id], "percentage", 0))
+                            )
+                        }}
+                    </td>
                     <td class="text-center">
                         <button @click="removeItem(item)" class="btn btn-danger btn-sm">
                             Hapus
@@ -96,6 +104,17 @@
                     <th class="text-right"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
                     <th class="text-right"> {{ currency_format(service_charge) }} </th>
                     <th></th>
+                </tr>
+
+
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
+                    <th class="text-right">
+                        -{{ currency_format(special_discount_total) }}
+                    </th>
                 </tr>
 
                 <tr class="border-top">
@@ -164,6 +183,22 @@
                             <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td> Diskon Khusus </td>
+                        <td>
+                            <multiselect
+                                placheholder="Diskon Khusus"
+                                selectLabel=""
+                                deselectLabel=""
+                                :custom-label="val => percent_format(val)"
+                                :options="special_discount_percentages"
+                                v-model="special_discount_percentage"
+                                :preselect-first="true"
+                            />
+                        </td>
+                    </tr>
+
                     <tr>
                         <td> Jumlah yang Harus Dibayar </td>
                         <td class="text-danger">
@@ -212,7 +247,8 @@
 <script>
 
 import order_types from '../order_types.js'
-import { currency_format, percent_format } from "../numeral_helpers.js"
+import { currency_format, percent_format } from "../numeral_helpers"
+import special_discount_percentages from "../special_discount_percentages"
 import { get } from "lodash"
 import OrderQuantity from "./OrderQuantity.vue"
 import { Multiselect } from "vue-multiselect"
@@ -226,6 +262,7 @@ export default {
         return {
             cash: null,
             password: null,
+            special_discount_percentage: null,
 
             p_sales_invoice: {
                 ...this.sales_invoice,
@@ -249,6 +286,10 @@ export default {
     },
 
     computed: {
+        special_discount_percentages() {
+            return special_discount_percentages
+        },
+
         order_types() {
             return order_types
         },
@@ -291,11 +332,33 @@ export default {
 
                 cash: this.cash,
                 type: this.p_sales_invoice.type,
+                special_discount: this.special_discount_percentage,
                 password: this.password,
             }
         },
 
+        undiscounted_sales_invoice_items() {
+            return this.added_items
+                .filter(added_item => added_item.outlet_menu_item !== null)
+                .filter(item => get(this.sales_invoice.discount_map[item.outlet_menu_item.id], "percentage", 0) == 0) 
+        },
+
+        undiscounted_total() {
+            return this.undiscounted_sales_invoice_items.reduce((prev, curr) => {
+                return prev + (curr.quantity * curr.outlet_menu_item.price)
+            }, 0)
+        },
+
         pretax_sum() {
+            return this.added_items
+                .filter(added_item => added_item.outlet_menu_item !== null)
+                .reduce((prev, curr) => {
+                    return prev + (curr.quantity * curr.outlet_menu_item.price *
+                        (1 - get(this.sales_invoice.discount_map[curr.outlet_menu_item.id], "percentage", 0)))
+                }, 0)
+        },
+
+        prediscount_pretax_sum() {
             return this.added_items
                 .filter(added_item => added_item.outlet_menu_item !== null)
                 .reduce((prev, curr) => {
@@ -304,15 +367,19 @@ export default {
         },
 
         tax() {
-            return this.pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai
+            return this.prediscount_pretax_sum * this.sales_invoice.outlet.pajak_pertambahan_nilai
         },
 
         service_charge() {
-            return this.pretax_sum * this.sales_invoice.outlet.service_charge
+            return this.prediscount_pretax_sum * this.sales_invoice.outlet.service_charge
+        },
+
+        special_discount_total() {
+            return this.undiscounted_total * this.special_discount_percentage
         },
 
         total() {
-            return this.pretax_sum + (this.tax + this.service_charge)
+            return this.pretax_sum + (this.tax + this.service_charge - this.special_discount_total)
         },
 
         rounding() {

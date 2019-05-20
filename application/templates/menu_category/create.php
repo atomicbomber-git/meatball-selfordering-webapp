@@ -24,9 +24,10 @@ use App\Helpers\AppInfo;
         </ol>
     </nav>
 
-    <h2>
+    <h3 class="mb-3">
+        <i class="fa fa-list"></i>
         Kategori Menu Baru
-    </h2>
+    </h3>
 
     <div class="card">
         <div class="card-body">

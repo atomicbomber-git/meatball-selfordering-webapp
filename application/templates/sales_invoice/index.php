@@ -21,7 +21,7 @@
         </ol>
     </nav>
 
-    <h3>
+    <h3 class="mb-3">
         <i class="fa fa-usd"></i>
         Transaksi / Kasir
     </h3>
@@ -30,21 +30,21 @@
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-sm table-striped">
+            <table class="datatable table table-sm table-striped table-bordered text-center">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> Nomor Pesanan </th>
                         <th> Waktu </th>
-                        <th> Kendali </th>
+                        <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php foreach($sales_invoices as $sales_invoice): ?>
                     <tr>
-                        <td> <?= $sales_invoice->number ?> </td>
+                        <td> <?= $sales_invoice->number ?>. </td>
                         <td> <?= $sales_invoice->created_at ?> </td>
-                        <td>
+                        <td class="text-center">
                             <a href="<?= base_url("salesInvoice/confirm/{$sales_invoice->id}") ?>" class="btn btn-dark btn-sm">
                                 Konfirmasi
                             </a>
@@ -56,3 +56,7 @@
         </div>
     </div>
 </div>
+
+<?php $this->start("extra-scripts") ?>
+    <?php $this->insert("shared/datatable") ?>
+<?php $this->stop() ?>

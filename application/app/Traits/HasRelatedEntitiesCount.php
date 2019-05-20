@@ -18,4 +18,9 @@ trait HasRelatedEntitiesCount
 
         return $count;
     }
+
+    public function getHasRelatedEntitiesAttribute()
+    {
+        return $this->related_entities_count > 0;
+    }
 }

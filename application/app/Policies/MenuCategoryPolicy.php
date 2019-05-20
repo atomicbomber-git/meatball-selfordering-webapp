@@ -10,12 +10,31 @@ class MenuCategoryPolicy
 {
     public static function canIndex(?User $user)
     {
-        if ($user === null) {
+        if ($user === null || $user->level !== UserLevel::ADMIN) {
             return false;
         }
 
-        return $user->level === UserLevel::ADMIN;
+        return true;
     }
+
+    public static function canCreate(?User $user)
+    {
+        if ($user === null || $user->level !== UserLevel::ADMIN) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function canUpdate(?User $user)
+    {
+        if ($user === null || $user->level !== UserLevel::ADMIN) {
+            return false;
+        }
+
+        return true;
+    }
+
 
     public static function canDelete(?User $user, MenuCategory $menuCategory)
     {

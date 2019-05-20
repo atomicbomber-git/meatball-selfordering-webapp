@@ -60,7 +60,7 @@
                     <th></th>
                     <th class="text-right"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
                     <th class="text-right">
-                        {{ currency_format(special_discount) }}
+                        -{{ currency_format(special_discount) }}
                     </th>
                 </tr>
 
@@ -126,7 +126,7 @@
                         <td> Diskon Khusus </td>
                         <td>
                             <multiselect
-                                placheholder="Placeholder"
+                                placheholder="Diskon Khusus"
                                 selectLabel=""
                                 deselectLabel=""
                                 :custom-label="val => percent_format(val)"
@@ -216,7 +216,7 @@ export default {
                             this.sendPrintRequest(response)
                                 .done(response => {
                                     swal({ icon: "success", text: "Pembayaran berhasil" })
-                                        .then(is_ok => { window.location.replace(this.redirect_url) })
+                                        // .then(is_ok => { window.location.replace(this.redirect_url) })
                                 })
                                 .fail((xhr, status, error) => {
                                     Sentry.captureException({xhr, status, error})
@@ -261,6 +261,12 @@ export default {
                 .filter(item => get(this.sales_invoice.discount_map[item.menu_item.outlet_menu_item.id], "percentage", 0) == 0) 
         },
 
+        undiscounted_total() {
+            return this.undiscounted_sales_invoice_items.reduce((prev, curr) => {
+                return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
+            }, 0)
+        },
+
         /* Pretax sum with item discount included */
         pretax_sum() {
             return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
@@ -272,12 +278,6 @@ export default {
 
         prediscount_pretax_sum() {
             return this.sales_invoice.sorted_planned_sales_invoice_items.reduce((prev, curr) => {
-                return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
-            }, 0)
-        },
-
-        undiscounted_total() {
-            return this.undiscounted_sales_invoice_items.reduce((prev, curr) => {
                 return prev + (curr.quantity * curr.menu_item.outlet_menu_item.price)
             }, 0)
         },

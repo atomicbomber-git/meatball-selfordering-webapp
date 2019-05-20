@@ -20,7 +20,7 @@ class SalesInvoice extends Model
     ];
 
     public $fillable = [
-        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "finished_at"
+        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "special_discount", "finished_at"
     ];
 
     public $appends = [
@@ -77,8 +77,8 @@ class SalesInvoice extends Model
         }]);
 
         $items = $this->planned_sales_invoice_items->filter(function ($item) {
-            $discount = $this->discount_map[$item->menu_item->outlet_menu_item->id] ?? 0;  
-            return $discount === 0;
+            $discount = $this->discount_map[$item->menu_item->outlet_menu_item->id]->percentage ?? 0;  
+            return $discount == 0;
         });
 
         return $items;
@@ -97,11 +97,10 @@ class SalesInvoice extends Model
         return $this->undiscounted_pretax_total * $this->special_discount;
     }
 
-    /* The `pretax_total` attrribute */
+    /* The `pretax_total` attrribute, without any discount applied */
     public function getPretaxTotalAttribute()
     {
         $this->loadMissing("outlet");
-
         $this->loadMissing(["planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) {
             $query->where("outlet_id", $this->outlet->id);
         }]);
@@ -109,7 +108,20 @@ class SalesInvoice extends Model
         return $this->planned_sales_invoice_items->sum(function ($sales_invoice_item) {
             return $sales_invoice_item->quantity *
                 $sales_invoice_item->menu_item->outlet_menu_item->price *
-                1 - ($this->discount_map[$sales_invoice_item->menu_item->outlet_menu_item->id]->percentage ?? 1);
+                (1 - ($this->discount_map[$sales_invoice_item->menu_item->outlet_menu_item->id]->percentage ?? 0));
+        });
+    }
+
+    /* Like `pretax_total`, but discounted */
+    public function getPrediscountPretaxTotalAttribute()
+    {
+        $this->loadMissing("outlet");
+        $this->loadMissing(["planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) {
+            $query->where("outlet_id", $this->outlet->id);
+        }]);
+
+        return $this->planned_sales_invoice_items->sum(function ($sales_invoice_item) {
+            return $sales_invoice_item->quantity * $sales_invoice_item->menu_item->outlet_menu_item->price;
         });
     }
 
@@ -117,20 +129,20 @@ class SalesInvoice extends Model
     public function getTaxAttribute()
     {
         $this->loadMissing("outlet");
-        return $this->pretax_total * ($this->outlet->pajak_pertambahan_nilai);
+        return $this->prediscount_pretax_total * ($this->outlet->pajak_pertambahan_nilai);
     }
 
     /* The `service_charge` attribute */
     public function getServiceChargeAttribute()
     {
         $this->loadMissing("outlet");
-        return $this->pretax_total * ($this->outlet->service_charge);
+        return $this->prediscount_pretax_total * ($this->outlet->service_charge);
     }
 
     /* The `total` attribute */
     public function getTotalAttribute()
     {
-        return $this->pretax_total + ($this->tax + $this->service_charge);
+        return $this->pretax_total + ($this->tax + $this->service_charge - $this->special_discount_total);
     }
 
     /* The `rounding` attribute */

@@ -46453,11 +46453,11 @@ var _numeral_helpers = require("../numeral_helpers");
 
 var _special_discount_percentages2 = _interopRequireDefault(require("../special_discount_percentages"));
 
+var _order_types2 = _interopRequireDefault(require("../order_types"));
+
 var _vueMultiselect = require("vue-multiselect");
 
 var _lodash = require("lodash");
-
-var _order_types2 = _interopRequireDefault(require("../order_types"));
 
 var _vueCleaveComponent = _interopRequireDefault(require("vue-cleave-component"));
 
@@ -47181,7 +47181,7 @@ render._withStripped = true
       
       }
     })();
-},{"sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","../numeral_helpers":"numeral_helpers.js","../special_discount_percentages":"special_discount_percentages.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","lodash":"../../node_modules/lodash/lodash.js","../order_types":"order_types.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/SalesInvoiceUpdateAndConfirm.vue":[function(require,module,exports) {
+},{"sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","../numeral_helpers":"numeral_helpers.js","../special_discount_percentages":"special_discount_percentages.js","../order_types":"order_types.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","lodash":"../../node_modules/lodash/lodash.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/SalesInvoiceUpdateAndConfirm.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

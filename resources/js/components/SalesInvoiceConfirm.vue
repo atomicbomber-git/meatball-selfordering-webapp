@@ -174,9 +174,9 @@
 import { vsprintf } from "sprintf-js"
 import { currency_format, percent_format } from "../numeral_helpers"
 import special_discount_percentages from "../special_discount_percentages"
+import order_types from "../order_types"
 import { Multiselect } from "vue-multiselect"
 import { get } from "lodash"
-import order_types from "../order_types"
 import VueCleave from "vue-cleave-component"
 
 export default {

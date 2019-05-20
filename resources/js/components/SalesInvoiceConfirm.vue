@@ -208,7 +208,7 @@ export default {
             })
             .then(is_ok => {
                 if (is_ok) {
-                    $.post(this.submit_url, {cash: this.cash, token: window.token})
+                    $.post(this.submit_url, {...this.final_form, token: window.token})
                         .done(response => {
                             this.error_data = null;
 
@@ -241,6 +241,13 @@ export default {
     },
 
     computed: {
+        final_form() {
+            return {
+                cash: this.cash,
+                special_discount: this.special_discount_percentage,
+            }
+        },
+
         special_discount_percentages() {
             return special_discount_percentages
         },

@@ -24,7 +24,7 @@ class SalesInvoice extends Model
     ];
 
     public $appends = [
-        "pretax_total", "tax", "service_charge", "total", "rounding", "total_change"
+        "pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items",
     ];
 
     protected $dates = [
@@ -67,6 +67,25 @@ class SalesInvoice extends Model
             return $curr->merge($next->discount_menu_items);
         }, collect())
         ->keyBy("outlet_menu_item_id");
+    }
+
+    /* Planned sales invoice items that are not discounted */
+    public function getUndiscountedItemsAttribute()
+    {
+        $this->loadMissing(["planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) {
+            $query->where("outlet_id", $this->outlet->id);
+        }]);
+
+        $items = $this->planned_sales_invoice_items->filter(function ($item) {
+            $discount = $this->discount_map[$item->menu_item->outlet_menu_item->id] ?? 0;  
+            return $discount === 0;
+        });
+
+        return $items;
+    }
+
+    public function getUndiscountedPretaxTotalAttribute() {
+
     }
 
     /* The `pretax_total` attrribute */

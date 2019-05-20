@@ -58,6 +58,9 @@ class SalesInvoice extends BaseController
         $outlet = Auth::user()->outlet ?: $this->error403();
 
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+
+        $this->jsonResponse($sales_invoice);
+
         $sales_invoice->load([
             "outlet",
             "outlet.cashier_printer",
@@ -88,6 +91,7 @@ class SalesInvoice extends BaseController
 
         $this->validate([
             ["cash", "jumlah pembayaran", "required|greater_than_equal_to[{$sales_invoice->rounding}]"],
+            ["special_discount", "diskon spesial", "required"],
         ]);
 
         DB::transaction(function () use ($sales_invoice) {
@@ -106,6 +110,7 @@ class SalesInvoice extends BaseController
             $sales_invoice->update([
                 "status" => SalesInvoiceModel::FINISHED,
                 "cash" => $this->input->post("cash"),
+                "special_discount" => $this->input->post("special_discount"),
                 "cashier_id" => Auth::user()->id,
                 "finished_at" => Date::now(),
             ]);
@@ -215,6 +220,8 @@ class SalesInvoice extends BaseController
 
     public function store()
     {
+        $outlet = Auth::user()->outlet ?: $this->error403();
+
         $this->validate([
             ["menu_items[*][id]", "id item menu", "required",],
             ["menu_items[*][quantity]", "jumlah item menu", "required",],
@@ -223,8 +230,9 @@ class SalesInvoice extends BaseController
 
         $data = $this->input->post(null);
 
-        DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data, $outlet) {
             $sales_invoice_count = SalesInvoiceModel::query()
+                ->where("outlet_id", $outlet->id)
                 ->whereDate("created_at", "=", Date::today())
                 ->count();
 

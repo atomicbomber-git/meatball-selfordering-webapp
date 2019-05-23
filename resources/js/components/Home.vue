@@ -63,11 +63,12 @@
                                 </div>
 
                                 <div class="col-md-8">
-                                    <table class="table table-striped">
+                                    <table class="table table-sm table-striped">
                                         <thead>
-                                            <th>Nama</th>
-                                            <th>Harga</th>
-                                            <th>Jumlah Pemesanan</th>
+                                            <th> Nama </th>
+                                            <th class="text-right"> Harga (Rp) </th>
+                                            <th class="text-right"> Diskon </th>
+                                            <th class="text-center"> Jumlah </th>
                                         </thead>
 
                                         <tbody>
@@ -76,8 +77,16 @@
                                                 :key="menu_item.id"
                                             >
                                                 <td>{{ menu_item.name }}</td>
-                                                <td>Rp. {{ number_format(menu_item.price) }}</td>
-                                                <td>
+                                                <td class="text-right">
+                                                    <!-- Real price -->
+                                                    {{ number_format(menu_item.outlet_menu_item.price) }}
+                                                </td>
+                                                <td class="text-right">
+                                                    <!-- Discount -->
+
+                                                    {{ percent_format(get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0)) }}
+                                                </td>
+                                                <td class="text-center">
                                                     <button
                                                         @click="--menu_item.order_quantity"
                                                         class="btn btn-sm btn-danger"
@@ -85,7 +94,7 @@
                                                         <i class="fa fa-minus"></i>
                                                     </button>
 
-                                                    <span class="font-weight-bold mx-3">
+                                                    <span class="font-weight-bold mx-1">
                                                         <order-quantity
                                                             v-model="menu_item.order_quantity"
                                                         />
@@ -118,16 +127,21 @@
                         <table class="table table-sm table-striped">
                             <thead>
                                 <th>Item</th>
-                                <th>Harga (Rp.)</th>
-                                <th style="width: 10rem">Jumlah</th>
-                                <th class="text-right"> Subtotal (Rp.) </th>
+                                <th class="text-right">Harga (Rp)</th>
+                                <th class="text-center" style="width: 10rem">Jumlah</th>
+                                <th class="text-right"> Subtotal (Rp) </th>
                             </thead>
 
                             <tbody>
                                 <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
                                     <td>{{ menu_item.name }}</td>
-                                    <td>{{ number_format(menu_item.price) }}</td>
-                                    <td>
+                                    <td class="text-right">
+                                        {{ number_format(
+                                            menu_item.outlet_menu_item.price * 
+                                            (1 - get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0))
+                                        ) }}
+                                    </td>
+                                    <td class="text-center">
                                         <button
                                             @click="--menu_item.order_quantity"
                                             class="btn btn-sm btn-danger"
@@ -147,9 +161,13 @@
                                         </button>
                                     </td>
 
-                                    <td
-                                        class="text-right"
-                                    >{{ number_format(menu_item.price * menu_item.order_quantity) }}</td>
+                                    <td class="text-right">
+                                        {{ number_format(
+                                            menu_item.outlet_menu_item.price *
+                                            menu_item.order_quantity *
+                                            (1 - get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0))
+                                        ) }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -214,15 +232,25 @@
                     <table class="table">
                         <thead>
                             <th>Item</th>
-                            <th>Harga (Rp.)</th>
-                            <th style="width: 10rem text-right">Jumlah</th>
-                            <th class="text-right">Subtotal (Rp.)</th>
+                            <th class="text-right">
+                                Harga (Rp)
+                            </th>
+                            <th class="text-right" style="width: 10rem">
+                                Jumlah
+                            </th>
+                            <th class="text-right">
+                                Subtotal (Rp)
+                            </th>
                         </thead>
 
                         <tbody>
                             <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
-                                <td>{{ menu_item.name }}</td>
-                                <td>{{ number_format(menu_item.price) }}</td>
+                                <td>
+                                    {{ menu_item.name }}
+                                </td>
+                                <td class="text-right">
+                                    {{ number_format(menu_item.outlet_menu_item.price) }}
+                                </td>
                                 
                                 <td class="text-right">
                                     <span class="font-weight-bold mx-1">
@@ -230,9 +258,13 @@
                                     </span>
                                 </td>
 
-                                <td
-                                    class="text-right"
-                                >{{ number_format(menu_item.price * menu_item.order_quantity) }}</td>
+                                <td class="text-right">
+                                    {{ number_format(
+                                        menu_item.outlet_menu_item.price * 
+                                        menu_item.order_quantity *
+                                        (1 - get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0))
+                                    ) }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -245,7 +277,9 @@
 
                     <div class="total-price font-weight-bold text-right">
                         TOTAL:
-                        <span class="text-danger">Rp. {{ number_format(total_price) }}</span>
+                        <span class="text-danger">
+                            Rp. {{ number_format(total_price) }}
+                        </span>
                     </div>
                 </div>
 
@@ -284,9 +318,10 @@
 </template>
 
 <script>
-import { number_format } from "../numeral_helpers.js";
+import { number_format, percent_format } from "../numeral_helpers.js";
+import { get } from 'lodash';
 import OrderQuantity from "./OrderQuantity.vue";
-import  order_types from "../order_types";
+import order_types from "../order_types";
 import { sprintf } from "sprintf-js";
 
 export default {
@@ -333,7 +368,11 @@ export default {
 
         total_price() {
             return this.ordered_menu_items.reduce((prev, cur) => {
-                return prev + cur.price * cur.order_quantity;
+                return prev + (
+                    cur.outlet_menu_item.price *
+                    cur.order_quantity *
+                    (1 - get(this.outlet.discount_map[cur.outlet_menu_item.id], "percentage", 0))
+                );
             }, 0);
         },
 
@@ -353,8 +392,10 @@ export default {
     },
 
     methods: {
+        get,
         sprintf,
         number_format,
+        percent_format,
 
         onOrderMenuCategoryButtonClick(menu_category) {
             this.selected_menu_category = menu_category;

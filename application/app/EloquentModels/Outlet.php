@@ -4,6 +4,7 @@ namespace App\EloquentModels;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasRelatedEntitiesCount;
+use Carbon\Carbon;
 
 class Outlet extends Model
 {
@@ -62,5 +63,20 @@ class Outlet extends Model
         return $this->hasOne(ReceiptPrinter::class)
             ->where("type", ReceiptPrinter::SERVICE_TYPE)
             ->where("is_active", 1);
+    }
+
+    public function getDiscountMapAttribute()
+    {
+        $time = Carbon::now();
+
+        $this->loadMissing(["discounts" => function ($query) use ($time) {
+            $query->whereTime("starts_at", "<", $time);
+            $query->whereTime("ends_at", ">", $time);
+        }, "discounts.discount_menu_items"]);
+
+        return $this->discounts->reduce(function ($curr, $next) {
+            return $curr->merge($next->discount_menu_items);
+        }, collect())
+        ->keyBy("outlet_menu_item_id");
     }
 }

@@ -29,27 +29,19 @@ class Home extends BaseController
     public function show()
     {
         $outlet = Auth::user()->outlet ?: $this->error403();
-
-        $outlet->load([
-            "outlet_menu_items:outlet_id,menu_item_id,price",
-        ]);
-
-        $menu_item_price_map = $outlet->outlet_menu_items
-            ->mapWithKeys(function ($menu_item) {
-                return [$menu_item->menu_item_id => $menu_item->price];
-            });
+        $outlet->append("discount_map");
+        $outlet->load(["outlet_menu_items:outlet_id,menu_item_id,price",]);
 
         $menu_data = MenuCategory::query()
             ->with(["menu_items" => function ($query) use($outlet) {
                 $query->whereIn("id", $outlet->outlet_menu_items->pluck("menu_item_id"));
             }])
-            ->get()
-            ->map(function ($menu_category) use($menu_item_price_map) {
-                foreach ($menu_category->menu_items as $menu_item) {
-                    $menu_item->price = $menu_item_price_map[$menu_item->id];
-                }
-                return $menu_category;
-            });
+            ->with(["menu_items.outlet_menu_item" => function ($query) use ($outlet) {
+                $query
+                    ->select("id", "outlet_id", "price", "menu_item_id")
+                    ->where("outlet_id", $outlet->id);
+            }])
+            ->get();
 
         $this->template->render("home/show", compact("menu_data", "outlet"));
     }

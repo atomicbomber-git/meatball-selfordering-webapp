@@ -49,7 +49,7 @@ function percent_format(value) {
     const converted = numeral(value).value()
     numeral.locale(orig_locale)
 
-    return numeral(converted).format('0.00%')
+    return numeral(converted).format('0%')
 }
 
 module.exports = { numeral, number_format, currency_format, percent_format }

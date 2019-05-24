@@ -124,7 +124,7 @@
                     <h1 class="h5 text-info">DAFTAR PESANAN</h1>
 
                     <div v-if="ordered_menu_items.length > 0">
-                        <table class="table table-sm table-striped">
+                        <table class="table table-sm">
                             <thead>
                                 <th>Item</th>
                                 <th class="text-right">Harga (Rp)</th>
@@ -132,7 +132,7 @@
                                 <th class="text-right"> Subtotal (Rp) </th>
                             </thead>
 
-                            <tbody>
+                            <tbody class="table-striped">
                                 <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
                                     <td>{{ menu_item.name }}</td>
                                     <td class="text-right">
@@ -170,11 +170,27 @@
                                     </td>
                                 </tr>
                             </tbody>
+
+                            <tfoot class="text-right">
+                                <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> Service Charge ({{ percent_format(outlet.service_charge) }}) </td>
+                                    <td> {{ number_format(this.service_charge) }} </td>
+                                </tr>
+
+                                <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> PPN ({{ percent_format(outlet.pajak_pertambahan_nilai) }}) </td>
+                                    <td> {{ number_format(this.tax) }} </td>
+                                </tr>
+                            </tfoot>
                         </table>
 
                         <div class="total-price font-weight-bold text-right">
                             TOTAL:
-                            <span class="text-danger">Rp. {{ number_format(total_price) }}</span>
+                            <span class="text-danger">Rp. {{ number_format(rounding) }}</span>
                         </div>
 
                         <div @click="onFinishOrderButtonClick" class="text-right mt-3">
@@ -267,6 +283,22 @@
                                 </td>
                             </tr>
                         </tbody>
+                        
+                        <tfoot class="text-right">
+                            <tr>
+                                <td> </td>
+                                <td> </td>
+                                <td> Service Charge ({{ percent_format(outlet.service_charge) }}) </td>
+                                <td> {{ number_format(this.service_charge) }} </td>
+                            </tr>
+
+                            <tr>
+                                <td> </td>
+                                <td> </td>
+                                <td> PPN ({{ percent_format(outlet.pajak_pertambahan_nilai) }}) </td>
+                                <td> {{ number_format(this.tax) }} </td>
+                            </tr>
+                        </tfoot>
                     </table>
 
                     <h3 class="text-right">
@@ -278,7 +310,7 @@
                     <div class="total-price font-weight-bold text-right">
                         TOTAL:
                         <span class="text-danger">
-                            Rp. {{ number_format(total_price) }}
+                            Rp. {{ number_format(rounding) }}
                         </span>
                     </div>
                 </div>
@@ -366,14 +398,32 @@ export default {
             return menu_items;
         },
 
-        total_price() {
+        prediscount_pretax_total_price() {
             return this.ordered_menu_items.reduce((prev, cur) => {
-                return prev + (
-                    cur.outlet_menu_item.price *
-                    cur.order_quantity *
-                    (1 - get(this.outlet.discount_map[cur.outlet_menu_item.id], "percentage", 0))
-                );
+                return prev + (cur.outlet_menu_item.price * cur.order_quantity);
             }, 0);
+        },
+
+        pretax_total_price() {
+            return this.ordered_menu_items.reduce((prev, cur) => {
+                return prev + (cur.outlet_menu_item.price * cur.order_quantity * (1 - get(this.outlet.discount_map[cur.outlet_menu_item.id], "percentage", 0)));
+            }, 0);
+        },
+
+        tax() {
+            return this.prediscount_pretax_total_price * this.outlet.pajak_pertambahan_nilai
+        },
+
+        service_charge() {
+            return this.prediscount_pretax_total_price * this.outlet.service_charge
+        },
+
+        total_price() {
+            return this.pretax_total_price + (this.tax + this.service_charge)
+        },
+
+        rounding() {
+            return Math.round(this.total_price / 100) * 100
         },
 
         form_data() {

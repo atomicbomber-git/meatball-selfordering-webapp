@@ -41038,14 +41038,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b6cefe = exports.default || module.exports;
+        var $8a4699 = exports.default || module.exports;
       
-      if (typeof $b6cefe === 'function') {
-        $b6cefe = $b6cefe.options;
+      if (typeof $8a4699 === 'function') {
+        $8a4699 = $8a4699.options;
       }
     
         /* template */
-        Object.assign($b6cefe, (function () {
+        Object.assign($8a4699, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -41072,9 +41072,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$b6cefe', $b6cefe);
+            api.createRecord('$8a4699', $8a4699);
           } else {
-            api.reload('$b6cefe', $b6cefe);
+            api.reload('$8a4699', $8a4699);
           }
         }
 
@@ -41381,12 +41381,29 @@ var _default = {
       });
       return menu_items;
     },
-    total_price: function total_price() {
+    prediscount_pretax_total_price: function prediscount_pretax_total_price() {
+      return this.ordered_menu_items.reduce(function (prev, cur) {
+        return prev + cur.outlet_menu_item.price * cur.order_quantity;
+      }, 0);
+    },
+    pretax_total_price: function pretax_total_price() {
       var _this = this;
 
       return this.ordered_menu_items.reduce(function (prev, cur) {
         return prev + cur.outlet_menu_item.price * cur.order_quantity * (1 - (0, _lodash.get)(_this.outlet.discount_map[cur.outlet_menu_item.id], "percentage", 0));
       }, 0);
+    },
+    tax: function tax() {
+      return this.prediscount_pretax_total_price * this.outlet.pajak_pertambahan_nilai;
+    },
+    service_charge: function service_charge() {
+      return this.prediscount_pretax_total_price * this.outlet.service_charge;
+    },
+    total_price: function total_price() {
+      return this.pretax_total_price + (this.tax + this.service_charge);
+    },
+    rounding: function rounding() {
+      return Math.round(this.total_price / 100) * 100;
     },
     form_data: function form_data() {
       var ordereds = this.ordered_menu_items.map(function (menu_item) {
@@ -41490,14 +41507,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $5fd4d4 = exports.default || module.exports;
+        var $3ebacf = exports.default || module.exports;
       
-      if (typeof $5fd4d4 === 'function') {
-        $5fd4d4 = $5fd4d4.options;
+      if (typeof $3ebacf === 'function') {
+        $3ebacf = $3ebacf.options;
       }
     
         /* template */
-        Object.assign($5fd4d4, (function () {
+        Object.assign($3ebacf, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -41783,11 +41800,12 @@ exports.default = _default;
             _vm._v(" "),
             _vm.ordered_menu_items.length > 0
               ? _c("div", [
-                  _c("table", { staticClass: "table table-sm table-striped" }, [
+                  _c("table", { staticClass: "table table-sm" }, [
                     _vm._m(0),
                     _vm._v(" "),
                     _c(
                       "tbody",
+                      { staticClass: "table-striped" },
                       _vm._l(_vm.ordered_menu_items, function(menu_item) {
                         return _c("tr", { key: menu_item.id }, [
                           _c("td", [_vm._v(_vm._s(menu_item.name))]),
@@ -41880,7 +41898,57 @@ exports.default = _default;
                         ])
                       }),
                       0
-                    )
+                    ),
+                    _vm._v(" "),
+                    _c("tfoot", { staticClass: "text-right" }, [
+                      _c("tr", [
+                        _c("td"),
+                        _vm._v(" "),
+                        _c("td"),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " Service Charge (" +
+                              _vm._s(
+                                _vm.percent_format(_vm.outlet.service_charge)
+                              ) +
+                              ") "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " " +
+                              _vm._s(_vm.number_format(this.service_charge)) +
+                              " "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td"),
+                        _vm._v(" "),
+                        _c("td"),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " PPN (" +
+                              _vm._s(
+                                _vm.percent_format(
+                                  _vm.outlet.pajak_pertambahan_nilai
+                                )
+                              ) +
+                              ") "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " " + _vm._s(_vm.number_format(this.tax)) + " "
+                          )
+                        ])
+                      ])
+                    ])
                   ]),
                   _vm._v(" "),
                   _c(
@@ -41891,9 +41959,7 @@ exports.default = _default;
                         "\n                        TOTAL:\n                        "
                       ),
                       _c("span", { staticClass: "text-danger" }, [
-                        _vm._v(
-                          "Rp. " + _vm._s(_vm.number_format(_vm.total_price))
-                        )
+                        _vm._v("Rp. " + _vm._s(_vm.number_format(_vm.rounding)))
                       ])
                     ]
                   ),
@@ -42089,7 +42155,55 @@ exports.default = _default;
                     ])
                   }),
                   0
-                )
+                ),
+                _vm._v(" "),
+                _c("tfoot", { staticClass: "text-right" }, [
+                  _c("tr", [
+                    _c("td"),
+                    _vm._v(" "),
+                    _c("td"),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        " Service Charge (" +
+                          _vm._s(
+                            _vm.percent_format(_vm.outlet.service_charge)
+                          ) +
+                          ") "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.number_format(this.service_charge)) +
+                          " "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td"),
+                    _vm._v(" "),
+                    _c("td"),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        " PPN (" +
+                          _vm._s(
+                            _vm.percent_format(
+                              _vm.outlet.pajak_pertambahan_nilai
+                            )
+                          ) +
+                          ") "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(" " + _vm._s(_vm.number_format(this.tax)) + " ")
+                    ])
+                  ])
+                ])
               ]),
               _vm._v(" "),
               _c("h3", { staticClass: "text-right" }, [
@@ -42110,7 +42224,7 @@ exports.default = _default;
                   _c("span", { staticClass: "text-danger" }, [
                     _vm._v(
                       "\n                        Rp. " +
-                        _vm._s(_vm.number_format(_vm.total_price)) +
+                        _vm._s(_vm.number_format(_vm.rounding)) +
                         "\n                    "
                     )
                   ])
@@ -42235,7 +42349,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-5fd4d4",
+            _scopeId: "data-v-3ebacf",
             functional: undefined
           };
         })());
@@ -42248,9 +42362,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$5fd4d4', $5fd4d4);
+            api.createRecord('$3ebacf', $3ebacf);
           } else {
-            api.reload('$5fd4d4', $5fd4d4);
+            api.reload('$3ebacf', $3ebacf);
           }
         }
 
@@ -42387,14 +42501,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $cd7a60 = exports.default || module.exports;
+        var $ebb93a = exports.default || module.exports;
       
-      if (typeof $cd7a60 === 'function') {
-        $cd7a60 = $cd7a60.options;
+      if (typeof $ebb93a === 'function') {
+        $ebb93a = $ebb93a.options;
       }
     
         /* template */
-        Object.assign($cd7a60, (function () {
+        Object.assign($ebb93a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -42503,9 +42617,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$cd7a60', $cd7a60);
+            api.createRecord('$ebb93a', $ebb93a);
           } else {
-            api.reload('$cd7a60', $cd7a60);
+            api.reload('$ebb93a', $ebb93a);
           }
         }
 
@@ -46713,14 +46827,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $7098dc = exports.default || module.exports;
+        var $43f480 = exports.default || module.exports;
       
-      if (typeof $7098dc === 'function') {
-        $7098dc = $7098dc.options;
+      if (typeof $43f480 === 'function') {
+        $43f480 = $43f480.options;
       }
     
         /* template */
-        Object.assign($7098dc, (function () {
+        Object.assign($43f480, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -47135,9 +47249,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$7098dc', $7098dc);
+            api.createRecord('$43f480', $43f480);
           } else {
-            api.reload('$7098dc', $7098dc);
+            api.reload('$43f480', $43f480);
           }
         }
 
@@ -47380,14 +47494,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $870b72 = exports.default || module.exports;
+        var $f6bf03 = exports.default || module.exports;
       
-      if (typeof $870b72 === 'function') {
-        $870b72 = $870b72.options;
+      if (typeof $f6bf03 === 'function') {
+        $f6bf03 = $f6bf03.options;
       }
     
         /* template */
-        Object.assign($870b72, (function () {
+        Object.assign($f6bf03, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -48012,9 +48126,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$870b72', $870b72);
+            api.createRecord('$f6bf03', $f6bf03);
           } else {
-            api.reload('$870b72', $870b72);
+            api.reload('$f6bf03', $f6bf03);
           }
         }
 
@@ -57342,14 +57456,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $28aa41 = exports.default || module.exports;
+        var $4b0577 = exports.default || module.exports;
       
-      if (typeof $28aa41 === 'function') {
-        $28aa41 = $28aa41.options;
+      if (typeof $4b0577 === 'function') {
+        $4b0577 = $4b0577.options;
       }
     
         /* template */
-        Object.assign($28aa41, (function () {
+        Object.assign($4b0577, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -57390,9 +57504,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$28aa41', $28aa41);
+            api.createRecord('$4b0577', $4b0577);
           } else {
-            api.reload('$28aa41', $28aa41);
+            api.reload('$4b0577', $4b0577);
           }
         }
 
@@ -62118,14 +62232,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $6b8b58 = exports.default || module.exports;
+        var $0f4ea2 = exports.default || module.exports;
       
-      if (typeof $6b8b58 === 'function') {
-        $6b8b58 = $6b8b58.options;
+      if (typeof $0f4ea2 === 'function') {
+        $0f4ea2 = $0f4ea2.options;
       }
     
         /* template */
-        Object.assign($6b8b58, (function () {
+        Object.assign($0f4ea2, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -62410,9 +62524,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$6b8b58', $6b8b58);
+            api.createRecord('$0f4ea2', $0f4ea2);
           } else {
-            api.reload('$6b8b58', $6b8b58);
+            api.reload('$0f4ea2', $0f4ea2);
           }
         }
 
@@ -62545,14 +62659,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f8212b = exports.default || module.exports;
+        var $5e57d3 = exports.default || module.exports;
       
-      if (typeof $f8212b === 'function') {
-        $f8212b = $f8212b.options;
+      if (typeof $5e57d3 === 'function') {
+        $5e57d3 = $5e57d3.options;
       }
     
         /* template */
-        Object.assign($f8212b, (function () {
+        Object.assign($5e57d3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -62837,9 +62951,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$f8212b', $f8212b);
+            api.createRecord('$5e57d3', $5e57d3);
           } else {
-            api.reload('$f8212b', $f8212b);
+            api.reload('$5e57d3', $5e57d3);
           }
         }
 
@@ -62905,14 +63019,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $9061ff = exports.default || module.exports;
+        var $ab210d = exports.default || module.exports;
       
-      if (typeof $9061ff === 'function') {
-        $9061ff = $9061ff.options;
+      if (typeof $ab210d === 'function') {
+        $ab210d = $ab210d.options;
       }
     
         /* template */
-        Object.assign($9061ff, (function () {
+        Object.assign($ab210d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -63025,9 +63139,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$9061ff', $9061ff);
+            api.createRecord('$ab210d', $ab210d);
           } else {
-            api.reload('$9061ff', $9061ff);
+            api.reload('$ab210d', $ab210d);
           }
         }
 
@@ -63093,14 +63207,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $453cdd = exports.default || module.exports;
+        var $6ef7f0 = exports.default || module.exports;
       
-      if (typeof $453cdd === 'function') {
-        $453cdd = $453cdd.options;
+      if (typeof $6ef7f0 === 'function') {
+        $6ef7f0 = $6ef7f0.options;
       }
     
         /* template */
-        Object.assign($453cdd, (function () {
+        Object.assign($6ef7f0, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -63202,9 +63316,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$453cdd', $453cdd);
+            api.createRecord('$6ef7f0', $6ef7f0);
           } else {
-            api.reload('$453cdd', $453cdd);
+            api.reload('$6ef7f0', $6ef7f0);
           }
         }
 
@@ -96625,7 +96739,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37171" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39599" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

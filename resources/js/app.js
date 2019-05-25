@@ -13,6 +13,8 @@ Vue.component("sales-invoice-confirm", require("./components/SalesInvoiceConfirm
 Vue.component("sales-invoice-update-and-confirm", require("./components/SalesInvoiceUpdateAndConfirm.vue").default)
 Vue.component("discount-create", require("./components/DiscountCreate.vue").default)
 Vue.component("discount-edit", require("./components/DiscountEdit.vue").default)
+Vue.component("outlet-create", require("./components/OutletCreate.vue").default)
+Vue.component("outlet-edit", require("./components/OutletEdit.vue").default)
 Vue.component("outlet-menu-item-create", require("./components/OutletMenuItemCreate.vue").default)
 Vue.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.vue").default)
 

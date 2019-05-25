@@ -47,6 +47,11 @@ class User extends Model
         return $this->hasMany(SalesInvoice::class, "cashier_id");
     }
 
+    public function scopeIsNotAdmin($query)
+    {
+        return $query->where("level", "<>", UserLevel::ADMIN);
+    }
+
     // This is not an Eloquent relationship method
     public function getOutletAttribute()
     {

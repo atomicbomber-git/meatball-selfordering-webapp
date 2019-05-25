@@ -308,9 +308,3 @@ export default {
     },
 }
 </script>
-
-<style>
-    span.multiselect__single {
-        text-align: right
-    }
-</style>

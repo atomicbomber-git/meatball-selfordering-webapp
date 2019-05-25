@@ -47256,10 +47256,6 @@ render._withStripped = true
         }
 
         
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
       }
     })();
 },{"sprintf-js":"../../node_modules/sprintf-js/src/sprintf.js","../numeral_helpers":"numeral_helpers.js","../special_discount_percentages":"special_discount_percentages.js","../order_types":"order_types.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","lodash":"../../node_modules/lodash/lodash.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/SalesInvoiceUpdateAndConfirm.vue":[function(require,module,exports) {
@@ -62960,7 +62956,1273 @@ render._withStripped = true
         
       }
     })();
-},{"vue-datetime":"../../node_modules/vue-datetime/dist/vue-datetime.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","./CleaveRange":"components/CleaveRange.vue","lodash":"../../node_modules/lodash/lodash.js","../numeral_helpers":"numeral_helpers.js","moment":"../../node_modules/moment/moment.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/OutletMenuItemCreate.vue":[function(require,module,exports) {
+},{"vue-datetime":"../../node_modules/vue-datetime/dist/vue-datetime.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","vue-cleave-component":"../../node_modules/vue-cleave-component/dist/vue-cleave.min.js","./CleaveRange":"components/CleaveRange.vue","lodash":"../../node_modules/lodash/lodash.js","../numeral_helpers":"numeral_helpers.js","moment":"../../node_modules/moment/moment.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/OutletCreate.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _lodash = require("lodash");
+
+var _vueMultiselect = require("vue-multiselect");
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: ["submit_url", "redirect_url", "users"],
+  components: {
+    Multiselect: _vueMultiselect.Multiselect
+  },
+  data: function data() {
+    return {
+      /* Form data */
+      name: null,
+      address: null,
+      phone: null,
+      pajak_pertambahan_nilai: null,
+      service_charge: null,
+      npwpd: null,
+      print_server_url: null,
+      m_users: this.users.map(function (user) {
+        return _objectSpread({}, user, {
+          is_added: false
+        });
+      }),
+
+      /* vue-multiselect models */
+      regular_user: null,
+      supervisor_user: null,
+      error_data: null
+    };
+  },
+  methods: {
+    get: _lodash.get,
+    onFormSubmit: function onFormSubmit() {
+      var _this = this;
+
+      $.post(this.submit_url, _objectSpread({
+        token: window.token
+      }, this.final_form)).done(function (response) {
+        _this.error_data = null;
+        window.location.replace(_this.redirect_url);
+      }).fail(function (xhr, status, error) {
+        var response = xhr.responseJSON;
+        _this.error_data = response.data;
+      });
+    },
+    onRemoveRegularUser: function onRemoveRegularUser(user) {
+      user.is_added = false;
+    }
+  },
+  watch: {
+    regular_user: function regular_user(user) {
+      if (user !== null) {
+        user.is_added = true;
+        this.regular_user = null;
+      }
+    }
+  },
+  computed: {
+    final_form: function final_form() {
+      return {
+        name: this.name,
+        address: this.address,
+        phone: this.phone,
+        pajak_pertambahan_nilai: this.pajak_pertambahan_nilai,
+        service_charge: this.service_charge,
+        npwpd: this.npwpd,
+        print_server_url: this.print_server_url,
+        supervisor_id: this.supervisor_user.id,
+        outlet_users: this.added_regular_users.map(function (user) {
+          return user.id;
+        })
+      };
+    },
+    supervisor_users: function supervisor_users() {
+      return this.m_users.filter(function (user) {
+        return user.level === "SUPERVISOR";
+      });
+    },
+    regular_users: function regular_users() {
+      return this.m_users.filter(function (user) {
+        return user.level !== "SUPERVISOR";
+      });
+    },
+    unadded_regular_users: function unadded_regular_users() {
+      return this.regular_users.filter(function (user) {
+        return !user.is_added;
+      });
+    },
+    added_regular_users: function added_regular_users() {
+      return this.regular_users.filter(function (user) {
+        return user.is_added;
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $27d083 = exports.default || module.exports;
+      
+      if (typeof $27d083 === 'function') {
+        $27d083 = $27d083.options;
+      }
+    
+        /* template */
+        Object.assign($27d083, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.onFormSubmit($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "name" } }, [_vm._v(" Nama: ")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.name,
+                      expression: "name"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(this.error_data, "errors.name", false)
+                  },
+                  attrs: { type: "text", id: "name", placeholder: "Nama" },
+                  domProps: { value: _vm.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.name = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(_vm._s(_vm.get(this.error_data, "errors.name", false)))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "address" } }, [
+                  _vm._v(" Alamat: ")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.address,
+                      expression: "address"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.address",
+                      false
+                    )
+                  },
+                  attrs: { type: "text", id: "address", placeholder: "Alamat" },
+                  domProps: { value: _vm.address },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.address = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(_vm.get(this.error_data, "errors.address", false))
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "phone" } }, [
+                  _vm._v(" Nomor Telefon: ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.phone,
+                      expression: "phone"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.phone",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "phone",
+                    placeholder: "Nomor Telefon"
+                  },
+                  domProps: { value: _vm.phone },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.phone = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(_vm.get(this.error_data, "errors.phone", false))
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "pajak_pertambahan_nilai" } }, [
+                  _vm._v(" Pajak Pertambahan Nilai (%): ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.pajak_pertambahan_nilai,
+                      expression: "pajak_pertambahan_nilai"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.pajak_pertambahan_nilai",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "pajak_pertambahan_nilai",
+                    placeholder: "Pajak Pertambahan Nilai (%)"
+                  },
+                  domProps: { value: _vm.pajak_pertambahan_nilai },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.pajak_pertambahan_nilai = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(
+                      _vm.get(
+                        this.error_data,
+                        "errors.pajak_pertambahan_nilai",
+                        false
+                      )
+                    )
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "service_charge" } }, [
+                  _vm._v(" Service Charge: ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.service_charge,
+                      expression: "service_charge"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.service_charge",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "service_charge",
+                    placeholder: "Service Charge"
+                  },
+                  domProps: { value: _vm.service_charge },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.service_charge = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(
+                      _vm.get(this.error_data, "errors.service_charge", false)
+                    )
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "npwpd" } }, [_vm._v(" NPWPD: ")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.npwpd,
+                      expression: "npwpd"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.npwpd",
+                      false
+                    )
+                  },
+                  attrs: { type: "text", id: "npwpd", placeholder: "NPWPD" },
+                  domProps: { value: _vm.npwpd },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.npwpd = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(_vm.get(this.error_data, "errors.npwpd", false))
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "print_server_url" } }, [
+                  _vm._v(" URL Print Server: ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.print_server_url,
+                      expression: "print_server_url"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.print_server_url",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "print_server_url",
+                    placeholder: "URL Print Server"
+                  },
+                  domProps: { value: _vm.print_server_url },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.print_server_url = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(
+                      _vm.get(this.error_data, "errors.print_server_url", false)
+                    )
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-6" }, [
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", { attrs: { for: "supervisor_id" } }, [
+                    _vm._v(" Supervisor Outlet: ")
+                  ]),
+                  _vm._v(" "),
+                  _c("multiselect", {
+                    attrs: {
+                      placeholder: "Supervisor Outlet",
+                      selectLabel: "",
+                      deselectLabel: "",
+                      "track-by": "id",
+                      label: "name",
+                      options: _vm.supervisor_users,
+                      "preselect-first": true
+                    },
+                    model: {
+                      value: _vm.supervisor_user,
+                      callback: function($$v) {
+                        _vm.supervisor_user = $$v
+                      },
+                      expression: "supervisor_user"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.get(this.error_data, "errors.supervisor_id", false)
+                    ? _c("div", { staticClass: "text-danger text-sm" }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.get(
+                                this.error_data,
+                                "errors.supervisor_id",
+                                false
+                              )
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    : _vm._e()
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", { attrs: { for: "outlet_users" } }, [
+                    _vm._v(" Waiter / Cashier Outlet: ")
+                  ]),
+                  _vm._v(" "),
+                  _c("multiselect", {
+                    attrs: {
+                      placeholder: "Waiter / Cashier Outlet",
+                      selectLabel: "",
+                      deselectLabel: "",
+                      "track-by": "id",
+                      "custom-label": function(user) {
+                        return user.name + " (" + user.level + ")"
+                      },
+                      options: _vm.unadded_regular_users
+                    },
+                    model: {
+                      value: _vm.regular_user,
+                      callback: function($$v) {
+                        _vm.regular_user = $$v
+                      },
+                      expression: "regular_user"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "table-responsive mt-3" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-sm table-striped table-bordered"
+                      },
+                      [
+                        _vm._m(0),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.added_regular_users, function(user) {
+                            return _c("tr", { key: user.id }, [
+                              _c("td", [_vm._v(" " + _vm._s(user.name) + " ")]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(" " + _vm._s(user.level) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-center" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-sm btn-danger",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.onRemoveRegularUser(user)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Hapus\n                                            "
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                          }),
+                          0
+                        )
+                      ]
+                    )
+                  ])
+                ],
+                1
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(1)
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead thead-dark" }, [
+      _c("tr", [
+        _c("th", [_vm._v(" Nama User ")]),
+        _vm._v(" "),
+        _c("th", [_vm._v(" Level ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v(" Kendali ")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex justify-content-end" }, [
+      _c("button", { staticClass: "btn btn-primary" }, [
+        _vm._v("\n                    Tambahkan Outlet Baru\n                ")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$27d083', $27d083);
+          } else {
+            api.reload('$27d083', $27d083);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"lodash":"../../node_modules/lodash/lodash.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/OutletEdit.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _lodash = require("lodash");
+
+var _vueMultiselect = require("vue-multiselect");
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: ["submit_url", "redirect_url", "outlet", "users"],
+  components: {
+    Multiselect: _vueMultiselect.Multiselect
+  },
+  data: function data() {
+    var _this = this;
+
+    return {
+      /* Form data */
+      name: this.outlet.name,
+      address: this.outlet.address,
+      phone: this.outlet.phone,
+      pajak_pertambahan_nilai: this.outlet.pajak_pertambahan_nilai * 100,
+      service_charge: this.outlet.service_charge * 100,
+      npwpd: this.outlet.npwpd,
+      print_server_url: this.outlet.print_server_url,
+      m_users: this.users.map(function (user) {
+        return _objectSpread({}, user, {
+          is_added: _this.outlet.outlet_users.find(function (outlet_user) {
+            return outlet_user.user_id === user.id;
+          }) !== undefined
+        });
+      }),
+
+      /* vue-multiselect models */
+      regular_user: null,
+      supervisor_user: this.outlet.supervisor,
+      error_data: null
+    };
+  },
+  methods: {
+    get: _lodash.get,
+    onFormSubmit: function onFormSubmit() {
+      var _this2 = this;
+
+      $.post(this.submit_url, _objectSpread({
+        token: window.token
+      }, this.final_form)).done(function (response) {
+        _this2.error_data = null;
+        window.location.replace(_this2.redirect_url);
+      }).fail(function (xhr, status, error) {
+        var response = xhr.responseJSON;
+        _this2.error_data = response.data;
+      });
+    },
+    onRemoveRegularUser: function onRemoveRegularUser(user) {
+      user.is_added = false;
+    }
+  },
+  watch: {
+    regular_user: function regular_user(user) {
+      if (user !== null) {
+        user.is_added = true;
+        this.regular_user = null;
+      }
+    }
+  },
+  computed: {
+    final_form: function final_form() {
+      return {
+        name: this.name,
+        address: this.address,
+        phone: this.phone,
+        pajak_pertambahan_nilai: this.pajak_pertambahan_nilai,
+        service_charge: this.service_charge,
+        npwpd: this.npwpd,
+        print_server_url: this.print_server_url,
+        supervisor_id: this.supervisor_user.id,
+        outlet_users: this.added_regular_users.map(function (user) {
+          return user.id;
+        })
+      };
+    },
+    supervisor_users: function supervisor_users() {
+      return this.m_users.filter(function (user) {
+        return user.level === "SUPERVISOR";
+      });
+    },
+    regular_users: function regular_users() {
+      return this.m_users.filter(function (user) {
+        return user.level !== "SUPERVISOR";
+      });
+    },
+    unadded_regular_users: function unadded_regular_users() {
+      return this.regular_users.filter(function (user) {
+        return !user.is_added;
+      });
+    },
+    added_regular_users: function added_regular_users() {
+      return this.regular_users.filter(function (user) {
+        return user.is_added;
+      });
+    }
+  }
+};
+exports.default = _default;
+        var $ca3c4e = exports.default || module.exports;
+      
+      if (typeof $ca3c4e === 'function') {
+        $ca3c4e = $ca3c4e.options;
+      }
+    
+        /* template */
+        Object.assign($ca3c4e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.onFormSubmit($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "name" } }, [_vm._v(" Nama: ")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.name,
+                      expression: "name"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(this.error_data, "errors.name", false)
+                  },
+                  attrs: { type: "text", id: "name", placeholder: "Nama" },
+                  domProps: { value: _vm.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.name = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(_vm._s(_vm.get(this.error_data, "errors.name", false)))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "address" } }, [
+                  _vm._v(" Alamat: ")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.address,
+                      expression: "address"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.address",
+                      false
+                    )
+                  },
+                  attrs: { type: "text", id: "address", placeholder: "Alamat" },
+                  domProps: { value: _vm.address },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.address = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(_vm.get(this.error_data, "errors.address", false))
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "phone" } }, [
+                  _vm._v(" Nomor Telefon: ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.phone,
+                      expression: "phone"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.phone",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "phone",
+                    placeholder: "Nomor Telefon"
+                  },
+                  domProps: { value: _vm.phone },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.phone = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(_vm.get(this.error_data, "errors.phone", false))
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "pajak_pertambahan_nilai" } }, [
+                  _vm._v(" Pajak Pertambahan Nilai (%): ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.pajak_pertambahan_nilai,
+                      expression: "pajak_pertambahan_nilai"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.pajak_pertambahan_nilai",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "pajak_pertambahan_nilai",
+                    placeholder: "Pajak Pertambahan Nilai (%)"
+                  },
+                  domProps: { value: _vm.pajak_pertambahan_nilai },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.pajak_pertambahan_nilai = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(
+                      _vm.get(
+                        this.error_data,
+                        "errors.pajak_pertambahan_nilai",
+                        false
+                      )
+                    )
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "service_charge" } }, [
+                  _vm._v(" Service Charge: ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.service_charge,
+                      expression: "service_charge"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.service_charge",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "service_charge",
+                    placeholder: "Service Charge"
+                  },
+                  domProps: { value: _vm.service_charge },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.service_charge = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(
+                      _vm.get(this.error_data, "errors.service_charge", false)
+                    )
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "npwpd" } }, [_vm._v(" NPWPD: ")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.npwpd,
+                      expression: "npwpd"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.npwpd",
+                      false
+                    )
+                  },
+                  attrs: { type: "text", id: "npwpd", placeholder: "NPWPD" },
+                  domProps: { value: _vm.npwpd },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.npwpd = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(_vm.get(this.error_data, "errors.npwpd", false))
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "print_server_url" } }, [
+                  _vm._v(" URL Print Server: ")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.print_server_url,
+                      expression: "print_server_url"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid": _vm.get(
+                      this.error_data,
+                      "errors.print_server_url",
+                      false
+                    )
+                  },
+                  attrs: {
+                    type: "text",
+                    id: "print_server_url",
+                    placeholder: "URL Print Server"
+                  },
+                  domProps: { value: _vm.print_server_url },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.print_server_url = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "invalid-feedback" }, [
+                  _vm._v(
+                    _vm._s(
+                      _vm.get(this.error_data, "errors.print_server_url", false)
+                    )
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-6" }, [
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", { attrs: { for: "supervisor_id" } }, [
+                    _vm._v(" Supervisor Outlet: ")
+                  ]),
+                  _vm._v(" "),
+                  _c("multiselect", {
+                    attrs: {
+                      placeholder: "Supervisor Outlet",
+                      selectLabel: "",
+                      deselectLabel: "",
+                      "track-by": "id",
+                      label: "name",
+                      options: _vm.supervisor_users,
+                      "preselect-first": true
+                    },
+                    model: {
+                      value: _vm.supervisor_user,
+                      callback: function($$v) {
+                        _vm.supervisor_user = $$v
+                      },
+                      expression: "supervisor_user"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.get(this.error_data, "errors.supervisor_id", false)
+                    ? _c("div", { staticClass: "text-danger text-sm" }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.get(
+                                this.error_data,
+                                "errors.supervisor_id",
+                                false
+                              )
+                            ) +
+                            "\n                        "
+                        )
+                      ])
+                    : _vm._e()
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", { attrs: { for: "outlet_users" } }, [
+                    _vm._v(" Waiter / Cashier Outlet: ")
+                  ]),
+                  _vm._v(" "),
+                  _c("multiselect", {
+                    attrs: {
+                      placeholder: "Waiter / Cashier Outlet",
+                      selectLabel: "",
+                      deselectLabel: "",
+                      "track-by": "id",
+                      "custom-label": function(user) {
+                        return user.name + " (" + user.level + ")"
+                      },
+                      options: _vm.unadded_regular_users
+                    },
+                    model: {
+                      value: _vm.regular_user,
+                      callback: function($$v) {
+                        _vm.regular_user = $$v
+                      },
+                      expression: "regular_user"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "table-responsive mt-3" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-sm table-striped table-bordered"
+                      },
+                      [
+                        _vm._m(0),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.added_regular_users, function(user) {
+                            return _c("tr", { key: user.id }, [
+                              _c("td", [_vm._v(" " + _vm._s(user.name) + " ")]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(" " + _vm._s(user.level) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-center" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-sm btn-danger",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.onRemoveRegularUser(user)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Hapus\n                                            "
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                          }),
+                          0
+                        )
+                      ]
+                    )
+                  ])
+                ],
+                1
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(1)
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead thead-dark" }, [
+      _c("tr", [
+        _c("th", [_vm._v(" Nama User ")]),
+        _vm._v(" "),
+        _c("th", [_vm._v(" Level ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v(" Kendali ")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex justify-content-end" }, [
+      _c("button", { staticClass: "btn btn-primary" }, [
+        _vm._v("\n                    Ubah Data Outlet\n                ")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$ca3c4e', $ca3c4e);
+          } else {
+            api.reload('$ca3c4e', $ca3c4e);
+          }
+        }
+
+        
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+      }
+    })();
+},{"lodash":"../../node_modules/lodash/lodash.js","vue-multiselect":"../../node_modules/vue-multiselect/dist/vue-multiselect.min.js","_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../node_modules/vue/dist/vue.runtime.esm.js"}],"components/OutletMenuItemCreate.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -96688,6 +97950,10 @@ _vue.default.component("discount-create", require("./components/DiscountCreate.v
 
 _vue.default.component("discount-edit", require("./components/DiscountEdit.vue").default);
 
+_vue.default.component("outlet-create", require("./components/OutletCreate.vue").default);
+
+_vue.default.component("outlet-edit", require("./components/OutletEdit.vue").default);
+
 _vue.default.component("outlet-menu-item-create", require("./components/OutletMenuItemCreate.vue").default);
 
 _vue.default.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.vue").default); // Load cleave.js
@@ -96711,7 +97977,7 @@ window.swal = require("sweetalert");
 window.app = new _vue.default({
   el: '#app'
 });
-},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","./components/DiscountCreate.vue":"components/DiscountCreate.vue","./components/DiscountEdit.vue":"components/DiscountEdit.vue","./components/OutletMenuItemCreate.vue":"components/OutletMenuItemCreate.vue","./components/OutletMenuItemEdit.vue":"components/OutletMenuItemEdit.vue","cleave.js/dist/cleave":"../../node_modules/cleave.js/dist/cleave.js","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../scss/app.scss":"../scss/app.scss","vue/dist/vue.esm":"../../node_modules/vue/dist/vue.esm.js","vue-js-modal":"../../node_modules/vue-js-modal/dist/index.js","./components/Home.vue":"components/Home.vue","./components/ReceiptPrinterIndex.vue":"components/ReceiptPrinterIndex.vue","./components/SalesInvoiceConfirm.vue":"components/SalesInvoiceConfirm.vue","./components/SalesInvoiceUpdateAndConfirm.vue":"components/SalesInvoiceUpdateAndConfirm.vue","./components/DiscountCreate.vue":"components/DiscountCreate.vue","./components/DiscountEdit.vue":"components/DiscountEdit.vue","./components/OutletCreate.vue":"components/OutletCreate.vue","./components/OutletEdit.vue":"components/OutletEdit.vue","./components/OutletMenuItemCreate.vue":"components/OutletMenuItemCreate.vue","./components/OutletMenuItemEdit.vue":"components/OutletMenuItemEdit.vue","cleave.js/dist/cleave":"../../node_modules/cleave.js/dist/cleave.js","popper.js":"../../node_modules/popper.js/dist/esm/popper.js","jquery":"../../node_modules/jquery/dist/jquery.js","datatables.net-bs4":"../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js","datatables.net-bs4/css/dataTables.bootstrap4.css":"../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css","bootstrap":"../../node_modules/bootstrap/dist/js/bootstrap.js","sweetalert":"../../node_modules/sweetalert/dist/sweetalert.min.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -96739,7 +98005,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39599" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42479" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

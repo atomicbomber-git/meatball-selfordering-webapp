@@ -39,6 +39,11 @@ class Outlet extends Model
         return $this->hasMany(ReceiptPrinter::class);
     }
 
+    public function outlet_users()
+    {
+        return $this->hasMany(OutletUser::class);
+    }
+
     public function discounts()
     {
         return $this->hasMany(Discount::class);

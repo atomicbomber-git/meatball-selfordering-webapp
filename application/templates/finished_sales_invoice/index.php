@@ -25,32 +25,34 @@
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-sm table-striped table-bordered">
-                <thead class="thead thead-dark">
-                    <tr>
-                        <th> Created At </th>
-                        <th> Updated At </th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-bordered">
+                    <thead class="thead thead-dark">
+                        <tr>
+                            <th> # </th>
+                            <th> Tanggal / Waktu </th>
+                            <th> Kasir </th>
+                            <th> Waiter / Service </th>
+                            <th> Kendali </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($sales_invoices as $key => $sales_invoice): ?>
+                        <tr>
+                            <td> <?= $key + 1 ?> </td>
+                            <td> <?= $sales_invoice->created_at ?> </td>
+                            <td> <?= $sales_invoice->cashier->name ?? '-' ?> </td>
+                            <td> <?= $sales_invoice->waiter->name ?? '-' ?> </td>
+                            <td>  </td>
+                        </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<?php $this->start('extra-scripts') ?>
-
-<script>
-    $(document).ready(function() {
-        $("table").DataTable({
-            "serverSide": true,
-            "ajax": "<?= base_url('finishedSalesInvoice/index') ?>",
-            "columns": [
-                { "name": "created_at" },
-                { "name": "updated_at" },
-            ]
-        });
-    })
-</script>
-
+<?php $this->start("extra-scripts") ?>
+    <?php $this->insert("shared/datatable") ?>
 <?php $this->stop() ?>

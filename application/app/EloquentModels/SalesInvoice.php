@@ -51,9 +51,19 @@ class SalesInvoice extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function waiter()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function discounts()
     {
         return $this->hasMany(Discount::class, "outlet_id", "outlet_id");
+    }
+
+    public function scopeIsFinished($query)
+    {
+        return $query->where("status", self::FINISHED);
     }
 
     public function getDiscountMapAttribute()

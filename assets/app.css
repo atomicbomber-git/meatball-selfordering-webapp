@@ -14097,6 +14097,10 @@ h3 {
 td, th {
   vertical-align: middle !important;
 }
+
+.width-md {
+  max-width: 650px;
+}
 img.card-img-top[data-v-3ebacf] {
     width: 200px;
     height: 200px;

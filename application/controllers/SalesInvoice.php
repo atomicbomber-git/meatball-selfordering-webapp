@@ -54,7 +54,7 @@ class SalesInvoice extends BaseController
     {
         SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items");
+        $sales_invoice->append("pretax_total", "tax_total", "service_charge_total", "total", "rounding", "total_change", "undiscounted_items");
 
         $outlet = Auth::user()->outlet ?: $this->error403();
         $sales_invoice->load([
@@ -83,7 +83,12 @@ class SalesInvoice extends BaseController
     {
         SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items");
+        $sales_invoice->append("pretax_total", "tax_total", "service_charge_total", "total", "rounding", "total_change", "undiscounted_items");
+
+        $this->validate([
+            ["cash", "jumlah pembayaran", "required"],
+            ["special_discount", "diskon spesial", "required"],
+        ]);
 
         DB::transaction(function () use ($sales_invoice) {
 
@@ -124,7 +129,7 @@ class SalesInvoice extends BaseController
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
         $sales_invoice->load(["planned_sales_invoice_items", "outlet",]);
-        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
+        $sales_invoice->append("pretax_total", "tax_total", "service_charge_total", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
 
         $outlet = $sales_invoice->outlet;
         $outlet->load([
@@ -140,7 +145,7 @@ class SalesInvoice extends BaseController
     public function processUpdateAndConfirm($sales_invoice_id)
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
-        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
+        $sales_invoice->append("pretax_total", "tax_total", "service_charge_total", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
 
         $outlet = Auth::user()->outlet ?: $this->error403();
 
@@ -516,8 +521,8 @@ class SalesInvoice extends BaseController
         /* Sub Total, Taxes, Services, Discount */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
         $text .= sprintf($format, "Sub Total", Formatter::currency($sales_invoice->pretax_total));
-        $text .= sprintf($format, "Tax " . Formatter::percent($sales_invoice->outlet->pajak_pertambahan_nilai), Formatter::currency($sales_invoice->tax));
-        $text .= sprintf($format, "Service Charge " . Formatter::percent($sales_invoice->outlet->service_charge), Formatter::currency($sales_invoice->service_charge));
+        $text .= sprintf($format, "Tax " . Formatter::percent($sales_invoice->outlet->pajak_pertambahan_nilai), Formatter::currency($sales_invoice->tax_total));
+        $text .= sprintf($format, "Service Charge " . Formatter::percent($sales_invoice->outlet->service_charge), Formatter::currency($sales_invoice->service_charge_total));
         $text .= sprintf($format, "Special Discount " . Formatter::percent($sales_invoice->special_discount), "-" .  Formatter::currency($sales_invoice->special_discount_total));
 
 

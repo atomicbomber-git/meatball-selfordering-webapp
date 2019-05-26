@@ -12,10 +12,15 @@ class Formatter {
 
     public static function percent($value)
     {
-        return number_format($value * 100, 2, ",", ".") . "%";
+        return number_format($value * 100, 0, ",", ".") . "%";
     }
 
     public static function salesInvoiceNumber($value)
+    {
+        return sprintf("%04d", $value);
+    }
+
+    public static function salesInvoiceId($value)
     {
         return sprintf("%04d", $value);
     }

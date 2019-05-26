@@ -18,7 +18,8 @@ class SalesInvoice extends Model
     ];
 
     public $fillable = [
-        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "special_discount"
+        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "special_discount",
+        "total_paid", "pajak_pertambahan_nilai", "service_charge",
     ];
 
     public function outlet()
@@ -126,14 +127,14 @@ class SalesInvoice extends Model
     }
 
     /* The `tax` attribute */
-    public function getTaxAttribute()
+    public function getTaxTotalAttribute()
     {
         $this->loadMissing("outlet");
         return $this->prediscount_pretax_total * ($this->outlet->pajak_pertambahan_nilai);
     }
 
     /* The `service_charge` attribute */
-    public function getServiceChargeAttribute()
+    public function getServiceChargeTotalAttribute()
     {
         $this->loadMissing("outlet");
         return $this->prediscount_pretax_total * ($this->outlet->service_charge);
@@ -142,7 +143,7 @@ class SalesInvoice extends Model
     /* The `total` attribute */
     public function getTotalAttribute()
     {
-        return $this->pretax_total + ($this->tax + $this->service_charge - $this->special_discount_total);
+        return $this->pretax_total + ($this->tax_total + $this->service_charge_total - $this->special_discount_total);
     }
 
     /* The `rounding` attribute */
@@ -155,5 +156,60 @@ class SalesInvoice extends Model
     public function getTotalChangeAttribute()
     {
         return $this->cash - $this->rounding;
+    }
+
+    public function getArchivedPrediscountTotalPriceAttribute()
+    {
+        $this->loadMissing("sales_invoice_items");
+        return $this->sales_invoice_items->sum(function ($sales_invoice_item) {
+            return $sales_invoice_item->price * $sales_invoice_item->quantity;
+        });
+    }
+
+    public function getArchivedTotalPriceAttribute()
+    {
+        $this->loadMissing("sales_invoice_items");
+        return $this->sales_invoice_items->sum(function ($sales_invoice_item) {
+            return $sales_invoice_item->price *
+                $sales_invoice_item->quantity *
+                (1 - $sales_invoice_item->discount);
+        });
+    }
+
+    public function getArchivedSpecialDiscountAttribute()
+    {
+        $this->loadMissing("sales_invoice_items");
+
+        /* Total of the price of items that isn't discounted by item discount */
+        $undiscounted_total_price = $this->sales_invoice_items->sum(function ($sales_invoice_item) {
+            if ($sales_invoice_item->discount != 0) {
+                return 0;
+            }
+            else {
+                return $sales_invoice_item->price * $sales_invoice_item->quantity;
+            }
+        });
+
+        return $this->special_discount * $undiscounted_total_price;
+    }
+
+    public function getArchivedTaxAttribute()
+    {
+        $this->loadMissing("outlet");
+        return  $this->pajak_pertambahan_nilai * $this->archived_prediscount_total_price;
+    }
+
+    public function getArchivedServiceChargeAttribute()
+    {
+        $this->loadMissing("outlet");
+        return $this->service_charge * $this->archived_prediscount_total_price;
+    }
+
+    /* Archived rounding of the total price */
+    public function getArchivedRoundingAttribute()
+    {
+        $this->loadMissing("sales_invoice_items", "outlet");
+        $total = $this->archived_total_price + $this->archived_tax + $this->archived_service_charge - $this->archived_special_discount;
+        return round($total / 100) * 100;
     }
 }

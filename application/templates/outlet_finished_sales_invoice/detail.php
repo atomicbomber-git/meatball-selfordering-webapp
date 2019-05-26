@@ -36,7 +36,7 @@ use App\Helpers\Formatter;
                 <table class="datatable table table-sm table-striped table-bordered">
                     <thead class="thead thead-dark">
                         <tr>
-                            <th> Nomor Invoice </th>
+                            <th class="text-center"> Nomor Invoice </th>
                             <th> Tanggal / Waktu </th>
                             <th> Kasir </th>
                             <th> Waiter / Service </th>
@@ -46,7 +46,7 @@ use App\Helpers\Formatter;
                     <tbody>
                         <?php foreach($sales_invoices as $key => $sales_invoice): ?>
                         <tr>
-                            <td> <?= Formatter::salesInvoiceNumber($sales_invoice->id) ?> </td>
+                            <td class="text-center"> <?= Formatter::salesInvoiceNumber($sales_invoice->id) ?> </td>
                             <td> <?= $sales_invoice->created_at ?> </td>
                             <td> <?= $sales_invoice->cashier->name ?? '-' ?> </td>
                             <td> <?= $sales_invoice->waiter->name ?? '-' ?> </td>
@@ -67,5 +67,10 @@ use App\Helpers\Formatter;
 </div>
 
 <?php $this->start("extra-scripts") ?>
-    <?php $this->insert("shared/datatable") ?>
+    <script>
+        $("table.datatable").DataTable({
+            "language": { "url": "<?= base_url("assets/indonesian-datatables.json") ?>" },
+            "order": [[0, "desc"]],
+        })
+    </script>
 <?php $this->stop() ?>

@@ -1,6 +1,8 @@
 <?php
     use App\Helpers\DefaultRoute;
     use App\Helpers\AppInfo;
+use App\Helpers\Formatter;
+
 ?>
 
 <?php $this->layout("shared/base", ["title" => "Transaksi"]) ?>
@@ -42,7 +44,7 @@
                 <tbody>
                     <?php foreach($sales_invoices as $sales_invoice): ?>
                     <tr>
-                        <td> <?= $sales_invoice->number ?>. </td>
+                        <td> <?= Formatter::salesInvoiceNumber($sales_invoice->number) ?> </td>
                         <td> <?= $sales_invoice->created_at ?> </td>
                         <td class="text-center">
                             <a href="<?= base_url("salesInvoice/confirm/{$sales_invoice->id}") ?>" class="btn btn-dark btn-sm">
@@ -58,5 +60,10 @@
 </div>
 
 <?php $this->start("extra-scripts") ?>
-    <?php $this->insert("shared/datatable") ?>
+    <script>
+        $("table.datatable").DataTable({
+            "language": { "url": "<?= base_url("assets/indonesian-datatables.json") ?>" },
+            "order": [[0, "desc"]],
+        })
+    </script>
 <?php $this->stop() ?>

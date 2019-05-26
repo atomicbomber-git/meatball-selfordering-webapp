@@ -3,8 +3,6 @@
 namespace App\EloquentModels;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Capsule\Manager as DB;
-use Carbon\Carbon;
 
 class SalesInvoice extends Model
 {
@@ -21,10 +19,6 @@ class SalesInvoice extends Model
 
     public $fillable = [
         "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "special_discount"
-    ];
-
-    public $appends = [
-        "pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items",
     ];
 
     public function outlet()

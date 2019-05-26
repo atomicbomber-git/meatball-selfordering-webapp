@@ -54,6 +54,7 @@ class SalesInvoice extends BaseController
     {
         SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items");
 
         $outlet = Auth::user()->outlet ?: $this->error403();
         $sales_invoice->load([
@@ -82,6 +83,7 @@ class SalesInvoice extends BaseController
     {
         SalesInvoicePolicy::canConfirm(Auth::user()) ?: $this->error403();
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items");
 
         DB::transaction(function () use ($sales_invoice) {
 
@@ -122,7 +124,7 @@ class SalesInvoice extends BaseController
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
         $sales_invoice->load(["planned_sales_invoice_items", "outlet",]);
-        $sales_invoice->append("discount_map");
+        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
 
         $outlet = $sales_invoice->outlet;
         $outlet->load([
@@ -138,6 +140,8 @@ class SalesInvoice extends BaseController
     public function processUpdateAndConfirm($sales_invoice_id)
     {
         $sales_invoice = SalesInvoiceModel::find($sales_invoice_id) ?: $this->error404();
+        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
+
         $outlet = Auth::user()->outlet ?: $this->error403();
 
         $this->validate([
@@ -185,6 +189,8 @@ class SalesInvoice extends BaseController
         }
 
         $sales_invoice = SalesInvoiceModel::find($sales_invoice->id);
+        $sales_invoice->append("pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items", "discount_map");
+
         $rounding = $sales_invoice->rounding;
 
         if ($this->input->post("cash") < $rounding) {

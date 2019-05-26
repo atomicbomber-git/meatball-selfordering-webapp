@@ -90,14 +90,12 @@ use App\Policies\UserPolicy;
                         <?php endif ?>
 
                         <?php if (TRUE) : ?>
-
-                            <li class='nav-item <?= URL::has("finishedSalesInvoice") ? "active" : "" ?>'>
-                                <a class='nav-link' href="<?= base_url("finishedSalesInvoice/index") ?>">
+                            <li class='nav-item <?= URL::has("outletFinishedSalesInvoice") ? "active" : "" ?>'>
+                                <a class='nav-link' href="<?= base_url("outletFinishedSalesInvoice/index") ?>">
                                     <i class='fa fa-book'></i>
                                     Histori Transaksi
                                 </a>
                             </li>
-
                         <?php endif ?>
 
                     <?php endif ?>

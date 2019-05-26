@@ -47472,6 +47472,8 @@ var _default = {
                 swal({
                   icon: 'success',
                   text: 'Konfirmasi Berhasil'
+                }).then(function (is_ok) {
+                  window.location.replace(_this5.redirect_url);
                 });
               }).fail(function (xhr, status, error) {
                 if (xhr.status === 0 || xhr.status === 500) {

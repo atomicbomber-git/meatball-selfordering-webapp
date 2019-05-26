@@ -424,6 +424,7 @@ export default {
                                 $.post(`${this.sales_invoice.outlet.print_server_url}/manual_print`, print_request_data)
                                     .done(response => {
                                         swal({ icon: 'success', text: 'Konfirmasi Berhasil' })
+                                            .then(is_ok => { window.location.replace(this.redirect_url) })
                                     })
                                     .fail((xhr, status, error) => {
                                         if (xhr.status === 0 || xhr.status === 500) {

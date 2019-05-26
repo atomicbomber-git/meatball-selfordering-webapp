@@ -2,23 +2,18 @@
 
 use App\BaseController;
 use App\EloquentModels\SalesInvoice;
-use Yajra\DataTables\DataTables;
 
 class FinishedSalesInvoice extends BaseController {
     protected function allowedMethods()
     {
         return [
-            'index' => ['get'],
+            'show' => ['get'],
         ];
     }
 
-    public function index()
+    public function show($sales_invoice_id)
     {
-        $sales_invoices = SalesInvoice::query()
-            ->isFinished()
-            ->orderByDesc("created_at")
-            ->get();
-
-        $this->template->render("finished_sales_invoice/index", compact("sales_invoices"));
+        $sales_invoice = SalesInvoice::find($sales_invoice_id) ?: $this->error404();
+        $this->jsonResponse($sales_invoice);
     }
 }

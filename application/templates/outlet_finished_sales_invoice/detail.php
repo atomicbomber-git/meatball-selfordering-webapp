@@ -1,5 +1,7 @@
 <?php
     use App\Helpers\DefaultRoute;
+use App\Helpers\Formatter;
+
 ?>
 
 <?php $this->layout("shared/base", ["title" => "Sejarah Transaksi"]) ?>
@@ -31,10 +33,10 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-sm table-striped table-bordered">
+                <table class="datatable table table-sm table-striped table-bordered">
                     <thead class="thead thead-dark">
                         <tr>
-                            <th> # </th>
+                            <th> Nomor Invoice </th>
                             <th> Tanggal / Waktu </th>
                             <th> Kasir </th>
                             <th> Waiter / Service </th>
@@ -44,7 +46,7 @@
                     <tbody>
                         <?php foreach($sales_invoices as $key => $sales_invoice): ?>
                         <tr>
-                            <td> <?= $key + 1 ?> </td>
+                            <td> <?= Formatter::salesInvoiceNumber($sales_invoice->id) ?> </td>
                             <td> <?= $sales_invoice->created_at ?> </td>
                             <td> <?= $sales_invoice->cashier->name ?? '-' ?> </td>
                             <td> <?= $sales_invoice->waiter->name ?? '-' ?> </td>

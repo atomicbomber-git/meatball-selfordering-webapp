@@ -250,6 +250,7 @@ class SalesInvoice extends BaseController
                 "status" => SalesInvoiceModel::UNPAID,
                 "number" => $sales_invoice_count + 1,
                 "outlet_id" => Auth::user()->outlet->id,
+                "waiter_id" => Auth::user()->id,
             ]);
 
             foreach ($data["menu_items"] as $ordered_menu_item) {

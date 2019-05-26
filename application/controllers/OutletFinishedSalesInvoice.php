@@ -24,10 +24,12 @@ class OutletFinishedSalesInvoice extends BaseController {
         $outlet = Outlet::find($outlet_id) ?: $this->error404();
 
         $sales_invoices = SalesInvoice::query()
+            ->select("id", "number", "outlet_id", "waiter_id", "cashier_id", "created_at")
             ->where("outlet_id", $outlet->id)
-            ->with("waiter", "cashier")
+            ->with("waiter:id,name", "cashier:id,name")
             ->isFinished()
             ->orderByDesc("created_at")
+            ->orderByDesc("number")
             ->get();
 
         $this->template->render("outlet_finished_sales_invoice/detail", compact("sales_invoices", "outlet"));

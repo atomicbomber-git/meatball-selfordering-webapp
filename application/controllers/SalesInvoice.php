@@ -86,6 +86,7 @@ class SalesInvoice extends BaseController
         DB::transaction(function () use ($sales_invoice) {
 
             if ($sales_invoice->status !== SalesInvoiceModel::FINISHED) {
+
                 foreach ($sales_invoice->planned_sales_invoice_items as $sales_invoice_item) {
                     SalesInvoiceItem::create([
                         "sales_invoice_id" => $sales_invoice->id,
@@ -102,7 +103,11 @@ class SalesInvoice extends BaseController
                 "cash" => $this->input->post("cash"),
                 "special_discount" => $this->input->post("special_discount"),
                 "cashier_id" => Auth::user()->id,
-                "finished_at" => Date::now(),
+
+                "cash" => $sales_invoice->rounding,
+                "total_paid" => $sales_invoice->rounding,
+                "pajak_pertambahan_nilai" => $sales_invoice->outlet->pajak_pertambahan_nilai,
+                "service_charge" => $sales_invoice->outlet->service_charge,
             ]);
         });
 
@@ -165,7 +170,11 @@ class SalesInvoice extends BaseController
             "special_discount" => $this->input->post("special_discount") ?: 0,
             "cash" => $this->input->post("cash"),
             "cashier_id" => Auth::user()->id,
-            "finished_at" => Date::now(),
+
+            "cash" => $sales_invoice->rounding,
+            "total_paid" => $sales_invoice->rounding,
+            "pajak_pertambahan_nilai" => $sales_invoice->outlet->pajak_pertambahan_nilai,
+            "service_charge" => $sales_invoice->outlet->service_charge,
         ]);
 
         PlannedSalesInvoiceItem::where("sales_invoice_id", $sales_invoice->id)->delete();
@@ -474,7 +483,7 @@ class SalesInvoice extends BaseController
         /* Cashier info */
         $text .= $this->receiptTextSeparator(self::RECEIPT_SEPARATOR_LENGTH);
         $text .= sprintf($format, $sales_invoice->cashier->name, "");
-        $text .= sprintf($format, $sales_invoice->finished_at->format("m/d/Y H:i:s"), "");
+        $text .= sprintf($format, $sales_invoice->created_at->format("m/d/Y H:i:s"), "");
 
 
         /* Receipt Items */
@@ -490,11 +499,10 @@ class SalesInvoice extends BaseController
             );
 
             /* Item discount */
-            // $discount = $this->discount_map[$sales_invoice_item->menu_item->outlet_menu_item->id]->percentage ?? 0;
             if ($sales_invoice_item->discount != 0) {
                 $text .= sprintf(
                     $format,
-                    "Diskon " . Formatter::percent($sales_invoice_item->discount),
+                    "    Diskon " . Formatter::percent($sales_invoice_item->discount),
                     "-" . Formatter::currency($sales_invoice_item->price * $sales_invoice_item->quantity * $sales_invoice_item->discount)
                 );
             };

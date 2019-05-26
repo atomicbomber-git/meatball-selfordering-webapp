@@ -20,15 +20,11 @@ class SalesInvoice extends Model
     ];
 
     public $fillable = [
-        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "special_discount", "finished_at"
+        "outlet_id", "waiter_id", "cashier_id", "number", "type", "status", "cash", "special_discount"
     ];
 
     public $appends = [
         "pretax_total", "tax", "service_charge", "total", "rounding", "total_change", "undiscounted_items",
-    ];
-
-    protected $dates = [
-        "finished_at",
     ];
 
     public function outlet()

@@ -10,7 +10,13 @@ class ReceiptPrinter extends Model
     const KITCHEN_TYPE = "KITCHEN";
     const SERVICE_TYPE = "SERVICE";
 
+    const TYPES = [
+        self::CASHIER_TYPE => "Kasir",
+        self::KITCHEN_TYPE => "Dapur",
+        self::SERVICE_TYPE => "Service",
+    ];
+
     public $fillable = [
-        "name", "ipv4_address", "port",
+        "outlet_id", "name", "ipv4_address", "port", "type",
     ];
 }

@@ -5,18 +5,32 @@
                 <tr>
                     <th>#</th>
                     <th>Nama</th>
+                    <th>Tipe</th>
                     <th>Alamat IP</th>
                     <th>Port</th>
-                    <th>Kendali</th>
+                    <th> Status </th>
+                    <th class="text-center">Kendali</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(receipt_printer, index) in receipt_printers" :key="receipt_printer.id">
-                    <td>{{ index + 1 }}</td>
+                    <td>{{ index + 1 }}.</td>
                     <td>{{ receipt_printer.name }}</td>
+                    <td>{{ receipt_printer.type }}</td>
                     <td>{{ receipt_printer.ipv4_address }}</td>
                     <td>{{ receipt_printer.port }}</td>
                     <td>
+                        <span
+                            class="badge"
+                            :class="{
+                                'badge-success': receipt_printer.is_active,
+                                'badge-danger': !receipt_printer.is_active
+                            }"
+                            >
+                            {{ receipt_printer.is_active ? 'Aktif' : 'Tidak Aktif' }}
+                        </span>
+                    </td>
+                    <td class="text-center">
                         <button @click="testPrint(receipt_printer)" class="btn btn-dark btn-sm">
                             Test Print
                             <i class="fa fa-print"></i>
@@ -28,6 +42,13 @@
                             >
                             Ubah
                         </a>
+
+                        
+
+
+                        <button v-if="!receipt_printer.is_active" class="btn btn-success btn-sm">
+                            Aktifkan
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -66,7 +87,7 @@ export default {
                         name: "text",
                         arguments: [
                             {
-                                data: "001\n\n\n",
+                                data: "PENGUJIAN\n\n\n",
                                 type: "text",
                             }
                         ]

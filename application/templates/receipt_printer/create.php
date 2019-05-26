@@ -1,6 +1,7 @@
 <?php
     use App\Helpers\DefaultRoute;
-    use App\EloquentModels\ReceiptPrinter;
+use App\EloquentModels\ReceiptPrinter;
+
 ?>
 
 <?php $this->layout("shared/base", ["title" => "Ubah Printer"]) ?>
@@ -17,7 +18,7 @@
                 </a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                Ubah Printer
+                Tambahkan Printer Baru
             </li>
         </ol>
     </nav>
@@ -28,7 +29,7 @@
 
             <?php $this->insert("shared/message") ?>
             
-            <form method="POST" action="<?= base_url("receiptPrinter/update/{$receipt_printer->id}") ?>" >
+            <form method="POST" action="<?= base_url("receiptPrinter/store") ?>" >
                 <input type="hidden"
                     name="<?= $this->csrf_name() ?>"
                     value="<?= $this->csrf_token() ?>">
@@ -41,7 +42,7 @@
                       type="text"
                       class="form-control <?= $this->has_error("name") ? "is-invalid" : "" ?>"
                       placeholder="Nama"
-                      value="<?= $this->old("name", $receipt_printer->name) ?>"
+                      value="<?= $this->old("name") ?>"
                       >
                   <?php if($this->has_error("name")): ?>
                   <div class="invalid-feedback">
@@ -58,7 +59,7 @@
                       type="text"
                       class="form-control <?= $this->has_error("ipv4_address") ? "is-invalid" : "" ?>"
                       placeholder="Alamat IP"
-                      value="<?= $this->old("ipv4_address", $receipt_printer->ipv4_address) ?>"
+                      value="<?= $this->old("ipv4_address") ?>"
                       >
                   <?php if($this->has_error("ipv4_address")): ?>
                   <div class="invalid-feedback">
@@ -75,7 +76,7 @@
                       type="text"
                       class="form-control <?= $this->has_error("port") ? "is-invalid" : "" ?>"
                       placeholder="Port"
-                      value="<?= $this->old("port", $receipt_printer->port) ?>"
+                      value="<?= $this->old("port", 9100) ?>"
                       >
                   <?php if($this->has_error("port")): ?>
                   <div class="invalid-feedback">
@@ -94,7 +95,7 @@
                       placeholder="Tipe"
                       >
                     <?php foreach(ReceiptPrinter::TYPES as $code => $label): ?>
-                    <option <?= $this->old("type", $receipt_printer->type) == $code ? 'selected' : '' ?> value="<?= $code ?>">
+                    <option <?= $this->old("type") == $code ? 'selected' : '' ?> value="<?= $code ?>">
                         <?= $label ?>
                     </option>
                     <?php endforeach ?>
@@ -108,13 +109,11 @@
               </div>
 
               <div class="text-right">
-                  <button class="btn btn-primary">
-                      Ubah
-                  </button>
+                    <button class="btn btn-primary">
+                        Tambahkan Printer Baru
+                    </button>
               </div>
-                
             </form>
-
         </div>
     </div>
 </div>

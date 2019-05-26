@@ -42430,6 +42430,27 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ["print_server_url", "receipt_printers"],
   methods: {
@@ -42459,7 +42480,7 @@ var _default = {
         }, {
           name: "text",
           arguments: [{
-            data: "001\n\n\n",
+            data: "PENGUJIAN\n\n\n",
             type: "text"
           }]
         }, {
@@ -42523,15 +42544,39 @@ exports.default = _default;
         "tbody",
         _vm._l(_vm.receipt_printers, function(receipt_printer, index) {
           return _c("tr", { key: receipt_printer.id }, [
-            _c("td", [_vm._v(_vm._s(index + 1))]),
+            _c("td", [_vm._v(_vm._s(index + 1) + ".")]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(receipt_printer.name))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(receipt_printer.type))]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(receipt_printer.ipv4_address))]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(receipt_printer.port))]),
             _vm._v(" "),
             _c("td", [
+              _c(
+                "span",
+                {
+                  staticClass: "badge",
+                  class: {
+                    "badge-success": receipt_printer.is_active,
+                    "badge-danger": !receipt_printer.is_active
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(
+                        receipt_printer.is_active ? "Aktif" : "Tidak Aktif"
+                      ) +
+                      "\n                    "
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "text-center" }, [
               _c(
                 "button",
                 {
@@ -42557,7 +42602,15 @@ exports.default = _default;
                   attrs: { href: "edit/" + receipt_printer.id }
                 },
                 [_vm._v("\n                        Ubah\n                    ")]
-              )
+              ),
+              _vm._v(" "),
+              !receipt_printer.is_active
+                ? _c("button", { staticClass: "btn btn-success btn-sm" }, [
+                    _vm._v(
+                      "\n                        Aktifkan\n                    "
+                    )
+                  ])
+                : _vm._e()
             ])
           ])
         }),
@@ -42591,11 +42644,15 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Nama")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Tipe")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Alamat IP")]),
         _vm._v(" "),
         _c("th", [_vm._v("Port")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Kendali")])
+        _c("th", [_vm._v(" Status ")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Kendali")])
       ])
     ])
   }

@@ -4,6 +4,7 @@ use App\BaseController;
 use App\Helpers\Auth;
 use App\Policies\ReceiptPrinterPolicy;
 use App\EloquentModels\ReceiptPrinter as ReceiptPrinterModel;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class ReceiptPrinter extends BaseController
 {
@@ -19,11 +20,34 @@ class ReceiptPrinter extends BaseController
             'index' => ['get'],
             'create' => ['get'],
             'store' => ['post'],
+            'activate' => ['post'],
             'edit' => ['get'],
             'update' => ['post'],
             'delete' => ['post'],
             'test' => ['post'],
         ];
+    }
+
+    public function activate($receipt_printer_id)
+    {
+        $receipt_printer = ReceiptPrinterModel::find($receipt_printer_id) ?:
+            $this->error404();
+        $outlet = Auth::user()->outlet ?:
+            $this->error403();
+
+        DB::transaction(function() use($outlet, $receipt_printer) {
+            /* Set other printers in the outlet of the same type to inactive */
+            $outlet->receipt_printers()
+                ->where("id", "<>", $receipt_printer->id)
+                ->where("type", $receipt_printer->type)
+                ->update(["is_active" => 0]);
+
+            /* Set itself to active */
+            $receipt_printer->update(["is_active" => 1]);
+        });
+
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+        $this->redirectBack();
     }
 
     public function index()
@@ -35,6 +59,34 @@ class ReceiptPrinter extends BaseController
 
         $print_server_url = $outlet->print_server_url;
         $this->template->render("receipt_printer/index", compact("receipt_printers", "print_server_url"));
+    }
+
+    public function create()
+    {
+        $this->template->render("receipt_printer/create");
+    }
+
+    public function store()
+    {
+        $this->validate([
+            ["name", "nama printer", "required|is_unique[receipt_printers.name]"],
+            ["ipv4_address", "alamat IP", "required"],
+            ["port", "port", "required"],
+            ["type", "port", "required"],
+        ]);
+
+        $outlet = Auth::user()->outlet ?: $this->error403();
+        
+        ReceiptPrinterModel::create([
+            "outlet_id" => $outlet->id,
+            "type" => $this->input->post("type"),
+            "name" => $this->input->post("name"),
+            "ipv4_address" => $this->input->post("ipv4_address"),
+            "port" => $this->input->post("port"),
+        ]);
+
+        $this->session->set_flashdata('message-success', 'Data berhasil ditambahkan.');
+        redirect(base_url("receiptPrinter/index"));
     }
     
     public function edit($receipt_printer_id)
@@ -54,12 +106,14 @@ class ReceiptPrinter extends BaseController
             ["name", "nama printer", "required"],
             ["ipv4_address", "alamat IP", "required"],
             ["port", "port", "required"],
+            ["type", "port", "required"],
         ]);
 
         $receipt_printer->update([
             "name" => $this->input->post("name"),
             "ipv4_address" => $this->input->post("ipv4_address"),
             "port" => $this->input->post("port"),
+            "type" => $this->input->post("type"),
         ]);
 
         $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');

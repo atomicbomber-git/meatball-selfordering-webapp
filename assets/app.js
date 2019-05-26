@@ -41567,7 +41567,9 @@ exports.default = _default;
                                   _vm._v(" "),
                                   _c("p", { staticClass: "text-muted" }, [
                                     _vm._v(
-                                      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem saepe ab, molestiae obcaecati nisi praesentium repellat."
+                                      "\n                                        " +
+                                        _vm._s(menu_category.description) +
+                                        "\n                                    "
                                     )
                                   ]),
                                   _vm._v(" "),

@@ -22,9 +22,9 @@
                                             class="font-weight-bold text-info"
                                         >{{ menu_category.name }}</span>
 
-                                        <p
-                                            class="text-muted"
-                                        >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem saepe ab, molestiae obcaecati nisi praesentium repellat.</p>
+                                        <p class="text-muted">
+                                            {{ menu_category.description }}
+                                        </p>
 
                                         <div class="text-right">
                                             <button

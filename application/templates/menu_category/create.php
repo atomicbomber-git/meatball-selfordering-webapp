@@ -45,6 +45,23 @@ use App\Helpers\AppInfo;
                 </div>
 
                 <div class="form-group">
+                    <label for="description"> Deskripsi: </label>
+                    <textarea
+                        name="description"
+                        id="description"
+                        type="text"
+                        rows="6"
+                        class="form-control <?= $this->has_error("description") ? "is-invalid" : "" ?>"
+                        placeholder="Deskripsi"
+                        ><?= $this->old("description") ?></textarea>
+                    <?php if($this->has_error("description")): ?>
+                    <div class="invalid-feedback">
+                        <?= $this->error("description") ?>
+                    </div>
+                    <?php endif ?>
+                </div>
+
+                <div class="form-group">
                     <label for="image"> Gambar: </label>
                     <input name="image" id="image" type="file" <?= $this->has_error("image") ? "is-invalid" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
                     <?php if ($this->has_error("image")) : ?>

@@ -5,6 +5,7 @@ use App\EloquentModels\MenuCategory as MenuCategoryModel;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use App\Policies\MenuCategoryPolicy;
 use App\Helpers\Auth;
+use App\Validators\IsUniqueExcept;
 
 class MenuCategory extends BaseController {
     public function __construct()
@@ -46,12 +47,13 @@ class MenuCategory extends BaseController {
         MenuCategoryPolicy::canCreate(Auth::user()) ?: $this->error403();
 
         $this->validate([
-            ["name", "nama", "required|is_unique[menu_categories.name]"]
+            ["name", "nama", "required|is_unique[menu_categories.name]"],
         ]);
 
         Capsule::transaction(function() {
             $menu_category = MenuCategoryModel::create([
                 "name" => $this->input->post("name"),
+                "description" => $this->input->post("description"),
             ]);
     
             $this->load->library('upload', [
@@ -94,12 +96,17 @@ class MenuCategory extends BaseController {
     public function update($menu_category_id)
     {
         MenuCategoryPolicy::canUpdate(Auth::user()) ?: $this->error403();
-        
         $menu_category = MenuCategoryModel::find($menu_category_id) ?: $this->error404();
+
+        $this->validate([
+            ["name", "nama", ["required", IsUniqueExcept::validator("menu_categories.name", $menu_category->name)]],
+        ]);
+
 
         Capsule::transaction(function() use($menu_category) {
             $menu_category->update([
                 "name" => $this->input->post("name"),
+                "description" => $this->input->post("description"),
             ]);
 
             if (!empty($_FILES["image"]["name"])) {

@@ -104,7 +104,6 @@ class SalesInvoice extends BaseController
                 "special_discount" => $this->input->post("special_discount"),
                 "cashier_id" => Auth::user()->id,
 
-                "cash" => $sales_invoice->rounding,
                 "total_paid" => $sales_invoice->rounding,
                 "pajak_pertambahan_nilai" => $sales_invoice->outlet->pajak_pertambahan_nilai,
                 "service_charge" => $sales_invoice->outlet->service_charge,
@@ -171,7 +170,6 @@ class SalesInvoice extends BaseController
             "cash" => $this->input->post("cash"),
             "cashier_id" => Auth::user()->id,
 
-            "cash" => $sales_invoice->rounding,
             "total_paid" => $sales_invoice->rounding,
             "pajak_pertambahan_nilai" => $sales_invoice->outlet->pajak_pertambahan_nilai,
             "service_charge" => $sales_invoice->outlet->service_charge,

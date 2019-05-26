@@ -133,6 +133,7 @@
                                 :options="special_discount_percentages"
                                 v-model="special_discount_percentage"
                                 :preselect-first="true"
+                                :allow-empty="false"
                             />
                         </td>
                     </tr>
@@ -216,7 +217,7 @@ export default {
                             this.sendPrintRequest(response)
                                 .done(response => {
                                     swal({ icon: "success", text: "Pembayaran berhasil" })
-                                        // .then(is_ok => { window.location.replace(this.redirect_url) })
+                                        .then(is_ok => { window.location.replace(this.redirect_url) })
                                 })
                                 .fail((xhr, status, error) => {
                                     Sentry.captureException({xhr, status, error})

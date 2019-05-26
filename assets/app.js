@@ -46740,7 +46740,9 @@ var _default = {
               swal({
                 icon: "success",
                 text: "Pembayaran berhasil"
-              }); // .then(is_ok => { window.location.replace(this.redirect_url) })
+              }).then(function (is_ok) {
+                window.location.replace(_this.redirect_url);
+              });
             }).fail(function (xhr, status, error) {
               Sentry.captureException({
                 xhr: xhr,
@@ -47140,7 +47142,8 @@ exports.default = _default;
                         return _vm.percent_format(val)
                       },
                       options: _vm.special_discount_percentages,
-                      "preselect-first": true
+                      "preselect-first": true,
+                      "allow-empty": false
                     },
                     model: {
                       value: _vm.special_discount_percentage,
@@ -47969,7 +47972,8 @@ exports.default = _default;
                         return _vm.percent_format(val)
                       },
                       options: _vm.special_discount_percentages,
-                      "preselect-first": true
+                      "preselect-first": true,
+                      "allow-empty": false
                     },
                     model: {
                       value: _vm.special_discount_percentage,
@@ -98005,7 +98009,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34811" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44323" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

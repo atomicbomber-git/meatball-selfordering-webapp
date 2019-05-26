@@ -195,6 +195,7 @@
                                 :options="special_discount_percentages"
                                 v-model="special_discount_percentage"
                                 :preselect-first="true"
+                                :allow-empty="false"
                             />
                         </td>
                     </tr>

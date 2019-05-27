@@ -43,11 +43,18 @@
                             Ubah
                         </a>
 
-                        
-
-
-                        <button v-if="!receipt_printer.is_active" class="btn btn-success btn-sm">
+                        <a 
+                            :href="`/receiptPrinter/activate/${receipt_printer.id}`"
+                            v-if="!receipt_printer.is_active"
+                            class="btn btn-success btn-sm">
                             Aktifkan
+                        </a>
+                        <a v-else disabled class="btn btn-secondary btn-sm">
+                            Aktifkan
+                        </a>
+
+                        <button @click="deleteReceiptPrinter(receipt_printer)" class="btn btn-danger btn-sm">
+                            Hapus
                         </button>
                     </td>
                 </tr>
@@ -81,13 +88,13 @@ export default {
                     },
                     {
                         name: "setTextSize",
-                        arguments: [{ data: 3, type: "integer" }, { data: 3, type: "integer" }]
+                        arguments: [{ data: 2, type: "integer" }, { data: 2, type: "integer" }]
                     },
                     {
                         name: "text",
                         arguments: [
                             {
-                                data: "PENGUJIAN\n\n\n",
+                                data: `${receipt_printer.name}\n\n\n`,
                                 type: "text",
                             }
                         ]
@@ -124,7 +131,18 @@ export default {
 
                     swal({ icon: "error", text: error_text })
                 });
+        },
+
+        deleteReceiptPrinter(receipt_printer) {
+            $.post(`/receiptPrinter/delete/${receipt_printer.id}`, {token: window.token})
+                .done(response => {
+                    window.location.replace(response.redirect_url);
+                })
+                .fail((xhr, status, error) => {
+                    let response = xhr.responseJSON;
+                    this.error_data = response.data;
+                });
         }
-    }
+    },
 };
 </script>

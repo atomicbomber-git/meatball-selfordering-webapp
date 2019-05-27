@@ -17,6 +17,6 @@ class ReceiptPrinter extends Model
     ];
 
     public $fillable = [
-        "outlet_id", "name", "ipv4_address", "port", "type",
+        "outlet_id", "name", "ipv4_address", "port", "type", "is_active",
     ];
 }

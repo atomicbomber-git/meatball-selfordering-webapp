@@ -20,7 +20,7 @@ class ReceiptPrinter extends BaseController
             'index' => ['get'],
             'create' => ['get'],
             'store' => ['post'],
-            'activate' => ['post'],
+            'activate' => ['get'],
             'edit' => ['get'],
             'update' => ['post'],
             'delete' => ['post'],
@@ -34,11 +34,11 @@ class ReceiptPrinter extends BaseController
             $this->error404();
         $outlet = Auth::user()->outlet ?:
             $this->error403();
+            
 
         DB::transaction(function() use($outlet, $receipt_printer) {
             /* Set other printers in the outlet of the same type to inactive */
             $outlet->receipt_printers()
-                ->where("id", "<>", $receipt_printer->id)
                 ->where("type", $receipt_printer->type)
                 ->update(["is_active" => 0]);
 
@@ -55,6 +55,10 @@ class ReceiptPrinter extends BaseController
         ReceiptPrinterPolicy::canIndex(Auth::user()) ?: $this->error403();
 
         $outlet = Auth::user()->outlet ?: $this->error403();
+        $outlet->load(["receipt_printers" => function ($query) {
+            $query->orderBy("type");
+        }]);
+
         $receipt_printers = $outlet->receipt_printers;
 
         $print_server_url = $outlet->print_server_url;
@@ -118,5 +122,18 @@ class ReceiptPrinter extends BaseController
 
         $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
         redirect(base_url("receiptPrinter/edit/{$receipt_printer_id}"));
+    }
+
+    public function delete($receipt_printer_id)
+    {
+        $receipt_printer = ReceiptPrinterModel::find($receipt_printer_id)
+            ?: $this->error404();
+
+        $receipt_printer->delete();
+        $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
+
+        $this->jsonResponse([
+            "redirect_url" => base_url("receiptPrinter/index")
+        ]);
     }
 }

@@ -42451,6 +42451,13 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ["print_server_url", "receipt_printers"],
   methods: {
@@ -42471,16 +42478,16 @@ var _default = {
         }, {
           name: "setTextSize",
           arguments: [{
-            data: 3,
+            data: 2,
             type: "integer"
           }, {
-            data: 3,
+            data: 2,
             type: "integer"
           }]
         }, {
           name: "text",
           arguments: [{
-            data: "PENGUJIAN\n\n\n",
+            data: "".concat(receipt_printer.name, "\n\n\n"),
             type: "text"
           }]
         }, {
@@ -42519,6 +42526,18 @@ var _default = {
           icon: "error",
           text: error_text
         });
+      });
+    },
+    deleteReceiptPrinter: function deleteReceiptPrinter(receipt_printer) {
+      var _this2 = this;
+
+      $.post("/receiptPrinter/delete/".concat(receipt_printer.id), {
+        token: window.token
+      }).done(function (response) {
+        window.location.replace(response.redirect_url);
+      }).fail(function (xhr, status, error) {
+        var response = xhr.responseJSON;
+        _this2.error_data = response.data;
       });
     }
   }
@@ -42605,12 +42624,49 @@ exports.default = _default;
               ),
               _vm._v(" "),
               !receipt_printer.is_active
-                ? _c("button", { staticClass: "btn btn-success btn-sm" }, [
-                    _vm._v(
-                      "\n                        Aktifkan\n                    "
-                    )
-                  ])
-                : _vm._e()
+                ? _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-success btn-sm",
+                      attrs: {
+                        href: "/receiptPrinter/activate/" + receipt_printer.id
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Aktifkan\n                    "
+                      )
+                    ]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-secondary btn-sm",
+                      attrs: { disabled: "" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Aktifkan\n                    "
+                      )
+                    ]
+                  ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger btn-sm",
+                  on: {
+                    click: function($event) {
+                      return _vm.deleteReceiptPrinter(receipt_printer)
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        Hapus\n                    "
+                  )
+                ]
+              )
             ])
           ])
         }),
@@ -98070,7 +98126,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44323" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45069" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

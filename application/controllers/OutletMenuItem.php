@@ -4,6 +4,8 @@ use App\BaseController;
 use App\EloquentModels\Outlet;
 use App\EloquentModels\MenuCategory;
 use App\EloquentModels\OutletMenuItem as OutletMenuItemModel;
+use App\Policies\OutletMenuItemPolicy;
+use App\Helpers\Auth;
 
 class OutletMenuItem extends BaseController {
     protected function allowedMethods()
@@ -23,6 +25,9 @@ class OutletMenuItem extends BaseController {
         $outlet = Outlet::find($outlet_id);
         $menu_category = MenuCategory::find($menu_category_id);
 
+        OutletMenuItemPolicy::canIndex(Auth::user()) ?:
+            $this->error403();
+
         $outlet_menu_items = OutletMenuItemModel::query()
             ->with("menu_item")
             ->where("outlet_id", $outlet->id)
@@ -39,6 +44,9 @@ class OutletMenuItem extends BaseController {
         $outlet = Outlet::find($outlet_id) ?: $this->error404();
         $menu_category = MenuCategory::find($menu_category_id) ?: $this->error404();
 
+        OutletMenuItemPolicy::canCreate(Auth::user()) ?:
+            $this->error403();
+
         $menu_category->load(["menu_items" => function ($query) use($outlet) {
             $query->whereDoesntHave("outlet_menu_item", function ($query) use($outlet) {
                 $query->where("outlet_id", $outlet->id);
@@ -51,6 +59,9 @@ class OutletMenuItem extends BaseController {
     public function store($outlet_id)
     {
         Outlet::find($outlet_id) ?: $this->error404();
+
+        OutletMenuItemPolicy::canCreate(Auth::user()) ?:
+            $this->error403();
 
         $this->validate([
             ["menu_item_id", "ID menu item", "required"],
@@ -69,6 +80,9 @@ class OutletMenuItem extends BaseController {
     public function edit($outlet_menu_item_id)
     {
         $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+
+        OutletMenuItemPolicy::canUpdate(Auth::user()) ?:
+            $this->error403();
         
         $outlet_menu_item->load([
             "outlet:id,name",
@@ -82,6 +96,9 @@ class OutletMenuItem extends BaseController {
     public function update($outlet_menu_item_id)
     {
         $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+
+        OutletMenuItemPolicy::canUpdate(Auth::user()) ?:
+            $this->error403();
 
         $this->validate([
             ["price", "harga", "required"],
@@ -98,6 +115,10 @@ class OutletMenuItem extends BaseController {
     public function delete($outlet_menu_item_id)
     {
         $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+
+        OutletMenuItemPolicy::canDelete(Auth::user(), $outlet_menu_item) ?:
+            $this->error403();
+
         $outlet_menu_item->delete();
 
         $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');

@@ -2,6 +2,8 @@
 use App\Helpers\DefaultRoute;
 use App\Helpers\AppInfo;
 use App\Helpers\Formatter;
+use App\Policies\OutletMenuItemPolicy;
+use App\Helpers\Auth;
 
 ?>
 
@@ -78,7 +80,9 @@ use App\Helpers\Formatter;
                                 <input type="hidden"
                                     name="<?= $this->csrf_name() ?>"
                                     value="<?= $this->csrf_token() ?>">
-                                <button class="btn btn-danger btn-sm">
+                                <button
+                                    <?= OutletMenuItemPolicy::canDelete(Auth::user(), $outlet_menu_item) ? '' : 'disabled' ?>
+                                    class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>
                             </form>

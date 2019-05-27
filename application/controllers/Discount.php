@@ -5,6 +5,8 @@ use App\EloquentModels\Discount as DiscountModel;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\EloquentModels\Outlet;
 use App\EloquentModels\DiscountMenuItem;
+use App\Policies\DiscountPolicy;
+use App\Helpers\Auth;
 
 class Discount extends BaseController {
     protected function allowedMethods()
@@ -22,26 +24,20 @@ class Discount extends BaseController {
     public function create($outlet_id)
     {
         $outlet = Outlet::find($outlet_id) ?: $this->error404();
+        
+        DiscountPolicy::canCreate(Auth::user()) ?:
+            $this->error403();
+        
         $outlet->load("outlet_menu_items.menu_item");
         $this->template->render("discount/create", compact("outlet"));
-    }
-
-    public function delete($discount_id)
-    {
-        $discount = DiscountModel::find($discount_id) ?: $this->error404();
-
-        DB::transaction(function() use($discount) {
-            $discount->discount_menu_items()->delete();
-            $discount->delete();
-        });
-        
-        $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
-        $this->redirectBack();
     }
 
     public function store($outlet_id)
     {
         Outlet::find($outlet_id) ?: $this->error404();
+
+        DiscountPolicy::canCreate(Auth::user()) ?:
+            $this->error403();
 
         $this->validate([
             ["name", "nama program diskon", "required"],
@@ -76,6 +72,9 @@ class Discount extends BaseController {
     public function edit($discount_id)
     {
         $discount = DiscountModel::find($discount_id) ?: $this->error404();
+
+        DiscountPolicy::canUpdate(Auth::user()) ?:
+            $this->error403();
         
         $discount->load([
             "discount_menu_items:id,discount_id,percentage,outlet_menu_item_id",
@@ -92,6 +91,9 @@ class Discount extends BaseController {
     public function update($discount_id)
     {
         $discount = DiscountModel::find($discount_id) ?: $this->error404();
+
+        DiscountPolicy::canUpdate(Auth::user()) ?:
+            $this->error403();
 
         $this->validate([
             ["name", "nama program diskon", "required"],
@@ -121,5 +123,22 @@ class Discount extends BaseController {
         });
 
         $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($discount_id)
+    {
+        $discount = DiscountModel::find($discount_id) ?:
+            $this->error404();
+
+        DiscountPolicy::canDelete(Auth::user(), $discount) ?:
+            $this->error403();
+
+        DB::transaction(function() use($discount) {
+            $discount->discount_menu_items()->delete();
+            $discount->delete();
+        });
+        
+        $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
+        $this->redirectBack();
     }
 }

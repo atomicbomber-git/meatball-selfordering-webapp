@@ -4,9 +4,9 @@ namespace App\Policies;
 
 use App\EloquentModels\User;
 use App\Enums\UserLevel;
-use App\EloquentModels\Discount;
+use App\EloquentModels\OutletMenuItem;
 
-class DiscountPolicy
+class OutletMenuItemPolicy
 {
     public static function canIndex(?User $user)
     {
@@ -23,13 +23,13 @@ class DiscountPolicy
         return ($user !== null) && ($user->level === UserLevel::ADMIN);
     }
 
-    public static function canDelete(?User $user, Discount $discount)
+    public static function canDelete(?User $user, OutletMenuItem $outlet_menu_item)
     {
         if ($user === null || $user->level !== UserLevel::ADMIN) {
             return false;
         }
 
-        if ($discount->has_related_entities) {
+        if ($outlet_menu_item->has_related_entities) {
             return false;
         }
 

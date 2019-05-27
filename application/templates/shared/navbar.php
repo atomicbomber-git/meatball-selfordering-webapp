@@ -7,6 +7,8 @@ use App\Policies\ReceiptPrinterPolicy;
 use App\Helpers\URL;
 use App\Policies\OutletPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\OutletMenuPolicy;
+use App\Policies\DiscountPolicy;
 
 ?>
 
@@ -52,18 +54,26 @@ use App\Policies\UserPolicy;
                                     <i class='fa fa-list'></i>
                                     Kategori Menu & Menu
                                 </a>
+
                                 <?php endif ?>
+
+                                <?php if(OutletMenuPolicy::canIndex(Auth::user())): ?>
 
                                 <a href="<?= base_url("outletMenu/index") ?>" class="dropdown-item">
                                     <i class="fa fa-cutlery"></i>
                                     Menu Outlet
                                 </a>
+                                    
+                                <?php endif ?>
 
+                                <?php if(DiscountPolicy::canIndex(Auth::user())): ?>
+                                
                                 <a href="<?= base_url("outletDiscount/index") ?>" class="dropdown-item">
                                     <i class="fa fa-percent"></i>
                                     Diskon
                                 </a>
 
+                                <?php endif ?>
                             </div>
                         </li>
 

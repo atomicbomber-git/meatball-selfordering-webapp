@@ -1,8 +1,9 @@
 <?php
-use App\Helpers\DefaultRoute;
-use App\Helpers\AppInfo;
-use App\Helpers\Formatter;
-
+    use App\Helpers\DefaultRoute;
+    use App\Helpers\AppInfo;
+    use App\Helpers\Formatter;
+    use App\Policies\DiscountPolicy;
+    use App\Helpers\Auth;
 ?>
 
 <?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
@@ -70,7 +71,9 @@ use App\Helpers\Formatter;
                                     name="<?= $this->csrf_name() ?>"
                                     value="<?= $this->csrf_token() ?>">
 
-                                <button class="btn btn-danger btn-sm">
+                                <button
+                                    <?= DiscountPolicy::canDelete(Auth::user(), $discount) ? '' : 'disabled' ?>
+                                    class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>
                             </form>

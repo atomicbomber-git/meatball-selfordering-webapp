@@ -166,14 +166,19 @@ class SalesInvoice extends Model
         });
     }
 
-    public function getArchivedTotalPriceAttribute()
+    public function getArchivedItemDiscountAttribute()
     {
         $this->loadMissing("sales_invoice_items");
         return $this->sales_invoice_items->sum(function ($sales_invoice_item) {
             return $sales_invoice_item->price *
                 $sales_invoice_item->quantity *
-                (1 - $sales_invoice_item->discount);
+                $sales_invoice_item->discount;
         });
+    }
+
+    public function getArchivedTotalPriceAttribute()
+    {
+        return $this->archived_prediscount_total_price - $this->archived_item_discount;
     }
 
     public function getArchivedSpecialDiscountAttribute()

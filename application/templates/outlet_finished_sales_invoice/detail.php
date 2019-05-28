@@ -37,19 +37,19 @@ use App\Helpers\Formatter;
                     <thead class="thead thead-dark">
                         <tr>
                             <th class="text-center"> Nomor Invoice </th>
-                            <th> Tanggal / Waktu </th>
-                            <th> Kasir </th>
-                            <th> Waiter / Service </th>
+                            <th class="text-right"> Total Pembayaran (Rp) </th>
+                            <th class="text-right"> Total Diskon Item (Rp) </th>
+                            <th class="text-right"> Total Diskon Khusus (Rp) </th>
                             <th class="text-center"> Kendali </th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($sales_invoices as $key => $sales_invoice): ?>
                         <tr>
-                            <td class="text-center"> <?= Formatter::salesInvoiceNumber($sales_invoice->id) ?> </td>
-                            <td> <?= $sales_invoice->created_at ?> </td>
-                            <td> <?= $sales_invoice->cashier->name ?? '-' ?> </td>
-                            <td> <?= $sales_invoice->waiter->name ?? '-' ?> </td>
+                            <td class="text-center"> <?= Formatter::salesInvoiceId($sales_invoice->id) ?> </td>
+                            <td class="text-right"> <?= Formatter::currency($sales_invoice->archived_rounding) ?> </td>
+                            <td class="text-right"> <?= Formatter::currency($sales_invoice->archived_item_discount) ?> </td>
+                            <td class="text-right"> <?= Formatter::currency($sales_invoice->archived_special_discount) ?> </td>
                             <td class="text-center">
                                 <a
                                     class="btn btn-dark btn-sm"

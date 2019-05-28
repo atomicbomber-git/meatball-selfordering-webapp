@@ -26,6 +26,14 @@ try {
     window.$ = window.jQuery = require('jquery');
     require('datatables.net-bs4')()
     require('datatables.net-bs4/css/dataTables.bootstrap4.css')
+    
+    require('jszip' );
+    require('pdfmake' );
+    require('datatables.net-buttons-bs4')();
+    require('datatables.net-buttons/js/buttons.colVis.js' )();
+    require('datatables.net-buttons/js/buttons.flash.js' )();
+    require('datatables.net-buttons/js/buttons.html5.js' )();
+    require('datatables.net-buttons/js/buttons.print.js' )();
 
     require('bootstrap');
 } catch (e) {}

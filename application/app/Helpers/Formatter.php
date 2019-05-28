@@ -22,7 +22,7 @@ class Formatter {
 
     public static function salesInvoiceId($value)
     {
-        return sprintf("%04d", $value);
+        return sprintf("%07d", $value);
     }
     
     public static function number($value)

@@ -21,17 +21,21 @@ class OutletFinishedSalesInvoice extends BaseController {
 
     public function detail($outlet_id)
     {
-        $outlet = Outlet::find($outlet_id) ?: $this->error404();
+        $outlet = Outlet::find($outlet_id) ?:
+            $this->error404();
 
         $sales_invoices = SalesInvoice::query()
-            ->select("id", "number", "outlet_id", "waiter_id", "cashier_id", "created_at")
+            ->select("id", "number", "outlet_id", "waiter_id", "cashier_id", "created_at", "special_discount")
             ->where("outlet_id", $outlet->id)
             ->with("waiter:id,name", "cashier:id,name")
             ->isFinished()
             ->orderByDesc("created_at")
             ->orderByDesc("number")
-            ->get();
+            ->get()
+            ->map
+            ->append("archived_special_discount", "archived_item_discount");
 
-        $this->template->render("outlet_finished_sales_invoice/detail", compact("sales_invoices", "outlet"));
+        $this->template
+            ->render("outlet_finished_sales_invoice/detail", compact("sales_invoices", "outlet"));
     }
 }

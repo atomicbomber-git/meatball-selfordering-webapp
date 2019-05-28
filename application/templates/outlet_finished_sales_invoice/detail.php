@@ -1,6 +1,7 @@
 <?php
     use App\Helpers\DefaultRoute;
     use App\Helpers\Formatter;
+    use App\Helpers\Date;
 ?>
 
 <?php $this->start("extra-styles") ?>
@@ -19,7 +20,7 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
 
 <?php $this->stop() ?>
 
-<?php $this->layout("shared/base", ["title" => "Histori Transaksi Outlet '{$outlet->name}'"]) ?>
+<?php $this->layout("shared/base", ["title" => "Histori Transaksi Outlet '{$outlet->name}' Tanggal " . Formatter::date(Date::today()) ]) ?>
 
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -41,9 +42,27 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
     <h3 class="mb-3">
         <i class="fa fa-book"></i>
         Histori Transaksi Outlet '<?= $outlet->name ?>'
+        <p class="lead"> Tanggal <?= Formatter::date(Date::today()) ?> </p>
     </h3>
 
     <?php $this->insert("shared/message") ?>
+
+    <div class="alert alert-dark">
+        <div class="row">
+            <div class="col-md-6">
+                Histori Transaksi untuk Tanggal <strong> <?= Formatter::date(Date::today()) ?> </strong> 
+            </div>
+
+            <div class="col-md-6">
+                <form class="form-inline justify-content-end" method="GET" action="">
+                    <label for="filter_date" class="mr-2"> Tanggal: </label>
+                    <input value="<?= $filter_date ?>" name="filter_date" class="form-control form-control-sm mr-2" type="date">
+                    <button class="btn btn-primary btn-sm"> Ubah Filter </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
 
     <div class="card">
         <div class="card-body">

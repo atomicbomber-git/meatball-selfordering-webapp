@@ -34,4 +34,9 @@ class Formatter {
     {
         return (new Carbon($value))->format("m/d/Y H:i:s");
     }
+
+    public static function date($value)
+    {
+        return (new Carbon($value))->format("m/d/Y");
+    }
 }

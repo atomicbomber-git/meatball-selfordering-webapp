@@ -45,6 +45,9 @@ require('bootstrap');
 require('datatables.net-bs4/css/dataTables.bootstrap4.css')
 require('datatables.net-buttons-bs4/css/buttons.bootstrap4.css')
 
+window.datatable_config = require('./datatable_config.js')
+window.numeral = require('./numeral_helpers.js').numeral
+window.currency_format = require('./numeral_helpers.js').currency_format
 
 // Add SweetAlert
 window.swal = require("sweetalert")

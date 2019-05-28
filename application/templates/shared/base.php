@@ -13,6 +13,8 @@ use App\Enums\UserLevel;
     <title> <?= $title ?? "Website Name" ?> </title>
     <link rel="stylesheet" href="<?= base_url("assets/app.css") ?>">
     <meta name="csrf-token" content="<?= $this->csrf_token() ?>">
+
+    <?= $this->section('extra-styles') ?>
 </head>
 <body>
     <?= $this->insert('shared/navbar') ?>

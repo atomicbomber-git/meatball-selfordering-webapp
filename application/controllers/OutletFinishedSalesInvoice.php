@@ -25,7 +25,7 @@ class OutletFinishedSalesInvoice extends BaseController {
             $this->error404();
 
         $sales_invoices = SalesInvoice::query()
-            ->select("id", "number", "outlet_id", "waiter_id", "cashier_id", "created_at", "special_discount")
+            ->select("id", "number", "outlet_id", "waiter_id", "cashier_id", "created_at", "special_discount", "invoice_number")
             ->where("outlet_id", $outlet->id)
             ->with("waiter:id,name", "cashier:id,name")
             ->isFinished()

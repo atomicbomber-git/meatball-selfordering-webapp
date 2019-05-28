@@ -1,10 +1,9 @@
 <?php
     use App\Helpers\DefaultRoute;
-use App\Helpers\Formatter;
-
+    use App\Helpers\Formatter;
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Sejarah Transaksi"]) ?>
+<?php $this->layout("shared/base", ["title" => "Histori Transaksi Outlet '{$outlet->name}'"]) ?>
 
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -36,10 +35,10 @@ use App\Helpers\Formatter;
                 <table class="datatable table table-sm table-striped table-bordered">
                     <thead class="thead thead-dark">
                         <tr>
-                            <th class="text-center"> Nomor Invoice </th>
-                            <th class="text-right"> Total Pembayaran (Rp) </th>
-                            <th class="text-right"> Total Diskon Item (Rp) </th>
-                            <th class="text-right"> Total Diskon Khusus (Rp) </th>
+                            <th class="text-center printable"> Nomor Invoice </th>
+                            <th class="text-right printable"> Total Pembayaran (Rp) </th>
+                            <th class="text-right printable"> Total Diskon Item (Rp) </th>
+                            <th class="text-right printable"> Total Diskon Khusus (Rp) </th>
                             <th class="text-center"> Kendali </th>
                         </tr>
                     </thead>
@@ -69,8 +68,31 @@ use App\Helpers\Formatter;
 <?php $this->start("extra-scripts") ?>
     <script>
         $("table.datatable").DataTable({
+            dom: '<<"row mb-4"<"col-sm-12 col-md-3"l><"col-sm-12 col-md-6 text-center"B><"col-sm-12 col-md-3"f>>rtip>',
             "language": { "url": "<?= base_url("assets/indonesian-datatables.json") ?>" },
             "order": [[0, "desc"]],
+
+            buttons: [
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: ".printable"
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: ".printable"
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ".printable"
+                    }
+                },
+                'colvis'
+            ]
         })
     </script>
 <?php $this->stop() ?>

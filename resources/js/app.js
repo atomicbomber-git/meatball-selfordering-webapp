@@ -21,22 +21,29 @@ Vue.component("outlet-menu-item-edit", require("./components/OutletMenuItemEdit.
 // Load cleave.js
 require('cleave.js/dist/cleave')
 
-try {
-    window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = require('jquery');
-    require('datatables.net-bs4')()
-    require('datatables.net-bs4/css/dataTables.bootstrap4.css')
-    
-    require('jszip' );
-    require('pdfmake' );
-    require('datatables.net-buttons-bs4')();
-    require('datatables.net-buttons/js/buttons.colVis.js' )();
-    require('datatables.net-buttons/js/buttons.flash.js' )();
-    require('datatables.net-buttons/js/buttons.html5.js' )();
-    require('datatables.net-buttons/js/buttons.print.js' )();
+window.Popper = require('popper.js').default;
+window.$ = window.jQuery = require('jquery');
 
-    require('bootstrap');
-} catch (e) {}
+
+
+window.JSZip = require( 'jszip' );
+
+let pdfMake = require( 'pdfmake/build/pdfmake' );
+let pdfFonts = require('pdfmake/build/vfs_fonts')
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+require( 'datatables.net-bs4')();
+require( 'datatables.net-buttons-bs4')();
+
+require( 'datatables.net-buttons/js/buttons.colVis.js')(window, window.$);
+require( 'datatables.net-buttons/js/buttons.flash.js')(window, window.$);
+require( 'datatables.net-buttons/js/buttons.html5.js')(window, window.$);
+require( 'datatables.net-buttons/js/buttons.print.js')(window, window.$);
+
+
+require('bootstrap');
+require('datatables.net-bs4/css/dataTables.bootstrap4.css')
+require('datatables.net-buttons-bs4/css/buttons.bootstrap4.css')
 
 
 // Add SweetAlert

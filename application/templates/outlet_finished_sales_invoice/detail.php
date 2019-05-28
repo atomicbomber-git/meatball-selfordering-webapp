@@ -61,7 +61,7 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
                     <tbody>
                         <?php foreach($sales_invoices as $key => $sales_invoice): ?>
                         <tr>
-                            <td class="text-center"> <?= Formatter::salesInvoiceId($sales_invoice->id) ?> </td>
+                            <td class="text-center"> <?= Formatter::salesInvoiceId($sales_invoice->invoice_number) ?> </td>
                             <td> <?= Formatter::currency($sales_invoice->archived_rounding) ?> </td>
                             <td> <?= Formatter::currency($sales_invoice->archived_item_discount) ?> </td>
                             <td> <?= Formatter::currency($sales_invoice->archived_special_discount) ?> </td>

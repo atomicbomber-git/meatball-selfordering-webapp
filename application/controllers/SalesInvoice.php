@@ -250,10 +250,17 @@ class SalesInvoice extends BaseController
                 ->whereDate("created_at", "=", Date::today())
                 ->count();
 
+            $invoice_number = SalesInvoiceModel::query()
+                ->select("invoice_number")
+                ->where("outlet_id", $outlet->id)
+                ->orderByDesc("invoice_number")
+                ->value("invoice_number") + 1 ?? 1;
+
             $this->sales_invoice = SalesInvoiceModel::create([
                 "type" => $data["type"],
                 "status" => SalesInvoiceModel::UNPAID,
                 "number" => $sales_invoice_count + 1,
+                "invoice_number" => $invoice_number,
                 "outlet_id" => Auth::user()->outlet->id,
                 "waiter_id" => Auth::user()->id,
             ]);
@@ -483,7 +490,7 @@ class SalesInvoice extends BaseController
         $text .= $sales_invoice->outlet->address . "\n";
         $text .= $sales_invoice->outlet->phone . "\n";
         $text .= "Tax Invoice" . "\n";
-        $text .= sprintf("No %08d", $sales_invoice->id) . "\n";
+        $text .= Formatter::salesInvoiceId($sales_invoice->invoice_number) . "\n";
 
 
         /* The row format */

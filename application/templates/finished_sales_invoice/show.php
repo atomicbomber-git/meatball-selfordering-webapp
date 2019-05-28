@@ -23,14 +23,14 @@ use App\Helpers\Formatter;
                 </a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                Invoice #<?= Formatter::salesInvoiceId($sales_invoice->id) ?>
+                Invoice #<?= Formatter::salesInvoiceId($sales_invoice->invoice_number) ?>
             </li>
         </ol>
     </nav>
 
     <h3 class="mb-3">
         <i class="fa fa-book"></i>
-        Invoice #<?= Formatter::salesInvoiceId($sales_invoice->id) ?>
+        Invoice #<?= Formatter::salesInvoiceId($sales_invoice->invoice_number) ?>
     </h3>
 
     <?php $this->insert("shared/message") ?>

@@ -13,7 +13,7 @@ class Auth
 
     public static function user()
     {
-        $session_user_id = get_instance()->session->user->id;
+        $session_user_id = get_instance()->session->user->id ?? null;
         return User::find($session_user_id);
     }
 }

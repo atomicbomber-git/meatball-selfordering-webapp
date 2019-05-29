@@ -34,4 +34,13 @@ class UserPolicy
 
         return true;
     }
+
+    public static function canToggleActivationStatus(?User $user, User $target_user)
+    {
+        if ($user === null || $user->level !== UserLevel::ADMIN || $target_user->level === UserLevel::ADMIN) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -44,6 +44,7 @@ use App\Helpers\Auth;
                         <th> Nama Asli </th>
                         <th> Nama Pengguna </th>
                         <th> Hak Akses </th>
+                        <th class="text-center"> Aktif / Non-Aktif </th>
                         <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
@@ -56,16 +57,50 @@ use App\Helpers\Auth;
                         <td> <?= $user->username ?> </td>
                         <td> <?= $user->formatted_level ?> </td>
                         <td class="text-center">
+                            <?php $this->insert("shared/activation_status", [
+                                "is_active" => $user->is_active
+                            ]) ?>
+                        </td>
+                        <td class="text-center">
 
                             <a class="btn btn-dark btn-sm" href="<?= base_url("user/edit/{$user->id}") ?>">
                                 Ubah
                             </a>
 
-                            <form
-                                class="d-inline-block" method="POST" action="<?= base_url("user/delete/{$user->id}") ?>" >
+                            <?php if($user->is_active): ?>
+
+                            <form class="d-inline-block confirmed" method="POST" action="<?= base_url("user/deactivate/{$user->id}") ?>" >
                                 <input type="hidden"
                                     name="<?= $this->csrf_name() ?>"
                                     value="<?= $this->csrf_token() ?>">
+                                <button
+                                    <?= UserPolicy::canToggleActivationStatus(Auth::user(), $user) ? '' : 'disabled' ?>
+                                    class="btn btn-warning btn-sm">
+                                    Non-Aktifkan
+                                </button>
+                            </form>
+ 
+                            <?php else: ?>
+
+                            <form class="d-inline-block confirmed" method="POST" action="<?= base_url("user/activate/{$user->id}") ?>" >
+                                <input type="hidden"
+                                    name="<?= $this->csrf_name() ?>"
+                                    value="<?= $this->csrf_token() ?>">
+                                <button
+                                    <?= UserPolicy::canToggleActivationStatus(Auth::user(), $user) ? '' : 'disabled' ?>
+                                    class="btn btn-success btn-sm">
+                                    Aktifkan
+                                </button>
+                            </form>
+
+                            <?php endif ?>
+
+                            <form
+                                class="d-inline-block confirmed" method="POST" action="<?= base_url("user/delete/{$user->id}") ?>" >
+                                <input type="hidden"
+                                    name="<?= $this->csrf_name() ?>"
+                                    value="<?= $this->csrf_token() ?>">
+
                                 <button
                                     <?= UserPolicy::canDelete(Auth::user(), $user) ? '' : 'disabled' ?>
                                     class="btn btn-danger btn-sm">

@@ -16,6 +16,8 @@ class User extends BaseController {
             'edit' => ['get'],
             'update' => ['post'],
             'delete' => ['post'],
+            'activate' => ['post'],
+            'deactivate' => ['post'],
         ];
     }
 
@@ -24,11 +26,41 @@ class User extends BaseController {
         UserPolicy::canIndex(Auth::user()) ?: $this->error403();
 
         $users = UserModel::query()
-            ->select("id", "name", "username", "level")
+            ->withoutGlobalScope("active")
+            ->select("id", "name", "username", "level", "is_active")
+            ->orderByDesc("is_active")
             ->withCount(UserModel::RELATED_ENTITIES)
             ->get();
 
         $this->template->render("user/index", compact("users"));
+    }
+
+    public function activate($user_id)
+    {
+        $user = UserModel::findOrFail($user_id) ?:
+            $this->error404();
+
+        UserPolicy::canToggleActivationStatus(Auth::user(), $user) ?:
+            $this->error403();
+
+        $user->update(["is_active" => true]);
+
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+        $this->redirectBack();
+    }
+
+    public function deactivate($user_id)
+    {
+        $user = UserModel::findOrFail($user_id) ?:
+            $this->error404();
+
+        UserPolicy::canToggleActivationStatus(Auth::user(), $user) ?:
+            $this->error403();
+
+        $user->update(["is_active" => false]);
+
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+        $this->redirectBack();
     }
 
     public function create()

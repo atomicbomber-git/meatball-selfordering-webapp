@@ -11,7 +11,7 @@ class User extends Model
     use HasRelatedEntitiesCount;
 
     public $fillable = [
-        "name", "username", "nik", "password", "level"
+        "name", "username", "nik", "password", "level", "is_active"
     ];
 
     public $hidden = [
@@ -25,7 +25,14 @@ class User extends Model
         "cashiered_sales_invoices",
     ];
 
-    public $timestamps = false;
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope("active", function ($query) {
+            $query->where("is_active", true);
+        });
+    }
 
     public function supervised_outlet()
     {

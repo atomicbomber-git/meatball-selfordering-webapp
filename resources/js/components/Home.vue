@@ -362,13 +362,16 @@ export default {
 
     data() {
         return {
-            p_menu_data: this.menu_data.map(menu_categories => ({
-                ...menu_categories,
-                menu_items: menu_categories.menu_items.map(menu_item => ({
-                    ...menu_item,
-                    order_quantity: 0
+            p_menu_data: this.menu_data
+                .map(menu_category => ({
+                    ...menu_category,
+                    menu_items: menu_category.menu_items
+                        .map(menu_item => ({
+                            ...menu_item,
+                            order_quantity: 0
+                        }))
                 }))
-            })),
+                .filter(menu_category => menu_category.menu_items.length > 0 ),
 
             selected_menu_category: null,
             order_type: null,

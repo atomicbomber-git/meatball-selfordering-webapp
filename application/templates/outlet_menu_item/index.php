@@ -55,6 +55,7 @@ use App\Helpers\Auth;
                         <th> # </th>
                         <th> Menu </th>
                         <th class="text-right"> Harga (Rp.) </th>
+                        <th class="text-center"> Aktif / Non-Aktif </th>
                         <th class="text-center"> Kendali </th>
                     </tr>
                 </thead>
@@ -65,6 +66,9 @@ use App\Helpers\Auth;
                         <td> <?= $key + 1 ?>. </td>
                         <td> <?= $outlet_menu_item->menu_item->name ?> </td>
                         <td class="text-right"> <?= Formatter::currency($outlet_menu_item->price) ?> </td>
+                        <td class="text-center">
+                            <?php $this->insert("shared/activation_status", ["is_active" => $outlet_menu_item->is_active]) ?>
+                        </td>
                         <td class="text-center">
                             <a
                                 href="<?= base_url("outletMenuItem/edit/{$outlet_menu_item->id}") ?>"

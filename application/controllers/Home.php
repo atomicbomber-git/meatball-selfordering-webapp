@@ -30,16 +30,14 @@ class Home extends BaseController
     {
         $outlet = Auth::user()->outlet ?: $this->error403();
         $outlet->append("discount_map");
-        $outlet->load(["outlet_menu_items:outlet_id,menu_item_id,price",]);
 
         $menu_data = MenuCategory::query()
             ->with(["menu_items" => function ($query) use($outlet) {
-                $query->whereIn("id", $outlet->outlet_menu_items->pluck("menu_item_id"));
-            }])
-            ->with(["menu_items.outlet_menu_item" => function ($query) use ($outlet) {
                 $query
-                    ->select("id", "outlet_id", "price", "menu_item_id")
-                    ->where("outlet_id", $outlet->id);
+                    ->whereHas("outlet_menu_item", function ($query) use ($outlet) {
+                        $query->where("outlet_id", $outlet->id);
+                    })
+                    ->with("outlet_menu_item");
             }])
             ->get();
 

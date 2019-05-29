@@ -17,6 +17,15 @@ class OutletMenuItem extends Model
         "discount_menu_items",
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope("active", function ($query) {
+            $query->where("is_active", true);
+        });
+    }
+
     public function outlet()
     {
         return $this->belongsTo(Outlet::class);

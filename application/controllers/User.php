@@ -37,8 +37,8 @@ class User extends BaseController {
 
     public function activate($user_id)
     {
-        $user = UserModel::findOrFail($user_id) ?:
-            $this->error404();
+        $user = UserModel::withoutGlobalScopes()
+            ->find($user_id) ?: $this->error404();
 
         UserPolicy::canToggleActivationStatus(Auth::user(), $user) ?:
             $this->error403();
@@ -51,8 +51,8 @@ class User extends BaseController {
 
     public function deactivate($user_id)
     {
-        $user = UserModel::findOrFail($user_id) ?:
-            $this->error404();
+        $user = UserModel::withoutGlobalScopes()
+            ->find($user_id) ?: $this->error404();
 
         UserPolicy::canToggleActivationStatus(Auth::user(), $user) ?:
             $this->error403();

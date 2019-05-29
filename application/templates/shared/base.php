@@ -36,9 +36,9 @@ use App\Enums\UserLevel;
     <?= $this->section('content') ?>
 
     <script src="<?= base_url("assets/app.js") ?>"></script>
-    <?= $this->section('extra-scripts') ?>
-
-    <?php $this->insert("shared/sentry") ?>
     <?php $this->insert("shared/sweetalert-confirmation") ?>
+
+    <?= $this->section('extra-scripts') ?>
+    <?php $this->insert("shared/sentry") ?>
 </body>
 </html>

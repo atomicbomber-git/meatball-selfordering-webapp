@@ -17,13 +17,15 @@ class OutletMenuItem extends BaseController {
             'edit' => ['get'],
             'update' => ['post'],
             'delete' => ['post'],
+            'activate' => ['post'],
+            'deactivate' => ['post'],
         ];
     }
 
     public function index($outlet_id, $menu_category_id)
     {
-        $outlet = Outlet::find($outlet_id);
-        $menu_category = MenuCategory::find($menu_category_id);
+        $outlet = Outlet::find($outlet_id) ?: $this->error404();
+        $menu_category = MenuCategory::find($menu_category_id) ?: $this->error404();
 
         OutletMenuItemPolicy::canIndex(Auth::user()) ?:
             $this->error403();
@@ -37,6 +39,16 @@ class OutletMenuItem extends BaseController {
             ->get();
 
         $this->template->render("outlet_menu_item/index", compact("outlet", "menu_category", "outlet_menu_items"));
+    }
+
+    public function activate($outlet_menu_item_id)
+    {
+        ;
+    }
+
+    public function deactivate($outlet_menu_item_id)
+    {
+        ;
     }
 
     public function create($outlet_id, $menu_category_id)
@@ -95,7 +107,8 @@ class OutletMenuItem extends BaseController {
 
     public function update($outlet_menu_item_id)
     {
-        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id)
+            ?: $this->error404();
 
         OutletMenuItemPolicy::canUpdate(Auth::user()) ?:
             $this->error403();
@@ -114,7 +127,8 @@ class OutletMenuItem extends BaseController {
 
     public function delete($outlet_menu_item_id)
     {
-        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id)
+            ?: $this->error404();
 
         OutletMenuItemPolicy::canDelete(Auth::user(), $outlet_menu_item) ?:
             $this->error403();

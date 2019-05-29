@@ -96,14 +96,14 @@ class User extends BaseController {
     {
         UserPolicy::canUpdate(Auth::user()) ?: $this->error403();
 
-        $user = UserModel::find($user_id) ?: $this->error404();
+        $user = UserModel::withoutGlobalScopes()->find($user_id) ?: $this->error404();
         $this->template->render('user/edit', compact('user'));
     }
 
     public function update($user_id)
     {
         UserPolicy::canUpdate(Auth::user()) ?: $this->error403();
-        $user = UserModel::find($user_id) ?: $this->error404();
+        $user = UserModel::withoutGlobalScopes()->find($user_id) ?: $this->error404();
 
         $this->validate([
             ["name", "nama", "required"],
@@ -131,7 +131,7 @@ class User extends BaseController {
 
     public function delete($user_id)
     {
-        $user = UserModel::find($user_id) ?: $this->error404();
+        $user = UserModel::withoutGlobalScopes()->find($user_id) ?: $this->error404();
 
         if (!UserPolicy::canDelete(Auth::user(), $user)) {
             $this->session->set_flashdata('message-success', 'Data tidak dapat dihapus.');

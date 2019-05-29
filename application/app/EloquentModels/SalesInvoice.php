@@ -74,6 +74,7 @@ class SalesInvoice extends Model
     public function getUndiscountedItemsAttribute()
     {
         $this->loadMissing(["planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) {
+            $query->withoutGlobalScope("active");
             $query->where("outlet_id", $this->outlet->id);
         }]);
 
@@ -103,6 +104,7 @@ class SalesInvoice extends Model
     {
         $this->loadMissing("outlet");
         $this->loadMissing(["planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) {
+            $query->withoutGlobalScope("active");
             $query->where("outlet_id", $this->outlet->id);
         }]);
 
@@ -118,6 +120,7 @@ class SalesInvoice extends Model
     {
         $this->loadMissing("outlet");
         $this->loadMissing(["planned_sales_invoice_items.menu_item.outlet_menu_item" => function ($query) {
+            $query->withoutGlobalScope("active");
             $query->where("outlet_id", $this->outlet->id);
         }]);
 

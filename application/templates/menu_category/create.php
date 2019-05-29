@@ -63,7 +63,7 @@ use App\Helpers\AppInfo;
 
                 <div class="form-group">
                     <label for="image"> Gambar: </label>
-                    <input name="image" id="image" type="file" <?= $this->has_error("image") ? "is-invalid" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
+                    <input name="image" id="image" type="file" class="form-control <?= $this->has_error("image") ? "is-invalid" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
                     <?php if ($this->has_error("image")) : ?>
                         <div class="invalid-feedback">
                             <?= $this->error("image") ?>

@@ -31,6 +31,7 @@ class OutletMenuItem extends BaseController {
             $this->error403();
 
         $outlet_menu_items = OutletMenuItemModel::query()
+            ->withoutGlobalScope("active")
             ->with("menu_item")
             ->where("outlet_id", $outlet->id)
             ->whereHas("menu_item", function ($query) use($menu_category) {
@@ -43,12 +44,24 @@ class OutletMenuItem extends BaseController {
 
     public function activate($outlet_menu_item_id)
     {
-        ;
+        $outlet_menu_item = OutletMenuItemModel::withoutGlobalScopes()
+            ->find($outlet_menu_item_id) ?: $this->error404();
+
+        $outlet_menu_item->update(["is_active" => true]);
+
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+        $this->redirectBack();
     }
 
     public function deactivate($outlet_menu_item_id)
     {
-        ;
+        $outlet_menu_item = OutletMenuItemModel::withoutGlobalScopes()
+            ->find($outlet_menu_item_id) ?: $this->error404();
+
+        $outlet_menu_item->update(["is_active" => false]);
+        
+        $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');
+        $this->redirectBack();
     }
 
     public function create($outlet_id, $menu_category_id)
@@ -61,7 +74,8 @@ class OutletMenuItem extends BaseController {
 
         $menu_category->load(["menu_items" => function ($query) use($outlet) {
             $query->whereDoesntHave("outlet_menu_item", function ($query) use($outlet) {
-                $query->where("outlet_id", $outlet->id);
+                $query->withoutGlobalScopes()
+                    ->where("outlet_id", $outlet->id);
             });
         }]);
 
@@ -91,7 +105,8 @@ class OutletMenuItem extends BaseController {
 
     public function edit($outlet_menu_item_id)
     {
-        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id) ?: $this->error404();
+        $outlet_menu_item = OutletMenuItemModel::withoutGlobalScopes()->find($outlet_menu_item_id)
+            ?: $this->error404();
 
         OutletMenuItemPolicy::canUpdate(Auth::user()) ?:
             $this->error403();
@@ -107,7 +122,7 @@ class OutletMenuItem extends BaseController {
 
     public function update($outlet_menu_item_id)
     {
-        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id)
+        $outlet_menu_item = OutletMenuItemModel::withoutGlobalScopes()->find($outlet_menu_item_id)
             ?: $this->error404();
 
         OutletMenuItemPolicy::canUpdate(Auth::user()) ?:
@@ -127,7 +142,7 @@ class OutletMenuItem extends BaseController {
 
     public function delete($outlet_menu_item_id)
     {
-        $outlet_menu_item = OutletMenuItemModel::find($outlet_menu_item_id)
+        $outlet_menu_item = OutletMenuItemModel::withoutGlobalScopes()->find($outlet_menu_item_id)
             ?: $this->error404();
 
         OutletMenuItemPolicy::canDelete(Auth::user(), $outlet_menu_item) ?:

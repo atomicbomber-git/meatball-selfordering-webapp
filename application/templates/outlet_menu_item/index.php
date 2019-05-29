@@ -75,6 +75,32 @@ use App\Helpers\Auth;
                                 class="btn btn-sm btn-dark">
                                 Ubah
                             </a>
+
+                            <?php if($outlet_menu_item->is_active): ?>
+
+                            <form class="d-inline-block confirmed" method="POST" action="<?= base_url("outletMenuItem/deactivate/{$outlet_menu_item->id}") ?>" >
+                                <input type="hidden"
+                                    name="<?= $this->csrf_name() ?>"
+                                    value="<?= $this->csrf_token() ?>">
+                                <button
+                                    class="btn btn-warning btn-sm">
+                                    Non-Aktifkan
+                                </button>
+                            </form>
+ 
+                            <?php else: ?>
+
+                            <form class="d-inline-block confirmed" method="POST" action="<?= base_url("outletMenuItem/activate/{$outlet_menu_item->id}") ?>" >
+                                <input type="hidden"
+                                    name="<?= $this->csrf_name() ?>"
+                                    value="<?= $this->csrf_token() ?>">
+                                <button
+                                    class="btn btn-success btn-sm">
+                                    Aktifkan
+                                </button>
+                            </form>
+
+                            <?php endif ?>
                             
                             <form
                                 class="d-inline-block confirmed"

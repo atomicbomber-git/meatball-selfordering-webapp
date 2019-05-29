@@ -28,7 +28,9 @@ class Home extends BaseController
 
     public function show()
     {
-        $outlet = Auth::user()->outlet ?: $this->error403();
+        $outlet = Auth::user()->outlet
+            ?: $this->error403();
+
         $outlet->append("discount_map");
 
         $menu_data = MenuCategory::query()

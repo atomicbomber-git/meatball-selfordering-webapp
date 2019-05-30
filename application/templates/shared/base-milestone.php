@@ -99,7 +99,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <li>
                             <a href="<?= base_url("outlet/index") ?>">
                                 <i class="fa fa-building fa-2x"></i>
-                                <span class="ml-2"> Outlet </span>
+                                <span class=m-l:2> Outlet </span>
                             </a>
                         </li>
                     <?php endif ?>
@@ -108,7 +108,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <li>
                             <a href="<?= base_url("user/index") ?>">
                                 <i class="fa fa-users fa-2x"></i>
-                                <span class="ml-2"> Pengguna </span>
+                                <span class=m-l:2> Pengguna </span>
                             </a>
                         </li>
                     <?php endif ?>
@@ -117,7 +117,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <li>
                             <a href="<?= base_url("menuCategory/index") ?>">
                                 <i class="fa fa-list fa-2x"></i>
-                                <span class="ml-2"> Kategori Menu & Menu </span>
+                                <span class=m-l:2> Kategori Menu & Menu </span>
                             </a>
                         </li>
                     <?php endif ?>

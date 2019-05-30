@@ -40,7 +40,7 @@
                         </div>
 
                         <div key="else" v-else>
-                            <div class="mb-3">
+                            <div class=m-b:3>
                                 <div class="text-right">
                                     <button
                                         class="btn btn-warning"
@@ -93,7 +93,7 @@
                                                         <i class="fa fa-minus"></i>
                                                     </button>
 
-                                                    <span class="font-weight-bold mx-1">
+                                                    <span class="font-weight-bold m-x:1">
                                                         <order-quantity
                                                             v-model="menu_item.order_quantity"
                                                         />
@@ -148,7 +148,7 @@
                                             <i class="fa fa-minus"></i>
                                         </button>
 
-                                        <span class="font-weight-bold mx-1">
+                                        <span class="font-weight-bold m-x:1">
                                             <order-quantity v-model="menu_item.order_quantity"/>
                                         </span>
 
@@ -268,7 +268,7 @@
                                 </td>
                                 
                                 <td class="text-right">
-                                    <span class="font-weight-bold mx-1">
+                                    <span class="font-weight-bold m-x:1">
                                         <order-quantity v-model="menu_item.order_quantity"/>
                                     </span>
                                 </td>

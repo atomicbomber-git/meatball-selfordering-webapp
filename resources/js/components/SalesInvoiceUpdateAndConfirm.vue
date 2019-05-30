@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-right my-2">
+        <div class="text-right m-y:2">
             <button @click="addItem" class="btn btn-info btn-sm">
                 Tambah Item
             </button>
@@ -42,7 +42,7 @@
                         </button>
 
                         <order-quantity
-                            class="mx-2"
+                            class=m-x:2
                             v-model="item.quantity"
                             >
                         </order-quantity>

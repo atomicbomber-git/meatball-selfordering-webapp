@@ -31,7 +31,7 @@ use App\Helpers\AppInfo;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-4">
+    <h3 class=m-b:4>
         <i class="fa fa-pencil"></i>
         Ubah Diskon
     </h3>

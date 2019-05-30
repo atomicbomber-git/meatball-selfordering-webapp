@@ -103,5 +103,5 @@ use App\Helpers\Auth;
 
 
 <?php $this->start("extra-scripts") ?>
-<?php $this->insert("shared/datatable") ?>
+    <?php $this->insert("shared/datatable") ?>
 <?php $this->stop() ?>

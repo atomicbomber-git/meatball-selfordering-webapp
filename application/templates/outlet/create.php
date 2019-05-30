@@ -31,7 +31,7 @@
         Tambahkan Outlet Baru
     </h3>
 
-    <div id="app" class="mb-5">
+    <div id="app" class=m-b:5>
         <outlet-create
             submit_url="<?= base_url("outlet/store") ?>"
             redirect_url="<?= base_url("outlet/index") ?>"

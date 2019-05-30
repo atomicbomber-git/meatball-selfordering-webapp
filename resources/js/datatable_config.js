@@ -1,6 +1,6 @@
 module.exports = {
 	dom:
-		'<<"row mb-4"<"col-sm-12 col-md-3"l><"col-sm-12 col-md-6 t-a:c"B><"col-sm-12 col-md-3"f>>rtip>',
+		'<<"row m-b:4"<"col-sm-12 col-md-3"l><"col-sm-12 col-md-6 t-a:c"B><"col-sm-12 col-md-3"f>>rtip>',
 	language: { url: "/assets/indonesian-datatables.json" },
 	buttons: [
 		{

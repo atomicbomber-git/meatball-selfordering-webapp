@@ -34,7 +34,7 @@ use function GuzzleHttp\json_encode;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-4">
+    <h3 class=m-b:4>
         <i class="fa fa-plus"></i>
         Tambah Diskon Baru
     </h3>

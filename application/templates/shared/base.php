@@ -499,12 +499,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <script src="<?= base_url('assets/scripts/main.js') ?>"></script>
     <script src="<?= base_url('assets/app.js') ?>"></script>
 
+
+
     <script>
         // Handles logout button click
         $('#logout_button').click(function() {
             $('#logout_form').submit();
         });
     </script>
+
+    <?php $this->insert("shared/sweetalert-confirmation") ?>
 
     <?= $this->section('extra-scripts') ?>
 </body>

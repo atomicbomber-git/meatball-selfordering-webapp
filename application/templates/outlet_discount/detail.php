@@ -27,13 +27,13 @@
         </ol>
     </nav>
 
-    <h3 class="mb-4">
+    <h3 class=m-b:4>
         <i class="fa fa-percent"></i>
         Detail Diskon Outlet '<?= $outlet->name ?>'
     </h3>
 
     <div class="t-a:r">
-        <a class="btn btn-info my-2" href="<?= base_url("discount/create/{$outlet->id}") ?>">
+        <a class="btn btn-info m-y:2" href="<?= base_url("discount/create/{$outlet->id}") ?>">
             Tambah Diskon Baru
             <i class="fa fa-plus"></i>
         </a>

@@ -147,7 +147,11 @@ class Outlet extends BaseController {
         $outlet = OutletModel::find($outlet_id) ?: $this->error404();
         OutletPolicy::canDelete(Auth::user(), $outlet) ?: $this->error403();
 
-        $outlet->delete();
+        DB::transaction(function() use($outlet) {
+            $outlet->outlet_users()->delete();
+            $outlet->delete();
+        });
+
         $this->session->set_flashdata('message-success', 'Data berhasil dihapus.');
         $this->redirectBack();
     }

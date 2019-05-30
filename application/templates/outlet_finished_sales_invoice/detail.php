@@ -55,8 +55,8 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
 
             <div class="col-md-6">
                 <form class="form-inline justify-content-end" method="GET" action="">
-                    <label for="filter_date" class="mr-2"> Tanggal: </label>
-                    <input value="<?= $filter_date ?>" name="filter_date" class="form-control form-control-sm mr-2" type="date">
+                    <label for="filter_date" class=m-r:2> Tanggal: </label>
+                    <input value="<?= $filter_date ?>" name="filter_date" class="form-control form-control-sm m-r:2" type="date">
                     <button class="btn btn-primary btn-sm"> Ubah Filter </button>
                 </form>
             </div>

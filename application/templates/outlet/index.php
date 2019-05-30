@@ -57,7 +57,7 @@ use App\Helpers\Auth;
                                 Ubah
                             </a>
 
-                            <form class="d-inline-block" method="POST" action="<?= base_url("outlet/delete/{$outlet->id}") ?>">
+                            <form class="d-inline-block confirmed" method="POST" action="<?= base_url("outlet/delete/{$outlet->id}") ?>">
                                 <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
                                 <button <?= OutletPolicy::canDelete(Auth::user(), $outlet) ?: 'disabled' ?> class="btn btn-danger btn-sm">
                                     Hapus
@@ -72,5 +72,5 @@ use App\Helpers\Auth;
 </div>
 
 <?php $this->start("extra-scripts") ?>
-<?php $this->insert("shared/datatable") ?>
+    <?php $this->insert("shared/datatable") ?>
 <?php $this->stop() ?>

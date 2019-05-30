@@ -26,7 +26,7 @@
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-building"></i>
         Tambahkan Outlet Baru
     </h3>

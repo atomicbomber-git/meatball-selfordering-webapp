@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-right my-2">
+        <div class="t-a:r my-2">
             <button @click="addItem" class="btn btn-info btn-sm">
                 Tambah Item
             </button>
@@ -10,11 +10,11 @@
             <thead class="thead thead-dark table-bordered">
                 <tr>
                     <th>Nama Item</th>
-                    <th class="text-center"> Jumlah </th>
-                    <th class="text-right"> Harga Satuan </th>
-                    <th class="text-right"> Diskon </th>
-                    <th class="text-right"> </th>
-                    <th class="text-center"> Kendali </th>
+                    <th class="t-a:c"> Jumlah </th>
+                    <th class="t-a:r"> Harga Satuan </th>
+                    <th class="t-a:r"> Diskon </th>
+                    <th class="t-a:r"> </th>
+                    <th class="t-a:c"> Kendali </th>
                 </tr>
             </thead>
 
@@ -34,7 +34,7 @@
                     </td>
 
                     <!-- Jumlah -->
-                    <td class="text-center">
+                    <td class="t-a:c">
                         <button
                             @click="--item.quantity"
                             class="btn btn-sm btn-danger">
@@ -55,13 +55,13 @@
                     </td>
 
                     <!-- Harga Satuan -->
-                    <td class="text-right"> Rp. {{ currency_format(get(item, "outlet_menu_item.price", 0)) }} </td>
+                    <td class="t-a:r"> Rp. {{ currency_format(get(item, "outlet_menu_item.price", 0)) }} </td>
 
-                    <td class="text-right">
+                    <td class="t-a:r">
                         {{ percent_format( get(sales_invoice.discount_map[item.outlet_menu_item.id], "percentage", 0) ) }}
                     </td>
 
-                    <td class="text-right">
+                    <td class="t-a:r">
                         Rp. {{
                             currency_format(
                                 item.quantity *
@@ -70,7 +70,7 @@
                             )
                         }}
                     </td>
-                    <td class="text-center">
+                    <td class="t-a:c">
                         <button @click="removeItem(item)" class="btn btn-danger btn-sm">
                             Hapus
                         </button>
@@ -83,8 +83,8 @@
                     <th>  </th>
                     <th>  </th>
                     <th>  </th>
-                    <th class="text-right"> Sub Total </th>
-                    <th class="text-right"> {{ currency_format(pretax_sum) }} </th>
+                    <th class="t-a:r"> Sub Total </th>
+                    <th class="t-a:r"> {{ currency_format(pretax_sum) }} </th>
                     <th></th>
                 </tr>
 
@@ -92,8 +92,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Tax {{ percent_format(sales_invoice.outlet.pajak_pertambahan_nilai) }} </th>
-                    <th class="text-right"> {{ currency_format(tax) }} </th>
+                    <th class="t-a:r"> Tax {{ percent_format(sales_invoice.outlet.pajak_pertambahan_nilai) }} </th>
+                    <th class="t-a:r"> {{ currency_format(tax) }} </th>
                     <th></th>
                 </tr>
 
@@ -101,8 +101,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
-                    <th class="text-right"> {{ currency_format(service_charge) }} </th>
+                    <th class="t-a:r"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
+                    <th class="t-a:r"> {{ currency_format(service_charge) }} </th>
                     <th></th>
                 </tr>
 
@@ -111,8 +111,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
-                    <th class="text-right">
+                    <th class="t-a:r"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
+                    <th class="t-a:r">
                         -{{ currency_format(special_discount_total) }}
                     </th>
                 </tr>
@@ -121,8 +121,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Total </th>
-                    <th class="text-right"> {{ currency_format(total) }} </th>
+                    <th class="t-a:r"> Total </th>
+                    <th class="t-a:r"> {{ currency_format(total) }} </th>
                     <th></th>
                 </tr>
 
@@ -130,8 +130,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Cash </th>
-                    <th class="text-right"> {{ currency_format(cash) }} </th>
+                    <th class="t-a:r"> Cash </th>
+                    <th class="t-a:r"> {{ currency_format(cash) }} </th>
                     <th></th>
                 </tr>
 
@@ -139,8 +139,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Rounding </th>
-                    <th class="text-right"> {{ currency_format(rounding) }} </th>
+                    <th class="t-a:r"> Rounding </th>
+                    <th class="t-a:r"> {{ currency_format(rounding) }} </th>
                     <th></th>
                 </tr>
 
@@ -148,14 +148,14 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Total Change </th>
-                    <th class="text-right"> {{ currency_format(this.total_change) }} </th>
+                    <th class="t-a:r"> Total Change </th>
+                    <th class="t-a:r"> {{ currency_format(this.total_change) }} </th>
                     <th></th>
                 </tr>
             </tfoot>
         </table>
 
-        <div class="text-right">
+        <div class="t-a:r">
             <div class="custom-control custom-radio custom-control-inline">
                 <input v-model="p_sales_invoice.type" value="DINE_IN" class="custom-control-input" type="radio" id="order_type_dine_in" name="order_type">
                 <label class="custom-control-label" for="order_type_dine_in"> {{ order_types["DINE_IN"] }} </label>
@@ -167,20 +167,20 @@
             </div>
         </div>
 
-        <div class="text-right mt-5">
+        <div class="t-a:r mt-5">
             <table class="table-sm table-borderless d-inline-block" style="witdh: 300px">
                 <tbody>
                     <tr>
                         <td> Jumlah Dibayar </td>
                         <td>
                             <vue-cleave
-                                class="form-control text-right"
-                                :class="{'is-invalid': get(this.error_data, 'errors.cash', false)}"
+                                class="form-control t-a:r"
+                                :class="{'error': get(this.error_data, 'errors.cash', false)}"
                                 v-model.number="cash"
                                 placeholder="Jumlah"
                                 :options="{ numeral: true, numeralDecimalScale: 2, stripLeadingZeroes: false, numeralDecimalMark: ',', delimiter: '.' }">
                             </vue-cleave>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </td>
                     </tr>
 
@@ -217,7 +217,7 @@
             </table>
         </div>
 
-        <div @click="confirmTransaction" class="text-right mt-3">
+        <div @click="confirmTransaction" class="t-a:r mt-3">
             <button class="btn btn-primary">
                 Konfirmasi Transaksi
             </button>
@@ -230,9 +230,9 @@
                     <input
                         v-model='password'
                         class='form-control'
-                        :class="{'is-invalid': get(this.error_data, 'errors.password', false)}"
+                        :class="{'error': get(this.error_data, 'errors.password', false)}"
                         type='password' id='password' placeholder='Kata Sandi'>
-                    <div class='invalid-feedback'>{{ get(this.error_data, 'errors.password', false) }}</div>
+                    <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                 </div>
 
                 <div v-if="get(error_data, 'message', false)" class="alert alert-danger">

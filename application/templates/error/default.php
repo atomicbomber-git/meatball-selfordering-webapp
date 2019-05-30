@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <h1 class="text-danger"> Error <?= $status ?> </h1>
             <p class="lead">
                 <?= $message ?>

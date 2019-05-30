@@ -39,7 +39,7 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-book"></i>
         Histori Transaksi Outlet '<?= $outlet->name ?>'
         <p class="lead"> Tanggal <?= Formatter::date(Date::today()) ?> </p>
@@ -65,7 +65,7 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
     </div>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <div class="table-responsive">
                 <table class="datatable table table-sm table-striped table-bordered">
                     <thead class="thead thead-dark">
@@ -74,19 +74,19 @@ td:nth-child(2),td:nth-child(3),td:nth-child(4),th:nth-child(2),th:nth-child(3),
                             <th class="printable"> Total Pembayaran (Rp) </th>
                             <th class="printable"> Total Diskon Item (Rp) </th>
                             <th class="printable"> Total Diskon Khusus (Rp) </th>
-                            <th class="text-center"> Kendali </th>
+                            <th class="t-a:c"> Kendali </th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($sales_invoices as $key => $sales_invoice): ?>
                         <tr>
-                            <td class="text-center"> <?= Formatter::salesInvoiceId($sales_invoice->invoice_number) ?> </td>
+                            <td class="t-a:c"> <?= Formatter::salesInvoiceId($sales_invoice->invoice_number) ?> </td>
                             <td> <?= Formatter::currency($sales_invoice->archived_rounding) ?> </td>
                             <td> <?= Formatter::currency($sales_invoice->archived_item_discount) ?> </td>
                             <td> <?= Formatter::currency($sales_invoice->archived_special_discount) ?> </td>
-                            <td class="text-center">
+                            <td class="t-a:c">
                                 <a
-                                    class="btn btn-dark btn-sm"
+                                    class="btn btn-info btn-sm"
                                     href="<?= base_url("finishedSalesInvoice/show/{$sales_invoice->id}") ?>">
                                     Detail
                                 </a>

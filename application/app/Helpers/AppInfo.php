@@ -6,6 +6,6 @@ class AppInfo
 {
     public static function name()
     {
-        return "Aplikasi Bakmi dan Bakso";
+        return "OPS Bakmi dan Bakso";
     }
 }

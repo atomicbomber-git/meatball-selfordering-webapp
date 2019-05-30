@@ -16,6 +16,7 @@
     "pdfmake": "^0.1.56",
     "popper.js": "^1.15.0",
     "sass": "^1.18.0",
+    "shed-css": "^1.4.0",
     "sprintf-js": "^1.1.2",
     "sweetalert": "^2.1.2",
     "vue": "^2.0.0",

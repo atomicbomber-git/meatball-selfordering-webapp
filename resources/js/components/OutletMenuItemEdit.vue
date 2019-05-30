@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
 
             <div class='form-group'>
                 <label for='menu_item'> Menu Item: </label>
@@ -23,10 +23,10 @@
                     class="form-control"
                     v-model.number="price"
                     :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }" />
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.price', false) }}</div>
+                <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
             </div>
 
-            <div class="d-flex justify-content-end">
+            <div class="t-a:r">
                 <button @click="submitForm" class="btn btn-primary">
                     Tambahkan Menu Baru
                 </button>

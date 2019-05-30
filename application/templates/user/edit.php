@@ -27,13 +27,13 @@ use App\Enums\UserLevel;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-pencil"></i>
         Ubah Pengguna
     </h3>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <form method="POST" action="<?= base_url("user/update/{$user->id}") ?>" >
                 <input type="hidden"
                     name="<?= $this->csrf_name() ?>"
@@ -45,12 +45,12 @@ use App\Enums\UserLevel;
                         name="name"
                         id="name"
                         type="text"
-                        class="form-control <?= $this->has_error("name") ? "is-invalid" : "" ?>"
+                        class="form-control <?= $this->has_error("name") ? "error" : "" ?>"
                         placeholder="Nama Asli"
                         value="<?= $this->old("name", $user->name) ?>"
                         >
                     <?php if($this->has_error("name")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("name") ?>
                     </div>
                     <?php endif ?>
@@ -62,12 +62,12 @@ use App\Enums\UserLevel;
                         name="username"
                         id="username"
                         type="text"
-                        class="form-control <?= $this->has_error("username") ? "is-invalid" : "" ?>"
+                        class="form-control <?= $this->has_error("username") ? "error" : "" ?>"
                         placeholder="Nama Pengguna"
                         value="<?= $this->old("username", $user->username) ?>"
                         >
                     <?php if($this->has_error("username")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("username") ?>
                     </div>
                     <?php endif ?>
@@ -76,7 +76,7 @@ use App\Enums\UserLevel;
                 <div class="form-group">
                     <label for="level"> Hak Akses: </label>
                     
-                    <select name="level" class="form-control <?= $this->has_error("level") ? "is-invalid" : "" ?>" id="level">
+                    <select name="level" class="form-control <?= $this->has_error("level") ? "error" : "" ?>" id="level">
                         <?php foreach(UserLevel::LEVELS as $level => $label): ?>
                         <option
                             <?= $this->old("password", $user->level) === $level ? 'selected' : '' ?>
@@ -87,7 +87,7 @@ use App\Enums\UserLevel;
                     </select>
 
                     <?php if($this->has_error("level")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("level") ?>
                     </div>
                     <?php endif ?>
@@ -99,7 +99,7 @@ use App\Enums\UserLevel;
                         name="password"
                         id="password"
                         type="password"
-                        class="form-control <?= $this->has_error("password") ? "is-invalid" : "" ?>"
+                        class="form-control <?= $this->has_error("password") ? "error" : "" ?>"
                         placeholder="Kata Sandi"
                         value="<?= $this->old("password") ?>"
                         >
@@ -107,13 +107,13 @@ use App\Enums\UserLevel;
                             Biarkan kolom ini kosong jika Anda tidak ingin mengubah kata sandi pengguna ini
                         </small>
                     <?php if($this->has_error("password")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("password") ?>
                     </div>
                     <?php endif ?>
                 </div>
             
-                <div class="d-flex justify-content-end">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Ubah Pengguna
                     </button>

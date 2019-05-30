@@ -30,7 +30,7 @@
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-list"></i>
         Ubah Menu Item '<?= $menu_item->name ?>'
     </h3>
@@ -38,7 +38,7 @@
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <form method="POST" action="<?= base_url("menuItem/update/{$menu_item->id}") ?>" >
                 <input type="hidden"
                     name="<?= $this->csrf_name() ?>"
@@ -50,18 +50,18 @@
                         name="name"
                         id="name"
                         type="text"
-                        class="form-control <?= $this->has_error("name") ? "is-invalid" : "" ?>"
+                        class="form-control <?= $this->has_error("name") ? "error" : "" ?>"
                         placeholder="Nama Menu"
                         value="<?= $this->old("name", $menu_item->name) ?>"
                         >
                     <?php if($this->has_error("name")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("name") ?>
                     </div>
                     <?php endif ?>
                 </div>
 
-                <div class="text-right">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Ubah
                     </button>

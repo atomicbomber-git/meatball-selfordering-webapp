@@ -4,10 +4,10 @@
             <thead class="thead thead-dark table-bordered">
                 <tr>
                     <th> Item </th>
-                    <th class="text-right"> Jumlah </th>
-                    <th class="text-right"> Harga Satuan </th>
-                    <th class="text-right"> Diskon Item </th>
-                    <th class="text-right"> </th>
+                    <th class="t-a:r"> Jumlah </th>
+                    <th class="t-a:r"> Harga Satuan </th>
+                    <th class="t-a:r"> Diskon Item </th>
+                    <th class="t-a:r"> </th>
                 </tr>
             </thead>
             <tbody class="table-bordered">
@@ -15,12 +15,12 @@
                     :key="planned_sales_invoice_item.id"
                     >
                     <td> {{ planned_sales_invoice_item.menu_item.name }} </td>
-                    <td class="text-right"> {{ planned_sales_invoice_item.quantity }} </td>
-                    <td class="text-right"> {{ currency_format(planned_sales_invoice_item.menu_item.outlet_menu_item.price) }} </td>
-                    <td class="text-right">
+                    <td class="t-a:r"> {{ planned_sales_invoice_item.quantity }} </td>
+                    <td class="t-a:r"> {{ currency_format(planned_sales_invoice_item.menu_item.outlet_menu_item.price) }} </td>
+                    <td class="t-a:r">
                         {{ percent_format( get(sales_invoice.discount_map[planned_sales_invoice_item.menu_item.outlet_menu_item.id], "percentage", 0) ) }}
                     </td>
-                    <td class="text-right">
+                    <td class="t-a:r">
                         {{ currency_format(
                             planned_sales_invoice_item.quantity *
                             planned_sales_invoice_item.menu_item.outlet_menu_item.price *
@@ -34,32 +34,32 @@
                     <th> </th>
                     <th> </th>
                     <th> </th>
-                    <th class="text-right"> Sub Total </th>
-                    <th class="text-right"> {{ currency_format(pretax_sum) }} </th>
+                    <th class="t-a:r"> Sub Total </th>
+                    <th class="t-a:r"> {{ currency_format(pretax_sum) }} </th>
                 </tr>
 
                 <tr>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Tax {{ percent_format(sales_invoice.outlet.pajak_pertambahan_nilai) }} </th>
-                    <th class="text-right"> {{ currency_format(tax) }} </th>
+                    <th class="t-a:r"> Tax {{ percent_format(sales_invoice.outlet.pajak_pertambahan_nilai) }} </th>
+                    <th class="t-a:r"> {{ currency_format(tax) }} </th>
                 </tr>
 
                 <tr>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
-                    <th class="text-right"> {{ currency_format(service_charge) }} </th>
+                    <th class="t-a:r"> Service Charge {{ percent_format(sales_invoice.outlet.service_charge) }} </th>
+                    <th class="t-a:r"> {{ currency_format(service_charge) }} </th>
                 </tr>
 
                 <tr>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
-                    <th class="text-right">
+                    <th class="t-a:r"> Diskon Khusus {{ percent_format(special_discount_percentage) }} </th>
+                    <th class="t-a:r">
                         -{{ currency_format(special_discount) }}
                     </th>
                 </tr>
@@ -68,37 +68,37 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Total </th>
-                    <th class="text-right"> {{ currency_format(total) }} </th>
+                    <th class="t-a:r"> Total </th>
+                    <th class="t-a:r"> {{ currency_format(total) }} </th>
                 </tr>
 
                 <tr class="border-top">
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Cash </th>
-                    <th class="text-right"> {{ currency_format(cash) }} </th>
+                    <th class="t-a:r"> Cash </th>
+                    <th class="t-a:r"> {{ currency_format(cash) }} </th>
                 </tr>
 
                 <tr>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Rounding </th>
-                    <th class="text-right"> {{ currency_format(rounding) }} </th>
+                    <th class="t-a:r"> Rounding </th>
+                    <th class="t-a:r"> {{ currency_format(rounding) }} </th>
                 </tr>
 
                 <tr class="border-top">
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="text-right"> Total Change </th>
-                    <th class="text-right"> {{ currency_format(total_change) }} </th>
+                    <th class="t-a:r"> Total Change </th>
+                    <th class="t-a:r"> {{ currency_format(total_change) }} </th>
                 </tr>
             </tfoot>
         </table>
 
-        <div class="text-right">
+        <div class="t-a:r">
             <!-- Dine In / Takeaway -->
             <h4>
                 <span class="badge badge-info">
@@ -112,13 +112,13 @@
                         <td> Jumlah Dibayar </td>
                         <td>
                             <vue-cleave
-                                class="form-control text-right"
-                                :class="{'is-invalid': get(this.error_data, 'errors.cash', false)}"
+                                class="form-control t-a:r"
+                                :class="{'error': get(this.error_data, 'errors.cash', false)}"
                                 v-model.number="cash"
                                 placeholder="Jumlah"
                                 :options="{ numeral: true, numeralDecimalScale: 2, stripLeadingZeroes: false, numeralDecimalMark: ',', delimiter: '.' }">
                             </vue-cleave>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.cash', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </td>
                     </tr>
 
@@ -155,7 +155,7 @@
             </table>
         </div>
 
-        <div class="text-right mt-5">
+        <div class="t-a:r mt-5">
 
             <a :href="this.update_and_confirm_url" class="btn btn-warning">
                 Revisi Transaksi

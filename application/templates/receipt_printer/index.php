@@ -20,19 +20,19 @@ use App\Helpers\AppInfo;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-print"></i>
         Printer
     </h3>
 
-    <div class="text-right my-3">
-        <a href="<?= base_url("receiptPrinter/create") ?>" class="btn btn-dark">
+    <div class="t-a:r m-y:3">
+        <a href="<?= base_url("receiptPrinter/create") ?>" class="btn btn-info">
             Tambahkan Printer Baru
         </a>
     </div>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <div id="app">
                 <receipt-printer-index
                     print_server_url="<?= $print_server_url ?>"

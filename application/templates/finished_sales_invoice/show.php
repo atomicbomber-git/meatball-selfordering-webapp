@@ -28,7 +28,7 @@ use App\Helpers\Formatter;
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-book"></i>
         Invoice #<?= Formatter::salesInvoiceId($sales_invoice->invoice_number) ?>
     </h3>
@@ -36,7 +36,7 @@ use App\Helpers\Formatter;
     <?php $this->insert("shared/message") ?>
 
     <div class="card width-md">
-        <div class="card-body">
+        <div class="card-block">
             <dl>
                 <dt> Tanggal / Waktu: </dt>
                 <dd> <?= $sales_invoice->created_at ?> </dd>
@@ -57,20 +57,20 @@ use App\Helpers\Formatter;
                     <thead class="thead thead-dark">
                         <tr>
                             <th> Nama Item </th>
-                            <th class="text-right"> Harga Satuan </th>
-                            <th class="text-right"> Jumlah </th>
-                            <th class="text-right"> Diskon </th>
-                            <th class="text-right"> </th>
+                            <th class="t-a:r"> Harga Satuan </th>
+                            <th class="t-a:r"> Jumlah </th>
+                            <th class="t-a:r"> Diskon </th>
+                            <th class="t-a:r"> </th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($sales_invoice->sales_invoice_items as $sales_invoice_item): ?>
                         <tr>
                             <td> <?= $sales_invoice_item->name ?> </td>
-                            <td class="text-right"> <?= Formatter::currency($sales_invoice_item->price) ?> </td>
-                            <td class="text-right"> <?= $sales_invoice_item->quantity ?> </td>
-                            <td class="text-right"> <?= Formatter::percent($sales_invoice_item->discount) ?> </td>
-                            <td class="text-right">
+                            <td class="t-a:r"> <?= Formatter::currency($sales_invoice_item->price) ?> </td>
+                            <td class="t-a:r"> <?= $sales_invoice_item->quantity ?> </td>
+                            <td class="t-a:r"> <?= Formatter::percent($sales_invoice_item->discount) ?> </td>
+                            <td class="t-a:r">
                                 <?= Formatter::currency($sales_invoice_item->final_price) ?>
                             </td>
                         </tr>
@@ -78,28 +78,28 @@ use App\Helpers\Formatter;
                     </tbody>
                     <tfoot class="table-borderless">
                         <tr>
-                            <th colspan="4" class="text-right"> Sub Total: </th>
-                            <th class="text-right"> <?= Formatter::currency($sales_invoice->archived_total_price) ?> </th>
+                            <th colspan="4" class="t-a:r"> Sub Total: </th>
+                            <th class="t-a:r"> <?= Formatter::currency($sales_invoice->archived_total_price) ?> </th>
                         </tr>
                         <tr>
-                            <th colspan="4" class="text-right"> Service Charge (<?= Formatter::percent($sales_invoice->service_charge) ?>): </th>
-                            <th class="text-right"> -<?= Formatter::currency($sales_invoice->archived_service_charge) ?> </th>
+                            <th colspan="4" class="t-a:r"> Service Charge (<?= Formatter::percent($sales_invoice->service_charge) ?>): </th>
+                            <th class="t-a:r"> -<?= Formatter::currency($sales_invoice->archived_service_charge) ?> </th>
                         </tr>
                         <tr>
-                            <th colspan="4" class="text-right"> Pajak Pertambahan Nilai (<?= Formatter::percent($sales_invoice->pajak_pertambahan_nilai) ?>): </th>
-                            <th class="text-right"> -<?= Formatter::currency($sales_invoice->archived_tax) ?> </th>
+                            <th colspan="4" class="t-a:r"> Pajak Pertambahan Nilai (<?= Formatter::percent($sales_invoice->pajak_pertambahan_nilai) ?>): </th>
+                            <th class="t-a:r"> -<?= Formatter::currency($sales_invoice->archived_tax) ?> </th>
                         </tr>
 
                         <tr>
-                            <th colspan="4" class="text-right"> Diskon Khusus (<?= Formatter::percent($sales_invoice->special_discount) ?>): </th>
-                            <th class="text-right"> -<?= Formatter::currency($sales_invoice->archived_special_discount) ?> </th>
+                            <th colspan="4" class="t-a:r"> Diskon Khusus (<?= Formatter::percent($sales_invoice->special_discount) ?>): </th>
+                            <th class="t-a:r"> -<?= Formatter::currency($sales_invoice->archived_special_discount) ?> </th>
                         </tr>
 
                         <hr/>
 
                         <tr class="border-top">
-                            <th colspan="4" class="text-right"> Rounding: </th>
-                            <th class="text-right"> <?= Formatter::currency($sales_invoice->archived_rounding) ?> </th>
+                            <th colspan="4" class="t-a:r"> Rounding: </th>
+                            <th class="t-a:r"> <?= Formatter::currency($sales_invoice->archived_rounding) ?> </th>
                         </tr>
                         
                     </tfoot>

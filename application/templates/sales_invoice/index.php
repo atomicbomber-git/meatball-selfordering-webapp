@@ -23,7 +23,7 @@ use App\Helpers\Formatter;
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-usd"></i>
         Transaksi / Kasir
     </h3>
@@ -31,13 +31,13 @@ use App\Helpers\Formatter;
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
-            <table class="datatable table table-sm table-striped table-bordered text-center">
+        <div class="card-block">
+            <table class="datatable table table-sm table-striped table-bordered t-a:c">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> Nomor Pesanan </th>
                         <th> Waktu </th>
-                        <th class="text-center"> Kendali </th>
+                        <th class="t-a:c"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -46,8 +46,8 @@ use App\Helpers\Formatter;
                     <tr>
                         <td> <?= Formatter::salesInvoiceNumber($sales_invoice->number) ?> </td>
                         <td> <?= $sales_invoice->created_at ?> </td>
-                        <td class="text-center">
-                            <a href="<?= base_url("salesInvoice/confirm/{$sales_invoice->id}") ?>" class="btn btn-dark btn-sm">
+                        <td class="t-a:c">
+                            <a href="<?= base_url("salesInvoice/confirm/{$sales_invoice->id}") ?>" class="btn btn-info btn-sm">
                                 Konfirmasi
                             </a>
                         </td>

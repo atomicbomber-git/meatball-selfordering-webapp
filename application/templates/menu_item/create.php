@@ -32,13 +32,13 @@
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-list"></i>
         Tambahkan Menu Baru pada Kategori '<?= $menu_category->name ?>'
     </h3>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <form method="POST" action="<?= base_url("menuItem/store/{$menu_category->id}") ?>" >
                 <input type="hidden"
                     name="<?= $this->csrf_name() ?>"
@@ -50,18 +50,18 @@
                         name="name"
                         id="name"
                         type="text"
-                        class="form-control <?= $this->has_error("name") ? "is-invalid" : "" ?>"
+                        class="form-control <?= $this->has_error("name") ? "error" : "" ?>"
                         placeholder="Nama Menu"
                         value="<?= $this->old("name") ?>"
                         >
                     <?php if($this->has_error("name")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("name") ?>
                     </div>
                     <?php endif ?>
                 </div>
 
-                <div class="text-right">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Tambahkan
                     </button>

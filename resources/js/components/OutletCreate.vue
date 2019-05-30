@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <form @submit.prevent="onFormSubmit">
 
                  <div class="row">
@@ -10,9 +10,9 @@
                             <input
                                 v-model='name'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.name', false)}"
+                                :class="{'error': get(this.error_data, 'errors.name', false)}"
                                 type='text' id='name' placeholder='Nama'>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.name', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
 
                         <div class='form-group'>
@@ -20,9 +20,9 @@
                             <textarea
                                 v-model='address'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.address', false)}"
+                                :class="{'error': get(this.error_data, 'errors.address', false)}"
                                 type='text' id='address' placeholder='Alamat'></textarea>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.address', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
 
                         <div class='form-group'>
@@ -30,9 +30,9 @@
                             <input
                                 v-model='phone'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.phone', false)}"
+                                :class="{'error': get(this.error_data, 'errors.phone', false)}"
                                 type='text' id='phone' placeholder='Nomor Telefon'>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.phone', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
 
                         <div class='form-group'>
@@ -40,9 +40,9 @@
                             <input
                                 v-model='pajak_pertambahan_nilai'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.pajak_pertambahan_nilai', false)}"
+                                :class="{'error': get(this.error_data, 'errors.pajak_pertambahan_nilai', false)}"
                                 type='text' id='pajak_pertambahan_nilai' placeholder='Pajak Pertambahan Nilai (%)'>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.pajak_pertambahan_nilai', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
 
                         <div class='form-group'>
@@ -50,9 +50,9 @@
                             <input
                                 v-model='service_charge'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.service_charge', false)}"
+                                :class="{'error': get(this.error_data, 'errors.service_charge', false)}"
                                 type='text' id='service_charge' placeholder='Service Charge'>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.service_charge', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
 
                         <div class='form-group'>
@@ -60,9 +60,9 @@
                             <input
                                 v-model='npwpd'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.npwpd', false)}"
+                                :class="{'error': get(this.error_data, 'errors.npwpd', false)}"
                                 type='text' id='npwpd' placeholder='NPWPD'>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.npwpd', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
 
                         <div class='form-group'>
@@ -70,9 +70,9 @@
                             <input
                                 v-model='print_server_url'
                                 class='form-control'
-                                :class="{'is-invalid': get(this.error_data, 'errors.print_server_url', false)}"
+                                :class="{'error': get(this.error_data, 'errors.print_server_url', false)}"
                                 type='text' id='print_server_url' placeholder='URL Print Server'>
-                            <div class='invalid-feedback'>{{ get(this.error_data, 'errors.print_server_url', false) }}</div>
+                            <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
                         </div>
                     </div>
 
@@ -112,14 +112,14 @@
                                         <tr>
                                             <th> Nama User </th>
                                             <th> Level </th>
-                                            <th class="text-center"> Kendali </th>
+                                            <th class="t-a:c"> Kendali </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="user in added_regular_users" :key="user.id">
                                             <td> {{ user.name }} </td>
                                             <td> {{ user.level }} </td>
-                                            <td class="text-center">
+                                            <td class="t-a:c">
                                                 <button @click="onRemoveRegularUser(user)" type="button" class="btn btn-sm btn-danger">
                                                     Hapus
                                                 </button>
@@ -132,7 +132,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Tambahkan Outlet Baru
                     </button>

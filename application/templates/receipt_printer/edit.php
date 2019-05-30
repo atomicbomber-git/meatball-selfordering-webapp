@@ -24,7 +24,7 @@
 
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
 
             <?php $this->insert("shared/message") ?>
             
@@ -39,12 +39,12 @@
                       name="name"
                       id="name"
                       type="text"
-                      class="form-control <?= $this->has_error("name") ? "is-invalid" : "" ?>"
+                      class="form-control <?= $this->has_error("name") ? "error" : "" ?>"
                       placeholder="Nama"
                       value="<?= $this->old("name", $receipt_printer->name) ?>"
                       >
                   <?php if($this->has_error("name")): ?>
-                  <div class="invalid-feedback">
+                  <div class='error'>
                       <?= $this->error("name") ?>
                   </div>
                   <?php endif ?>
@@ -56,12 +56,12 @@
                       name="ipv4_address"
                       id="ipv4_address"
                       type="text"
-                      class="form-control <?= $this->has_error("ipv4_address") ? "is-invalid" : "" ?>"
+                      class="form-control <?= $this->has_error("ipv4_address") ? "error" : "" ?>"
                       placeholder="Alamat IP"
                       value="<?= $this->old("ipv4_address", $receipt_printer->ipv4_address) ?>"
                       >
                   <?php if($this->has_error("ipv4_address")): ?>
-                  <div class="invalid-feedback">
+                  <div class='error'>
                       <?= $this->error("ipv4_address") ?>
                   </div>
                   <?php endif ?>
@@ -73,12 +73,12 @@
                       name="port"
                       id="port"
                       type="text"
-                      class="form-control <?= $this->has_error("port") ? "is-invalid" : "" ?>"
+                      class="form-control <?= $this->has_error("port") ? "error" : "" ?>"
                       placeholder="Port"
                       value="<?= $this->old("port", $receipt_printer->port) ?>"
                       >
                   <?php if($this->has_error("port")): ?>
-                  <div class="invalid-feedback">
+                  <div class='error'>
                       <?= $this->error("port") ?>
                   </div>
                   <?php endif ?>
@@ -90,7 +90,7 @@
                       name="type"
                       id="type"
                       type="text"
-                      class="form-control <?= $this->has_error("type") ? "is-invalid" : "" ?>"
+                      class="form-control <?= $this->has_error("type") ? "error" : "" ?>"
                       placeholder="Tipe"
                       >
                     <?php foreach(ReceiptPrinter::TYPES as $code => $label): ?>
@@ -101,13 +101,13 @@
 
                   </select>
                   <?php if($this->has_error("type")): ?>
-                  <div class="invalid-feedback">
+                  <div class='error'>
                       <?= $this->error("type") ?>
                   </div>
                   <?php endif ?>
               </div>
 
-              <div class="text-right">
+              <div class="t-a:r">
                   <button class="btn btn-primary">
                       Ubah
                   </button>

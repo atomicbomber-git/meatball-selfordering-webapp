@@ -27,13 +27,13 @@ use App\Helpers\Auth;
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-list"></i>
         Detail Kategori Menu '<?= $menu_category->name ?>'
     </h3>
 
-    <div class="text-right my-3">
-        <a href="<?= base_url("menuItem/create/{$menu_category->id}") ?>" class="btn btn-dark">
+    <div class="t-a:r m-y:3">
+        <a href="<?= base_url("menuItem/create/{$menu_category->id}") ?>" class="btn btn-info">
             Tambahkan Menu Baru
         </a>
     </div>
@@ -41,13 +41,13 @@ use App\Helpers\Auth;
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <table class="table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
                         <th> Nama </th>
-                        <th class="text-center"> Kendali </th>
+                        <th class="t-a:c"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -56,11 +56,11 @@ use App\Helpers\Auth;
                         <tr>
                             <td> <?= $key + 1 ?> </td>
                             <td> <?= $menu_item->name ?> </td>
-                            <td class="text-center">
+                            <td class="t-a:c">
                                 <form class="confirmed d-inline-block" method="POST" action="<?= base_url("menuItem/delete/{$menu_item->id}") ?>">
                                     <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
 
-                                    <a class="btn btn-dark btn-sm" href="<?= base_url("menuItem/edit/{$menu_item->id}") ?>">
+                                    <a class="btn btn-info btn-sm" href="<?= base_url("menuItem/edit/{$menu_item->id}") ?>">
                                         Ubah
                                     </a>
 

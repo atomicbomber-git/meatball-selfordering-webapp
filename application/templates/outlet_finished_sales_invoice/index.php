@@ -16,7 +16,7 @@
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-book"></i>
         Histori Transaksi
     </h3>
@@ -24,13 +24,13 @@
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <table class="table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
                         <th> Nama Outlet </th>
-                        <th class="text-center"> Kendali </th>
+                        <th class="t-a:c"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -39,10 +39,10 @@
                     <tr>
                         <td> <?= $outlet->id ?> </td>
                         <td> <?= $outlet->name ?> </td>
-                        <td class="text-center">
+                        <td class="t-a:c">
                             <a
                                 href="<?= base_url("outletFinishedSalesInvoice/detail/{$outlet->id}") ?>"
-                                class="btn btn-dark btn-sm">
+                                class="btn btn-info btn-sm">
                                 Detail
                             </a>
                         </td>

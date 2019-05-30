@@ -32,8 +32,8 @@
         Detail Diskon Outlet '<?= $outlet->name ?>'
     </h3>
 
-    <div class="d-flex justify-content-end">
-        <a class="btn btn-dark my-2" href="<?= base_url("discount/create/{$outlet->id}") ?>">
+    <div class="t-a:r">
+        <a class="btn btn-info my-2" href="<?= base_url("discount/create/{$outlet->id}") ?>">
             Tambah Diskon Baru
             <i class="fa fa-plus"></i>
         </a>
@@ -42,7 +42,7 @@
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <table class="datatable table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
@@ -50,7 +50,7 @@
                         <th> Nama Program Diskon </th>
                         <th> Waktu Mulai Berlaku </th>
                         <th> Waktu Selesai Berlaku </th>
-                        <th class="text-center"> Kendali </th>
+                        <th class="t-a:c"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -61,8 +61,8 @@
                         <td> <?= $discount->name ?> </td>
                         <td> <?= Formatter::datetime($discount->starts_at) ?> </td>
                         <td> <?= Formatter::datetime($discount->ends_at) ?> </td>
-                        <td class="text-center">
-                            <a class="btn btn-dark btn-sm" href="<?= base_url("discount/edit/{$discount->id}") ?>">
+                        <td class="t-a:c">
+                            <a class="btn btn-info btn-sm" href="<?= base_url("discount/edit/{$discount->id}") ?>">
                                 Detail / Ubah
                             </a>
 

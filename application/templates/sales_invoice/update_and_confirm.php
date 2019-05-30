@@ -28,7 +28,7 @@ $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-usd"></i>
         Konfirmasi Transaksi
         <p class="lead">
@@ -38,7 +38,7 @@ $this->layout("shared/base", ["title" => "Konfirmasi Transaksi"]) ?>
     </h3>
 
     <div class="card">
-        <div class="card-body" id="app">
+        <div class="card-block" id="app">
             <sales-invoice-update-and-confirm
                 :sales_invoice='<?= json_encode($sales_invoice) ?>'
                 :outlet_menu_items='<?= json_encode($outlet_menu_items) ?>'

@@ -1,36 +1,36 @@
 <template>
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
 
             <div class='form-group'>
                 <label for='name'> Nama Program Diskon: </label>
                 <input
                     v-model='name'
                     class='form-control'
-                    :class="{'is-invalid': get(this.error_data, 'errors.name', false)}"
+                    :class="{'error': get(this.error_data, 'errors.name', false)}"
                     type='text' id='name' placeholder='Nama Program Diskon'>
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.name', false) }}</div>
+                <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
             </div>
 
             <div class='form-group'>
                 <label for='starts_at'> Waktu Mulai: </label>
 
                 <datetime
-                    :input-class="{'form-control': true, 'is-invalid': get(this.error_data, 'errors.starts_at', false)}"
+                    :input-class="{'form-control': true, 'error': get(this.error_data, 'errors.starts_at', false)}"
                     placeholder="Waktu Mulai"
                     type="datetime" v-model="starts_at"></datetime>
 
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.starts_at', false) }}</div>
+                <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
             </div>
 
             <div class='form-group'>
                 <label for='ends_at'> Waktu Selesai: </label>
 
                 <datetime
-                    :input-class="{'form-control': true, 'is-invalid': get(this.error_data, 'errors.ends_at', false)}"
+                    :input-class="{'form-control': true, 'error': get(this.error_data, 'errors.ends_at', false)}"
                     placeholder="Waktu Selesai"
                     type="datetime" v-model="ends_at"></datetime>
-                <div class='invalid-feedback'>{{ get(this.error_data, 'errors.ends_at', false) }}</div>
+                <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
             </div>
 
             <div class="form-group">
@@ -52,25 +52,25 @@
                     <thead class="thead thead-dark">
                         <tr>
                             <th> Menu </th>
-                            <th class="text-right"> Harga Asli </th>
-                            <th class="text-right"> Diskon (%) </th>
-                            <th class="text-right"> Harga Diskon </th>
-                            <th class="text-center"> Kendali </th>
+                            <th class="t-a:r"> Harga Asli </th>
+                            <th class="t-a:r"> Diskon (%) </th>
+                            <th class="t-a:r"> Harga Diskon </th>
+                            <th class="t-a:c"> Kendali </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="outlet_menu_item in added_outlet_menu_items" :key="outlet_menu_item.id">
                             <td> {{ outlet_menu_item.menu_item.name }} </td>
-                            <td class="text-right"> {{ currency_format(outlet_menu_item.price) }} </td>
-                            <td class="text-right">
+                            <td class="t-a:r"> {{ currency_format(outlet_menu_item.price) }} </td>
+                            <td class="t-a:r">
                                 <cleave-range
                                     min="1"
                                     max="100"
                                     v-model="outlet_menu_item.percentage"
                                     />
                             </td>
-                            <td class="text-right"> {{ currency_format(outlet_menu_item.price * ( 1 - outlet_menu_item.percentage / 100 )) }} </td>
-                            <td class="text-center">
+                            <td class="t-a:r"> {{ currency_format(outlet_menu_item.price * ( 1 - outlet_menu_item.percentage / 100 )) }} </td>
+                            <td class="t-a:c">
                                 <button @click="outlet_menu_item.is_added = false" class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>
@@ -79,7 +79,7 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-end mt-5">
+                <div class="t-a:r mt-5">
                     <button @click="submitForm" :disabled="!this.is_submittable" class="btn btn-primary">
                         Ubah Diskon
                     </button>

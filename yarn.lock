@@ -4811,6 +4811,11 @@ shebang-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
   integrity sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
 
+shed-css@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.npm.taobao.org/shed-css/download/shed-css-1.4.0.tgz#b6004d022438d22e462a063bd50e112d77935f65"
+  integrity sha1-tgBNAiQ40i5GKgY71Q4RLXeTX2U=
+
 sigmund@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/sigmund/-/sigmund-1.0.1.tgz#3ff21f198cad2175f9f3b781853fd94d0d19b590"

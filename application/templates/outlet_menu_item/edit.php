@@ -43,21 +43,21 @@ use App\Helpers\AppInfo;
     </h3>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
 
             <form method="POST" action="<?= base_url("outletMenuItem/update/{$outlet_menu_item->id}") ?>">
                 <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
                 <div class="form-group">
                     <label for="price"> Harga (Rp.): </label>
-                    <input name="price" id="price" type="text" class="form-control <?= $this->has_error("price") ? "is-invalid" : "" ?>" placeholder="Harga" value="<?= $this->old("price", Formatter::number($outlet_menu_item->price)) ?>">
+                    <input name="price" id="price" type="text" class="form-control <?= $this->has_error("price") ? "error" : "" ?>" placeholder="Harga" value="<?= $this->old("price", Formatter::number($outlet_menu_item->price)) ?>">
                     <?php if ($this->has_error("price")) : ?>
-                        <div class="invalid-feedback">
+                        <div class='error'>
                             <?= $this->error("price") ?>
                         </div>
                     <?php endif ?>
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Ubah Data
                     </button>

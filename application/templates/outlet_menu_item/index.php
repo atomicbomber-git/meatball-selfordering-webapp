@@ -33,14 +33,14 @@ use App\Helpers\Auth;
         </ol>
     </nav>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-cutlery"></i>
         Detail Menu Outlet '<?= $outlet->name ?>'
         Kategori '<?= $menu_category->name ?>'
     </h3>
 
-    <div class="text-right my-3">
-        <a href="<?= base_url("outletMenuItem/create/{$outlet->id}/{$menu_category->id}") ?>" class="btn btn-dark">
+    <div class="t-a:r m-y:3">
+        <a href="<?= base_url("outletMenuItem/create/{$outlet->id}/{$menu_category->id}") ?>" class="btn btn-info">
             Tambahkan Menu
         </a>
     </div>
@@ -48,15 +48,15 @@ use App\Helpers\Auth;
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <table class="table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
                         <th> Menu </th>
-                        <th class="text-right"> Harga (Rp.) </th>
-                        <th class="text-center"> Aktif / Non-Aktif </th>
-                        <th class="text-center"> Kendali </th>
+                        <th class="t-a:r"> Harga (Rp.) </th>
+                        <th class="t-a:c"> Aktif / Non-Aktif </th>
+                        <th class="t-a:c"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -65,11 +65,11 @@ use App\Helpers\Auth;
                     <tr>
                         <td> <?= $key + 1 ?>. </td>
                         <td> <?= $outlet_menu_item->menu_item->name ?> </td>
-                        <td class="text-right"> <?= Formatter::currency($outlet_menu_item->price) ?> </td>
-                        <td class="text-center">
+                        <td class="t-a:r"> <?= Formatter::currency($outlet_menu_item->price) ?> </td>
+                        <td class="t-a:c">
                             <?php $this->insert("shared/activation_status", ["is_active" => $outlet_menu_item->is_active]) ?>
                         </td>
-                        <td class="text-center">
+                        <td class="t-a:c">
                             <a
                                 href="<?= base_url("outletMenuItem/edit/{$outlet_menu_item->id}") ?>"
                                 class="btn btn-sm btn-dark">

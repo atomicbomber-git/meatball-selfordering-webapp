@@ -27,15 +27,15 @@ use App\Helpers\AppInfo;
     <?php $this->insert("shared/message") ?>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <form method="POST" enctype="multipart/form-data" action="<?= base_url("menuCategory/update/{$menu_category->id}") ?>">
                 <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
 
                 <div class="form-group">
                     <label for="name"> Nama: </label>
-                    <input name="name" id="name" type="text" class="form-control <?= $this->has_error("name") ? "is-invalid" : "" ?>" placeholder="Nama" value="<?= $this->old("name", $menu_category->name) ?>">
+                    <input name="name" id="name" type="text" class="form-control <?= $this->has_error("name") ? "error" : "" ?>" placeholder="Nama" value="<?= $this->old("name", $menu_category->name) ?>">
                     <?php if ($this->has_error("name")) : ?>
-                        <div class="invalid-feedback">
+                        <div class='error'>
                             <?= $this->error("name") ?>
                         </div>
                     <?php endif ?>
@@ -48,11 +48,11 @@ use App\Helpers\AppInfo;
                         id="description"
                         type="text"
                         rows="6"
-                        class="form-control <?= $this->has_error("description") ? "is-invalid" : "" ?>"
+                        class="form-control <?= $this->has_error("description") ? "error" : "" ?>"
                         placeholder="Deskripsi"
                         ><?= $this->old("description", $menu_category->description) ?></textarea>
                     <?php if($this->has_error("description")): ?>
-                    <div class="invalid-feedback">
+                    <div class='error'>
                         <?= $this->error("description") ?>
                     </div>
                     <?php endif ?>
@@ -65,15 +65,15 @@ use App\Helpers\AppInfo;
 
                 <div class="form-group">
                     <label for="image"> Gambar Baru: </label>
-                    <input name="image" id="image" type="file" class="form-control <?= $this->has_error("image") ? "is-invalid" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
+                    <input name="image" id="image" type="file" class="form-control <?= $this->has_error("image") ? "error" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
                     <?php if ($this->has_error("image")) : ?>
-                        <div class="invalid-feedback">
+                        <div class='error'>
                             <?= $this->error("image") ?>
                         </div>
                     <?php endif ?>
                 </div>
 
-                <div class="text-right">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Ubah
                     </button>

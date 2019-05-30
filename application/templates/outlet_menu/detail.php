@@ -26,19 +26,19 @@ use App\Helpers\AppInfo;
 
     <?php $this->insert("shared/message") ?>
 
-    <h3 class="mb-3">
+    <h3 class="m-b:3">
         <i class="fa fa-cutlery"></i>
         Detail Menu Outlet '<?= $outlet->name ?>'
     </h3>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <table class="table table-sm table-bordered table-striped">
                 <thead class="thead thead-dark">
                     <tr>
                         <th> # </th>
                         <th> Kategori Menu </th>
-                        <th class="text-center"> Kendali </th>
+                        <th class="t-a:c"> Kendali </th>
                     </tr>
                 </thead>
 
@@ -47,8 +47,8 @@ use App\Helpers\AppInfo;
                     <tr>
                         <td> <?= $menu_category->id ?> </td>
                         <td> <?= $menu_category->name ?> </td>
-                        <td class="text-center">
-                            <a class="btn btn-dark btn-sm" href="<?= base_url("outletMenuItem/index/{$outlet->id}/{$menu_category->id}") ?>">
+                        <td class="t-a:c">
+                            <a class="btn btn-info btn-sm" href="<?= base_url("outletMenuItem/index/{$outlet->id}/{$menu_category->id}") ?>">
                                 Detail
                             </a>
                         </td>

@@ -32,7 +32,7 @@
                 <label class='error' v-if="get(this.error_data, 'errors.price', false)">{{ get(this.error_data, 'errors.price', false) }}</label>
             </div>
 
-            <div class="d-flex justify-content-end">
+            <div class="t-a:r">
                 <button @click="submitForm" class="btn btn-primary">
                     Tambahkan Menu Baru
                 </button>

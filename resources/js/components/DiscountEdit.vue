@@ -52,25 +52,25 @@
                     <thead class="thead thead-dark">
                         <tr>
                             <th> Menu </th>
-                            <th class="text-right"> Harga Asli </th>
-                            <th class="text-right"> Diskon (%) </th>
-                            <th class="text-right"> Harga Diskon </th>
-                            <th class="text-center"> Kendali </th>
+                            <th class="t-a:r"> Harga Asli </th>
+                            <th class="t-a:r"> Diskon (%) </th>
+                            <th class="t-a:r"> Harga Diskon </th>
+                            <th class="t-a:r"> Kendali </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="outlet_menu_item in added_outlet_menu_items" :key="outlet_menu_item.id">
                             <td> {{ outlet_menu_item.menu_item.name }} </td>
-                            <td class="text-right"> {{ currency_format(outlet_menu_item.price) }} </td>
-                            <td class="text-right">
+                            <td class="t-a:r"> {{ currency_format(outlet_menu_item.price) }} </td>
+                            <td class="t-a:r">
                                 <cleave-range
                                     min="1"
                                     max="100"
                                     v-model="outlet_menu_item.percentage"
                                     />
                             </td>
-                            <td class="text-right"> {{ currency_format(outlet_menu_item.price * ( 1 - outlet_menu_item.percentage / 100 )) }} </td>
-                            <td class="text-center">
+                            <td class="t-a:r"> {{ currency_format(outlet_menu_item.price * ( 1 - outlet_menu_item.percentage / 100 )) }} </td>
+                            <td class="t-a:r">
                                 <button @click="outlet_menu_item.is_added = false" class="btn btn-danger btn-sm">
                                     Hapus
                                 </button>
@@ -79,7 +79,7 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-end m-t:5">
+                <div class="t-a:r m-t:5">
                     <button @click="submitForm" :disabled="!this.is_submittable" class="btn btn-primary">
                         Ubah Diskon
                     </button>

@@ -54,7 +54,7 @@ use App\Helpers\Auth;
                             <img style="width: 320px; height: 240px; object-fit: cover" src="<?= base_url("menuCategory/image/{$menu_category->id}") ?>" alt="<?= $menu_category->name ?>">
                         </td>
                         <td class="t-a:c">
-                            <a href="<?= base_url("menuCategory/edit/{$menu_category->id}") ?>" class="btn btn-sm btn-dark">
+                            <a href="<?= base_url("menuCategory/edit/{$menu_category->id}") ?>" class="btn btn-sm btn-info">
                                 Ubah
                             </a>
 

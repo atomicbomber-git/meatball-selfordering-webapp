@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table class="table table-sm table-striped">
+        <table class="table table-sm table-bordered table-striped">
             <thead class="thead thead-dark">
                 <tr>
                     <th>#</th>
@@ -8,8 +8,8 @@
                     <th>Tipe</th>
                     <th>Alamat IP</th>
                     <th>Port</th>
-                    <th> Status </th>
-                    <th class="text-center">Kendali</th>
+                    <th class="t-a:c"> Status </th>
+                    <th class="t-a:c">Kendali</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,26 +19,25 @@
                     <td>{{ receipt_printer.type }}</td>
                     <td>{{ receipt_printer.ipv4_address }}</td>
                     <td>{{ receipt_printer.port }}</td>
-                    <td>
+                    <td class="t-a:c">
                         <span
-                            class="badge"
+                            class="tag"
                             :class="{
-                                'badge-success': receipt_printer.is_active,
-                                'badge-danger': !receipt_printer.is_active
+                                'tag-success': receipt_printer.is_active,
+                                'tag-danger': !receipt_printer.is_active
                             }"
                             >
                             {{ receipt_printer.is_active ? 'Aktif' : 'Tidak Aktif' }}
                         </span>
                     </td>
-                    <td class="text-center">
-                        <button @click="testPrint(receipt_printer)" class="btn btn-dark btn-sm">
+                    <td class="t-a:c">
+                        <button @click="testPrint(receipt_printer)" class="btn btn-info btn-sm">
                             Test Print
-                            <i class="fa fa-print"></i>
                         </button>
 
                         <a
                             :href="`edit/${receipt_printer.id}`"
-                            class="btn btn-dark btn-sm"
+                            class="btn btn-info btn-sm"
                             >
                             Ubah
                         </a>
@@ -49,9 +48,9 @@
                             class="btn btn-success btn-sm">
                             Aktifkan
                         </a>
-                        <a v-else disabled class="btn btn-secondary btn-sm">
+                        <button v-else disabled class="btn btn-success btn-sm">
                             Aktifkan
-                        </a>
+                        </button>
 
                         <button @click="deleteReceiptPrinter(receipt_printer)" class="btn btn-danger btn-sm">
                             Hapus
@@ -66,7 +65,7 @@
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                 </div>
 
-                <h3 class="text-center m-t:3"> Tes Printer, Mohon Tunggu. </h3>
+                <h3 class="c m-t:3"> Tes Printer, Mohon Tunggu. </h3>
             </div>
         </div>
     </div>

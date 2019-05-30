@@ -4,9 +4,11 @@
     use App\Policies\MenuCategoryPolicy;
     use App\Policies\OutletMenuPolicy;
     use App\Policies\DiscountPolicy;
+    use App\Policies\ReceiptPrinterPolicy;
+    use App\Policies\SalesInvoicePolicy;
     use App\Helpers\Auth;
+    use App\Helpers\URL;
 ?>
-
 
 <nav>
     <p class="nav-title"> MASTER DATA </p>
@@ -58,6 +60,28 @@
             </a>
         </li>
         
+        <?php endif ?>
+    </ul>
+
+    <p class="nav-title"> OPERASIONAL </p>
+
+    <ul class="nav">
+        <?php if (ReceiptPrinterPolicy::canIndex(Auth::user())) : ?>
+            <li>
+                <a href="<?= base_url("receiptPrinter/index") ?>">
+                    <i class="fa-fw fa fa-print fa-2x"></i>
+                    <span class=m-l:2> Printer </span>
+                </a>
+            </li>
+        <?php endif ?>
+
+        <?php if (SalesInvoicePolicy::canIndex(Auth::user())) : ?>
+            <li>
+                <a href="<?= base_url("salesInvoice/index") ?>">
+                    <i class="fa-fw fa fa-usd fa-2x"></i>
+                    <span class=m-l:2> Transaksi </span>
+                </a>
+            </li>
         <?php endif ?>
     </ul>
 </nav>

@@ -1,6 +1,6 @@
 <template>
     <vue-cleave
-        class="form-control text-right"
+        class="form-control t-a:r"
         v-model.number="m_value"
         type="number"
         step="5"

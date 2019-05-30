@@ -1,9 +1,9 @@
 <?php if($is_active): ?>
-    <span class="badge badge-success">
+    <span class="tag tag-success">
         Aktif
     </span>
 <?php else: ?>
-    <span class="badge badge-danger">
+    <span class="tag tag-danger">
         Non-Aktif
     </span>
 <?php endif ?>

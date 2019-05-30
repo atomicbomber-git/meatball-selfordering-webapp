@@ -52,47 +52,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <!--sidebar panel-->
         <div class="off-canvas-overlay" data-toggle="sidebar"></div>
 
-        <div class="sidebar-panel">
-            <div class="brand">
-                <!-- toggle offscreen menu -->
-                <a href="javascript:;" data-toggle="sidebar" class="toggle-offscreen hidden-lg-up">
-                    <i class="material-icons">menu</i>
-                </a>
-                <!-- /toggle offscreen menu -->
-                <!-- logo -->
-                <a class="brand-logo">
-                    <img class="expanding-hidden" src="<?= base_url('assets/images/logo.png') ?>" alt="" />
-                </a>
-                <!-- /logo -->
+        <?php if(Auth::check()): ?>
+            <div class="sidebar-panel">
+                <?php $this->insert("shared/sidebar") ?>
             </div>
-            <div class="nav-profile dropdown">
-                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                    <div class="user-image">
-                        <img src="<?= base_url('assets/images/avatar.jpg') ?>" class="avatar img-circle" alt="user" title="user" />
-                    </div>
-                    <div class="user-info expanding-hidden">
-                        <?= Auth::user()->name ?? 'Guest' ?>
-                    </div>
-                </a>
-                <div class="dropdown-menu">
-                    <a id="logout_button" class="dropdown-item">
-                        <i class="fa fa-sign-out"></i>
-                        Logout
-                    </a>
-
-                    <form method="POST" action="<?= base_url("logout/handle") ?>">
-                        <input type="hidden" name="<?= $this->csrf_name() ?>" value="<?= $this->csrf_token() ?>">
-                    </form>
-                </div>
-            </div>
-            <!-- main navigation -->
-            
-            <?php $this->insert("shared/navmenu") ?>
-            
-            <!-- /main navigation -->
-        </div>
+        <?php endif ?>
 
         <!-- /sidebar panel -->
+
         <!-- content panel -->
         <div class="main-panel">
             <!-- top header -->
@@ -241,7 +208,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <!-- main area -->
             <div class="main-content">
                 <div class="content-view">
-                    <?= $this->section('content') ?>
+                    <div class="container-fluid">
+                        <?= $this->section('content') ?>
+                    </div>
                 </div>
                 <!-- bottom footer -->
                 <div class="content-footer">
@@ -509,6 +478,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </script>
 
     <?php $this->insert("shared/sweetalert-confirmation") ?>
+    <?php $this->insert("shared/sentry") ?>
 
     <?= $this->section('extra-scripts') ?>
 </body>

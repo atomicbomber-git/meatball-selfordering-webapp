@@ -112,14 +112,14 @@
                                         <tr>
                                             <th> Nama User </th>
                                             <th> Level </th>
-                                            <th class="text-center"> Kendali </th>
+                                            <th class="t-a:r"> Kendali </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="user in added_regular_users" :key="user.id">
                                             <td> {{ user.name }} </td>
                                             <td> {{ user.level }} </td>
-                                            <td class="text-center">
+                                            <td class="t-a:r">
                                                 <button @click="onRemoveRegularUser(user)" type="button" class="btn btn-sm btn-danger">
                                                     Hapus
                                                 </button>
@@ -132,7 +132,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="t-a:r">
                     <button class="btn btn-primary">
                         Tambahkan Outlet Baru
                     </button>

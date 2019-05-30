@@ -52,7 +52,8 @@ class ReceiptPrinter extends BaseController
 
     public function index()
     {
-        ReceiptPrinterPolicy::canIndex(Auth::user()) ?: $this->error403();
+        ReceiptPrinterPolicy::canIndex(Auth::user())
+            ?: $this->error403();
 
         $outlet = Auth::user()->outlet ?: $this->error403();
         $outlet->load(["receipt_printers" => function ($query) {

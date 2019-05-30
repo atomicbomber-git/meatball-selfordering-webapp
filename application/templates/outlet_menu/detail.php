@@ -5,45 +5,44 @@ use App\Helpers\AppInfo;
 
 <?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
 
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active">
-                <a href="<?= base_url(DefaultRoute::get()) ?>">
-                    <?= AppInfo::name() ?>
-                </a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="<?= base_url("outletMenu/index") ?>">
-                    Menu Outlet
-                </a>
-            </li>
-            <li class="breadcrumb-item active">
-                '<?= $outlet->name ?>'
-            </li>
-        </ol>
-    </nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">
+            <a href="<?= base_url(DefaultRoute::get()) ?>">
+                <?= AppInfo::name() ?>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="<?= base_url("outletMenu/index") ?>">
+                Menu Outlet
+            </a>
+        </li>
+        <li class="breadcrumb-item active">
+            '<?= $outlet->name ?>'
+        </li>
+    </ol>
+</nav>
 
-    <?php $this->insert("shared/message") ?>
+<?php $this->insert("shared/message") ?>
 
-    <h3 class="m-b:3">
-        <i class="fa fa-cutlery"></i>
-        Detail Menu Outlet '<?= $outlet->name ?>'
-    </h3>
+<h3 class="m-b:3">
+    <i class="fa fa-cutlery"></i>
+    Detail Menu Outlet '<?= $outlet->name ?>'
+</h3>
 
-    <div class="card">
-        <div class="card-block">
-            <table class="table table-sm table-bordered table-striped">
-                <thead class="thead thead-dark">
-                    <tr>
-                        <th> # </th>
-                        <th> Kategori Menu </th>
-                        <th class="t-a:c"> Kendali </th>
-                    </tr>
-                </thead>
+<div class="card">
+    <div class="card-block">
+        <table class="table table-sm table-bordered table-striped">
+            <thead class="thead thead-dark">
+                <tr>
+                    <th> # </th>
+                    <th> Kategori Menu </th>
+                    <th class="t-a:c"> Kendali </th>
+                </tr>
+            </thead>
 
-                <tbody>
-                    <?php foreach($menu_categories as $menu_category): ?>
+            <tbody>
+                <?php foreach ($menu_categories as $menu_category) : ?>
                     <tr>
                         <td> <?= $menu_category->id ?> </td>
                         <td> <?= $menu_category->name ?> </td>
@@ -53,9 +52,8 @@ use App\Helpers\AppInfo;
                             </a>
                         </td>
                     </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-        </div>
+                <?php endforeach ?>
+            </tbody>
+        </table>
     </div>
-</div>
+</div

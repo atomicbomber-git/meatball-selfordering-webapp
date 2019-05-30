@@ -55,9 +55,9 @@ use App\Helpers\AppInfo;
                         placeholder="Deskripsi"
                         ><?= $this->old("description") ?></textarea>
                     <?php if($this->has_error("description")): ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("description") ?>
-                    </div>
+                    </label>
                     <?php endif ?>
                 </div>
 

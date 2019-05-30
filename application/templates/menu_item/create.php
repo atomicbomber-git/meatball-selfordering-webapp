@@ -55,9 +55,9 @@
                         value="<?= $this->old("name") ?>"
                         >
                     <?php if($this->has_error("name")): ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("name") ?>
-                    </div>
+                    </label>
                     <?php endif ?>
                 </div>
 

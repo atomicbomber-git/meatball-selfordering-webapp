@@ -24,9 +24,9 @@
                         value="<?= $this->old("username") ?>"
                         >
                     <?php if($this->has_error("username")): ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("username") ?>
-                    </div>
+                    </label>
                     <?php endif ?>
                 </div>
 
@@ -41,9 +41,9 @@
                         value=""
                         >
                     <?php if($this->has_error("password")): ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("password") ?>
-                    </div>
+                    </label>
                     <?php endif ?>
                 </div>
                 

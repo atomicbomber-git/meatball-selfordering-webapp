@@ -40,9 +40,9 @@ use App\Enums\UserLevel;
                 <label for="name"> Nama Asli: </label>
                 <input name="name" id="name" type="text" class="form-control <?= $this->has_error("name") ? "error" : "" ?>" placeholder="Nama Asli" value="<?= $this->old("name") ?>">
                 <?php if ($this->has_error("name")) : ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("name") ?>
-                    </div>
+                    </label>
                 <?php endif ?>
             </div>
 
@@ -50,9 +50,9 @@ use App\Enums\UserLevel;
                 <label for="username"> Nama Pengguna: </label>
                 <input name="username" id="username" type="text" class="form-control <?= $this->has_error("username") ? "error" : "" ?>" placeholder="Nama Pengguna" value="<?= $this->old("username") ?>">
                 <?php if ($this->has_error("username")) : ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("username") ?>
-                    </div>
+                    </label>
                 <?php endif ?>
             </div>
 
@@ -68,9 +68,9 @@ use App\Enums\UserLevel;
                 </select>
 
                 <?php if ($this->has_error("level")) : ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("level") ?>
-                    </div>
+                    </label>
                 <?php endif ?>
             </div>
 
@@ -78,9 +78,9 @@ use App\Enums\UserLevel;
                 <label for="password"> Kata Sandi: </label>
                 <input name="password" id="password" type="password" class="form-control <?= $this->has_error("password") ? "error" : "" ?>" placeholder="Kata Sandi" value="<?= $this->old("password") ?>">
                 <?php if ($this->has_error("password")) : ?>
-                    <div class='error'>
+                    <label class='error'>
                         <?= $this->error("password") ?>
-                    </div>
+                    </label>
                 <?php endif ?>
             </div>
 

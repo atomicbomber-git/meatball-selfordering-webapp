@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-8 pr-2">
             <div class="card">
-                <div class="card-body">
+                <div class="card-block">
                     <transition name="menu-fade" mode="out-in">
                         <div key="if" v-if="selected_menu_category === null">
                             <div class="row">
@@ -16,7 +16,7 @@
                                         :src="`/menuCategory/image/${menu_category.id}`"
                                         :alt="menu_category.name"
                                     >
-                                    <div class="card-body">
+                                    <div class="card-block">
                                         <span
                                             class="font-weight-bold text-info"
                                         >{{ menu_category.name }}</span>
@@ -119,7 +119,7 @@
 
         <div class="col-lg-4 pl-0">
             <div class="card">
-                <div class="card-body">
+                <div class="card-block">
                     <h1 class="h5 text-info">DAFTAR PESANAN</h1>
 
                     <div v-if="ordered_menu_items.length > 0">
@@ -214,7 +214,7 @@
                     <i class="fa fa-info"></i>
                     Jenis Pemesanan
                 </div>
-                <div class="card-body">
+                <div class="card-block">
                     <h2> Silahkan memilih jenis pemesanan Anda </h2>
                 </div>
                 <div class="card-footer text-center">
@@ -243,7 +243,7 @@
                     <i class="fa fa-question"></i>
                     Konfirmasi Pemesanan
                 </div>
-                <div class="card-body">
+                <div class="card-block">
                     <table class="table">
                         <thead>
                             <th>Item</th>

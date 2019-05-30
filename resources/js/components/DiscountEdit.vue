@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
 
             <div class='form-group'>
                 <label for='name'> Nama Program Diskon: </label>

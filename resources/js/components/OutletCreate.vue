@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
             <form @submit.prevent="onFormSubmit">
 
                  <div class="row">

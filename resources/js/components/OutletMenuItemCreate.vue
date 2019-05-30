@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-body">
+        <div class="card-block">
 
             <div class='form-group'>
                 <label for='menu_item'> Menu Item: </label>

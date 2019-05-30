@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-8 pr-2">
             <div class="card">
-                <div class="card-block">
+                <div class="card-body">
                     <transition name="menu-fade" mode="out-in">
                         <div key="if" v-if="selected_menu_category === null">
                             <div class="row">
@@ -16,7 +16,7 @@
                                         :src="`/menuCategory/image/${menu_category.id}`"
                                         :alt="menu_category.name"
                                     >
-                                    <div class="card-block">
+                                    <div class="card-body">
                                         <span
                                             class="font-weight-bold text-info"
                                         >{{ menu_category.name }}</span>
@@ -25,7 +25,7 @@
                                             {{ menu_category.description }}
                                         </p>
 
-                                        <div class="t-a:r">
+                                        <div class="text-right">
                                             <button
                                                 @click="onOrderMenuCategoryButtonClick(menu_category)"
                                                 class="btn btn-info btn-sm"
@@ -40,8 +40,8 @@
                         </div>
 
                         <div key="else" v-else>
-                            <div class="m-b:3">
-                                <div class="t-a:r">
+                            <div class="mb-3">
+                                <div class="text-right">
                                     <button
                                         class="btn btn-warning"
                                         @click="selected_menu_category = null"
@@ -65,9 +65,9 @@
                                     <table class="table table-sm table-striped">
                                         <thead>
                                             <th> Nama </th>
-                                            <th class="t-a:r"> Harga (Rp) </th>
-                                            <th class="t-a:r"> Diskon </th>
-                                            <th class="t-a:c"> Jumlah </th>
+                                            <th class="text-right"> Harga (Rp) </th>
+                                            <th class="text-right"> Diskon </th>
+                                            <th class="text-center"> Jumlah </th>
                                         </thead>
 
                                         <tbody>
@@ -76,16 +76,16 @@
                                                 :key="menu_item.id"
                                             >
                                                 <td>{{ menu_item.name }}</td>
-                                                <td class="t-a:r">
+                                                <td class="text-right">
                                                     <!-- Real price -->
                                                     {{ number_format(menu_item.outlet_menu_item.price) }}
                                                 </td>
-                                                <td class="t-a:r">
+                                                <td class="text-right">
                                                     <!-- Discount -->
 
                                                     {{ percent_format(get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0)) }}
                                                 </td>
-                                                <td class="t-a:c">
+                                                <td class="text-center">
                                                     <button
                                                         @click="--menu_item.order_quantity"
                                                         class="btn btn-sm btn-danger"
@@ -119,28 +119,28 @@
 
         <div class="col-lg-4 pl-0">
             <div class="card">
-                <div class="card-block">
+                <div class="card-body">
                     <h1 class="h5 text-info">DAFTAR PESANAN</h1>
 
                     <div v-if="ordered_menu_items.length > 0">
                         <table class="table table-sm">
                             <thead>
                                 <th>Item</th>
-                                <th class="t-a:r">Harga (Rp)</th>
-                                <th class="t-a:c" style="width: 10rem">Jumlah</th>
-                                <th class="t-a:r"> Subtotal (Rp) </th>
+                                <th class="text-right">Harga (Rp)</th>
+                                <th class="text-center" style="width: 10rem">Jumlah</th>
+                                <th class="text-right"> Subtotal (Rp) </th>
                             </thead>
 
                             <tbody class="table-striped">
                                 <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
                                     <td>{{ menu_item.name }}</td>
-                                    <td class="t-a:r">
+                                    <td class="text-right">
                                         {{ number_format(
                                             menu_item.outlet_menu_item.price * 
                                             (1 - get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0))
                                         ) }}
                                     </td>
-                                    <td class="t-a:c">
+                                    <td class="text-center">
                                         <button
                                             @click="--menu_item.order_quantity"
                                             class="btn btn-sm btn-danger"
@@ -160,7 +160,7 @@
                                         </button>
                                     </td>
 
-                                    <td class="t-a:r">
+                                    <td class="text-right">
                                         {{ number_format(
                                             menu_item.outlet_menu_item.price *
                                             menu_item.order_quantity *
@@ -170,7 +170,7 @@
                                 </tr>
                             </tbody>
 
-                            <tfoot class="t-a:r">
+                            <tfoot class="text-right">
                                 <tr>
                                     <td> </td>
                                     <td> </td>
@@ -187,12 +187,12 @@
                             </tfoot>
                         </table>
 
-                        <div class="total-price font-weight-bold t-a:r">
+                        <div class="total-price font-weight-bold text-right">
                             TOTAL:
                             <span class="text-danger">Rp. {{ number_format(rounding) }}</span>
                         </div>
 
-                        <div @click="onFinishOrderButtonClick" class="t-a:r mt-3">
+                        <div @click="onFinishOrderButtonClick" class="text-right mt-3">
                             <button class="btn btn-primary">
                                 Selesaikan Pemesanan
                                 <i class="fa fa-check"></i>
@@ -214,10 +214,10 @@
                     <i class="fa fa-info"></i>
                     Jenis Pemesanan
                 </div>
-                <div class="card-block">
+                <div class="card-body">
                     <h2> Silahkan memilih jenis pemesanan Anda </h2>
                 </div>
-                <div class="card-footer t-a:c">
+                <div class="card-footer text-center">
                     <button @click="onChooseOrderTypeModalReturnButtonClick" class="btn btn-warning">
                         <i class="fa fa-arrow-left"></i>
                         Kembali
@@ -243,17 +243,17 @@
                     <i class="fa fa-question"></i>
                     Konfirmasi Pemesanan
                 </div>
-                <div class="card-block">
+                <div class="card-body">
                     <table class="table">
                         <thead>
                             <th>Item</th>
-                            <th class="t-a:r">
+                            <th class="text-right">
                                 Harga (Rp)
                             </th>
-                            <th class="t-a:r" style="width: 10rem">
+                            <th class="text-right" style="width: 10rem">
                                 Jumlah
                             </th>
-                            <th class="t-a:r">
+                            <th class="text-right">
                                 Subtotal (Rp)
                             </th>
                         </thead>
@@ -263,17 +263,17 @@
                                 <td>
                                     {{ menu_item.name }}
                                 </td>
-                                <td class="t-a:r">
+                                <td class="text-right">
                                     {{ number_format(menu_item.outlet_menu_item.price) }}
                                 </td>
                                 
-                                <td class="t-a:r">
+                                <td class="text-right">
                                     <span class="font-weight-bold mx-1">
                                         <order-quantity v-model="menu_item.order_quantity"/>
                                     </span>
                                 </td>
 
-                                <td class="t-a:r">
+                                <td class="text-right">
                                     {{ number_format(
                                         menu_item.outlet_menu_item.price * 
                                         menu_item.order_quantity *
@@ -283,7 +283,7 @@
                             </tr>
                         </tbody>
                         
-                        <tfoot class="t-a:r">
+                        <tfoot class="text-right">
                             <tr>
                                 <td> </td>
                                 <td> </td>
@@ -300,13 +300,13 @@
                         </tfoot>
                     </table>
 
-                    <h3 class="t-a:r">
+                    <h3 class="text-right">
                         <span class="badge badge-info">
                             {{ order_types[order_type] }}
                         </span>
                     </h3>
 
-                    <div class="total-price font-weight-bold t-a:r">
+                    <div class="total-price font-weight-bold text-right">
                         TOTAL:
                         <span class="text-danger">
                             Rp. {{ number_format(rounding) }}
@@ -314,7 +314,7 @@
                     </div>
                 </div>
 
-                <div class="card-footer t-a:r">
+                <div class="card-footer text-right">
                     <button @click="onFinishOrderModalReturnButtonClick" class="btn btn-warning">
                         <i class="fa fa-arrow-left"></i>
                         Kembali

@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-block">
+        <div class="card-body">
 
             <div class='form-group'>
                 <label for='menu_item'> Menu Item: </label>
@@ -25,14 +25,14 @@
                 <label for='price'> Harga (Rp.): </label>
                 <vue-cleave
                     class="form-control"
-                    :class="{'error': get(this.error_data, 'errors.price', false)}"
+                    :class="{'is-invalid': get(this.error_data, 'errors.price', false)}"
                     v-model.number="price"
                     :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }">
                 </vue-cleave>
-                <label class='error'>{{ get(this.error_data, 'errors.name', false) }}</label>
+                <label class='error' v-if="get(this.error_data, 'errors.price', false)">{{ get(this.error_data, 'errors.price', false) }}</label>
             </div>
 
-            <div class="t-a:r">
+            <div class="d-flex justify-content-end">
                 <button @click="submitForm" class="btn btn-primary">
                     Tambahkan Menu Baru
                 </button>

@@ -9,7 +9,7 @@
                     <th>Alamat IP</th>
                     <th>Port</th>
                     <th> Status </th>
-                    <th class="t-a:c">Kendali</th>
+                    <th class="text-center">Kendali</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,15 +30,15 @@
                             {{ receipt_printer.is_active ? 'Aktif' : 'Tidak Aktif' }}
                         </span>
                     </td>
-                    <td class="t-a:c">
-                        <button @click="testPrint(receipt_printer)" class="btn btn-info btn-sm">
+                    <td class="text-center">
+                        <button @click="testPrint(receipt_printer)" class="btn btn-dark btn-sm">
                             Test Print
                             <i class="fa fa-print"></i>
                         </button>
 
                         <a
                             :href="`edit/${receipt_printer.id}`"
-                            class="btn btn-info btn-sm"
+                            class="btn btn-dark btn-sm"
                             >
                             Ubah
                         </a>
@@ -66,7 +66,7 @@
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                 </div>
 
-                <h3 class="t-a:c mt-3"> Tes Printer, Mohon Tunggu. </h3>
+                <h3 class="text-center mt-3"> Tes Printer, Mohon Tunggu. </h3>
             </div>
         </div>
     </div>

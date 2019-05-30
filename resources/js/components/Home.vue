@@ -7,7 +7,7 @@
                         <div key="if" v-if="selected_menu_category === null">
                             <div class="row">
                                 <div
-                                    class="card col-md-4 d-inline-block mt-3"
+                                    class="card col-md-4 d-inline-block m-t:3"
                                     v-for="menu_category in p_menu_data"
                                     :key="menu_category.id"
                                 >
@@ -192,7 +192,7 @@
                             <span class="text-danger">Rp. {{ number_format(rounding) }}</span>
                         </div>
 
-                        <div @click="onFinishOrderButtonClick" class="text-right mt-3">
+                        <div @click="onFinishOrderButtonClick" class="text-right m-t:3">
                             <button class="btn btn-primary">
                                 Selesaikan Pemesanan
                                 <i class="fa fa-check"></i>

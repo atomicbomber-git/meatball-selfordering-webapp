@@ -155,7 +155,7 @@
             </table>
         </div>
 
-        <div class="text-right mt-5">
+        <div class="text-right m-t:5">
 
             <a :href="this.update_and_confirm_url" class="btn btn-warning">
                 Revisi Transaksi

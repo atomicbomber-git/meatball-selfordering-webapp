@@ -66,7 +66,7 @@
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                 </div>
 
-                <h3 class="text-center mt-3"> Tes Printer, Mohon Tunggu. </h3>
+                <h3 class="text-center m-t:3"> Tes Printer, Mohon Tunggu. </h3>
             </div>
         </div>
     </div>

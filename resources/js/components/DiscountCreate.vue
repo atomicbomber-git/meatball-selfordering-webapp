@@ -79,7 +79,7 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-end mt-5">
+                <div class="d-flex justify-content-end m-t:5">
                     <button @click="submitForm" :disabled="!this.is_submittable" class="btn btn-primary">
                         Tambah Diskon
                     </button>

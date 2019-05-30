@@ -106,7 +106,7 @@
                                 v-model="regular_user"
                             ></multiselect>
 
-                            <div class="table-responsive mt-3">
+                            <div class="table-responsive m-t:3">
                                 <table class="table table-sm table-striped table-bordered">
                                     <thead class="thead thead-dark">
                                         <tr>

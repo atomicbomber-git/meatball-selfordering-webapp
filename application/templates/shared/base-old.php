@@ -18,7 +18,7 @@ use App\Enums\UserLevel;
 </head>
 <body>
     <?= $this->insert('shared/navbar') ?>
-    <div class="mt-5"></div>
+    <div class="m-t:5"></div>
 
     <div class="container">
         <?php if(Auth::check()): ?>

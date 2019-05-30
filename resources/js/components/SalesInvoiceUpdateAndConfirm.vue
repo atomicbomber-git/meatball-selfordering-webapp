@@ -167,7 +167,7 @@
             </div>
         </div>
 
-        <div class="text-right mt-5">
+        <div class="text-right m-t:5">
             <table class="table-sm table-borderless d-inline-block" style="witdh: 300px">
                 <tbody>
                     <tr>
@@ -217,7 +217,7 @@
             </table>
         </div>
 
-        <div @click="confirmTransaction" class="text-right mt-3">
+        <div @click="confirmTransaction" class="text-right m-t:3">
             <button class="btn btn-primary">
                 Konfirmasi Transaksi
             </button>

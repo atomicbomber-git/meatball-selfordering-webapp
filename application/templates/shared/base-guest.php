@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="<?= $this->csrf_token() ?>">
 </head>
 <body>
-    <div class="mt-5"></div>
+    <div class="m-t:5"></div>
 
     <?= $this->section('content') ?>
 

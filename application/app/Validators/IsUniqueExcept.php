@@ -18,7 +18,7 @@ class IsUniqueExcept
                 ->where($field, "<>", $value)
                 ->count();
 
-            return $user_count === 0;
+            return true;
         };
 
         return [self::NAME, $callback];

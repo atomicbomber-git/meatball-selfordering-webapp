@@ -29,7 +29,7 @@
     "weekstart": "^1.0.0"
   },
   "scripts": {
-    "serve": "./node_modules/parcel-bundler/bin/cli.js serve ./resources/js/app.js -d assets --public-url /assets",
+    "serve": "./node_modules/parcel-bundler/bin/cli.js serve ./resources/js/app.js ./resources/js/app-guest.js -d assets --public-url /assets",
     "build": "./node_modules/parcel-bundler/bin/cli.js build ./resources/js/app.js -d assets --public-url /assets"
   },
   "dependencies": {

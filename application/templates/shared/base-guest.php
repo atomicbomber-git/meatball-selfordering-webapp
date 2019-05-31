@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> <?= $title ?? "Website Name" ?> </title>
-    <link rel="stylesheet" href="<?= base_url("assets/app.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/app-guest.css") ?>">
     <meta name="csrf-token" content="<?= $this->csrf_token() ?>">
 </head>
 <body>
@@ -16,9 +16,6 @@
     <script src="<?= base_url("assets/app.js") ?>"></script>
     <?= $this->section('extra-scripts') ?>
 
-    <script src="https://browser.sentry-cdn.com/5.1.1/bundle.min.js" crossorigin="anonymous"></script>
-    <script>
-        Sentry.init({ dsn: 'https://dd60cce3e53c446294aaf94af674ef8e@sentry.io/1446170' });
-    </script>
+    <?php $this->insert("shared/sentry") ?>
 </body>
 </html>

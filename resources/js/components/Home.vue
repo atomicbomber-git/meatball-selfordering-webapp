@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-8 pr-2">
             <div class="card">
-                <div class="card-block">
+                <div class="card-body">
                     <transition name="menu-fade" mode="out-in">
                         <div key="if" v-if="selected_menu_category === null">
                             <div class="row">
@@ -16,7 +16,7 @@
                                         :src="`/menuCategory/image/${menu_category.id}`"
                                         :alt="menu_category.name"
                                     >
-                                    <div class="card-block">
+                                    <div class="card-body">
                                         <span
                                             class="font-weight-bold text-info"
                                         >{{ menu_category.name }}</span>
@@ -67,7 +67,7 @@
                                             <th> Nama </th>
                                             <th class="t-a:r"> Harga (Rp) </th>
                                             <th class="t-a:r"> Diskon </th>
-                                            <th class="t-a:r"> Jumlah </th>
+                                            <th class="t-a:c"> Jumlah </th>
                                         </thead>
 
                                         <tbody>
@@ -85,7 +85,7 @@
 
                                                     {{ percent_format(get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0)) }}
                                                 </td>
-                                                <td class="t-a:r">
+                                                <td class="t-a:c">
                                                     <button
                                                         @click="--menu_item.order_quantity"
                                                         class="btn btn-sm btn-danger"
@@ -93,7 +93,7 @@
                                                         <i class="fa fa-minus"></i>
                                                     </button>
 
-                                                    <span class="font-weight-bold m-x:1">
+                                                    <span class="font-weight-bold m-x:.5">
                                                         <order-quantity
                                                             v-model="menu_item.order_quantity"
                                                         />
@@ -119,7 +119,7 @@
 
         <div class="col-lg-4 pl-0">
             <div class="card">
-                <div class="card-block">
+                <div class="card-body">
                     <h1 class="h5 text-info">DAFTAR PESANAN</h1>
 
                     <div v-if="ordered_menu_items.length > 0">
@@ -127,7 +127,7 @@
                             <thead>
                                 <th>Item</th>
                                 <th class="t-a:r">Harga (Rp)</th>
-                                <th class="t-a:r" style="width: 10rem">Jumlah</th>
+                                <th class="t-a:c" style="width: 10rem">Jumlah</th>
                                 <th class="t-a:r"> Subtotal (Rp) </th>
                             </thead>
 
@@ -140,7 +140,7 @@
                                             (1 - get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0))
                                         ) }}
                                     </td>
-                                    <td class="t-a:r">
+                                    <td class="t-a:c">
                                         <button
                                             @click="--menu_item.order_quantity"
                                             class="btn btn-sm btn-danger"
@@ -148,7 +148,7 @@
                                             <i class="fa fa-minus"></i>
                                         </button>
 
-                                        <span class="font-weight-bold m-x:1">
+                                        <span class="font-weight-bold m-x:.5">
                                             <order-quantity v-model="menu_item.order_quantity"/>
                                         </span>
 
@@ -214,7 +214,7 @@
                     <i class="fa fa-info"></i>
                     Jenis Pemesanan
                 </div>
-                <div class="card-block">
+                <div class="card-body">
                     <h2> Silahkan memilih jenis pemesanan Anda </h2>
                 </div>
                 <div class="card-footer t-a:r">
@@ -243,7 +243,7 @@
                     <i class="fa fa-question"></i>
                     Konfirmasi Pemesanan
                 </div>
-                <div class="card-block">
+                <div class="card-body">
                     <table class="table">
                         <thead>
                             <th>Item</th>
@@ -268,7 +268,7 @@
                                 </td>
                                 
                                 <td class="t-a:r">
-                                    <span class="font-weight-bold m-x:1">
+                                    <span class="font-weight-bold m-x:.5">
                                         <order-quantity v-model="menu_item.order_quantity"/>
                                     </span>
                                 </td>

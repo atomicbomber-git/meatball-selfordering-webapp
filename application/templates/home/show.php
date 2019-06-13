@@ -1,8 +1,18 @@
 <?php ?>
 
-<?php $this->layout('shared/base-guest', ["title" => "Daftar Menu"]) ?>
+<?php $this->layout('shared/base-guest', ["title" => "Menu"]) ?>
 
-<div class="container-fluid">
+<?php $this->start("extra-styles") ?>
+
+<style>
+    body {
+        background-image: url("/assets/header.jpg")
+    }
+</style>
+
+<?php $this->stop() ?>
+
+<div class="container-fluid" style="margin-top: 300px">
     <div id="app">
         <home
             submit_url="<?= base_url('salesInvoice/store') ?>"

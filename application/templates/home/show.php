@@ -6,13 +6,14 @@
 
 <style>
     body {
-        background-image: url("/assets/header.jpg")
+        background-image: url("/assets/header.jpg");
+        background-size: cover;
     }
 </style>
 
 <?php $this->stop() ?>
 
-<div class="container-fluid" style="margin-top: 300px">
+<div class="container-fluid" style="margin-top: 150px">
     <div id="app">
         <home
             submit_url="<?= base_url('salesInvoice/store') ?>"

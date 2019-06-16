@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MenuCategory extends Model
 {
     public $fillable = [
-        "name", "image", "description"
+        "name", "image", "description", "column", "priority",
     ];
 
     const IMAGE_STORAGE_PATH = "storage/menu_categories";

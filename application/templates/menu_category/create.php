@@ -54,6 +54,40 @@ use App\Helpers\AppInfo;
             </div>
 
             <div class="form-group">
+                <label for="priority"> Nilai Prioritas Urutan: </label>
+                <input
+                    name="priority"
+                    id="priority"
+                    type="text"
+                    class="form-control <?= $this->has_error("priority") ? "is-invalid" : "" ?>"
+                    placeholder="Nilai Prioritas Urutan"
+                    value="<?= $this->old("priority") ?>"
+                    >
+                <?php if($this->has_error("priority")): ?>
+                <div class="invalid-feedback">
+                    <?= $this->error("priority") ?>
+                </div>
+                <?php endif ?>
+            </div>
+
+            <div class="form-group">
+                <label for="column"> Kolom Tempat Kategori Menu Berada: </label>
+                <input
+                    name="column"
+                    id="column"
+                    type="text"
+                    class="form-control <?= $this->has_error("column") ? "is-invalid" : "" ?>"
+                    placeholder="Kolom Tempat Kategori Menu Berada"
+                    value="<?= $this->old("column") ?>"
+                    >
+                <?php if($this->has_error("column")): ?>
+                <div class="invalid-feedback">
+                    <?= $this->error("column") ?>
+                </div>
+                <?php endif ?>
+            </div>
+
+            <div class="form-group">
                 <label for="image"> Gambar: </label>
                 <input name="image" id="image" type="file" class="form-control <?= $this->has_error("image") ? "error" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
                 <?php if ($this->has_error("image")) : ?>

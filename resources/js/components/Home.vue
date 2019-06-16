@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-lg-8 pr-2">
+        <div class="col-lg-9 pr-2">
             <div class="card">
                 <div class="card-body">
                     <transition name="menu-fade" mode="out-in">
@@ -53,60 +53,119 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4">
-                                    <img
-                                        class="img-detail"
-                                        :src="`/menuCategory/image/${selected_menu_category.id}`"
-                                        :alt="selected_menu_category.name"
-                                    >
-                                </div>
-
-                                <div class="col-md-8">
+                                <div class="col-md-6 pr-1">
                                     <table class="table table-sm table-striped">
-                                        <thead>
+                                        <thead class="thead thead-dark">
                                             <th> Nama </th>
-                                            <th class="t-a:r"> Harga (Rp) </th>
+                                            <th class="t-a:r"> Rp </th>
                                             <th class="t-a:r"> Diskon </th>
                                             <th class="t-a:c"> Jumlah </th>
                                         </thead>
 
                                         <tbody>
-                                            <tr
-                                                v-for="menu_item in selected_menu_category.menu_items"
-                                                :key="menu_item.id"
-                                            >
-                                                <td>{{ menu_item.name }}</td>
-                                                <td class="t-a:r">
-                                                    <!-- Real price -->
-                                                    {{ number_format(menu_item.outlet_menu_item.price) }}
-                                                </td>
-                                                <td class="t-a:r">
-                                                    <!-- Discount -->
+                                            <template v-for="menu_category in first_column_menu_categories">
 
-                                                    {{ percent_format(get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0)) }}
-                                                </td>
-                                                <td class="t-a:c">
-                                                    <button
-                                                        @click="--menu_item.order_quantity"
-                                                        class="btn btn-sm btn-danger"
-                                                    >
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
+                                                <tr :key="'space_' + menu_category.id" style="height: 30px">
+                                                </tr>
 
-                                                    <span class="font-weight-bold m-x:.5">
-                                                        <order-quantity
-                                                            v-model="menu_item.order_quantity"
-                                                        />
-                                                    </span>
+                                                <tr class="table-primary" :key="'category_' + menu_category.id">
+                                                    <th colspan="4">
+                                                        {{ menu_category.name }}
+                                                    </th>
+                                                </tr>
 
-                                                    <button
-                                                        @click="++menu_item.order_quantity"
-                                                        class="btn btn-sm btn-success"
-                                                    >
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                                <tr
+                                                    v-for="menu_item in menu_category.menu_items"
+                                                    :key="menu_item.id"
+                                                >
+                                                    <td style="max-width: 150px">{{ menu_item.name }}</td>
+                                                    <td class="t-a:r">
+                                                        <!-- Real price -->
+                                                        {{ number_format(menu_item.outlet_menu_item.price) }}
+                                                    </td>
+                                                    <td class="t-a:r">
+                                                        <!-- Discount -->
+
+                                                        {{ percent_format(get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0)) }}
+                                                    </td>
+                                                    <td class="t-a:c">
+                                                        <button
+                                                            @click="--menu_item.order_quantity"
+                                                            class="btn btn-sm btn-danger"
+                                                        >
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+
+                                                        <span class="font-weight-bold m-x:.5">
+                                                            <order-quantity
+                                                                v-model="menu_item.order_quantity"
+                                                            />
+                                                        </span>
+
+                                                        <button
+                                                            @click="++menu_item.order_quantity"
+                                                            class="btn btn-sm btn-success"
+                                                        >
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6 pl-1">
+                                    <table class="table table-sm table-striped">
+                                        <tbody>
+                                            <template v-for="(menu_category, i) in second_column_menu_categories">
+
+                                                <tr v-if="i !== 0" :key="'space_' + menu_category.id" style="height: 30px">
+                                                </tr>
+
+                                                <tr style="max-width: 150px" class="table-primary" :key="'category_' + menu_category.id">
+                                                    <th colspan="4">
+                                                        {{ menu_category.name }}
+                                                    </th>
+                                                </tr>
+
+                                                <tr
+                                                    v-for="menu_item in menu_category.menu_items"
+                                                    :key="menu_item.id"
+                                                >
+                                                    <td>{{ menu_item.name }}</td>
+                                                    <td class="t-a:r">
+                                                        <!-- Real price -->
+                                                        {{ number_format(menu_item.outlet_menu_item.price) }}
+                                                    </td>
+                                                    <td class="t-a:r">
+                                                        <!-- Discount -->
+
+                                                        {{ percent_format(get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0)) }}
+                                                    </td>
+                                                    <td class="t-a:c">
+                                                        <button
+                                                            @click="--menu_item.order_quantity"
+                                                            class="btn btn-sm btn-danger"
+                                                        >
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+
+                                                        <span class="font-weight-bold m-x:.5">
+                                                            <order-quantity
+                                                                v-model="menu_item.order_quantity"
+                                                            />
+                                                        </span>
+
+                                                        <button
+                                                            @click="++menu_item.order_quantity"
+                                                            class="btn btn-sm btn-success"
+                                                        >
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </template>
                                         </tbody>
                                     </table>
                                 </div>
@@ -117,47 +176,21 @@
             </div>
         </div>
 
-        <div class="col-lg-4 pl-0">
+        <div class="col-lg-3 pl-0">
             <div class="card">
                 <div class="card-body">
                     <h1 class="h5 text-info">DAFTAR PESANAN</h1>
 
                     <div v-if="ordered_menu_items.length > 0">
                         <table class="table table-sm">
-                            <thead>
-                                <th>Item</th>
-                                <th class="t-a:r">Harga (Rp)</th>
-                                <th class="t-a:c" style="width: 10rem">Jumlah</th>
-                                <th class="t-a:r"> Subtotal (Rp) </th>
-                            </thead>
-
                             <tbody class="table-striped">
                                 <tr v-for="menu_item in ordered_menu_items" :key="menu_item.id">
-                                    <td>{{ menu_item.name }}</td>
-                                    <td class="t-a:r">
-                                        {{ number_format(
+                                    <td colspan="3">
+                                        {{ menu_item.name }} <br>
+                                        {{ menu_item.order_quantity }}x {{ number_format(
                                             menu_item.outlet_menu_item.price * 
                                             (1 - get(outlet.discount_map[menu_item.outlet_menu_item.id], "percentage", 0))
                                         ) }}
-                                    </td>
-                                    <td class="t-a:c">
-                                        <button
-                                            @click="--menu_item.order_quantity"
-                                            class="btn btn-sm btn-danger"
-                                        >
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-
-                                        <span class="font-weight-bold m-x:.5">
-                                            <order-quantity v-model="menu_item.order_quantity"/>
-                                        </span>
-
-                                        <button
-                                            @click="++menu_item.order_quantity"
-                                            class="btn btn-sm btn-success"
-                                        >
-                                            <i class="fa fa-plus"></i>
-                                        </button>
                                     </td>
 
                                     <td class="t-a:r">
@@ -248,7 +281,7 @@
                         <thead>
                             <th>Item</th>
                             <th class="t-a:r">
-                                Harga (Rp)
+                                Rp
                             </th>
                             <th class="t-a:r" style="width: 10rem">
                                 Jumlah
@@ -350,7 +383,7 @@
 
 <script>
 import { number_format, percent_format } from "../numeral_helpers.js";
-import { get } from 'lodash';
+import { get, partition } from 'lodash';
 import OrderQuantity from "./OrderQuantity.vue";
 import order_types from "../order_types";
 import { sprintf } from "sprintf-js";
@@ -363,8 +396,9 @@ export default {
     data() {
         return {
             p_menu_data: this.menu_data
-                .map(menu_category => ({
+                .map((menu_category, index) => ({
                     ...menu_category,
+                    index: index,
                     menu_items: menu_category.menu_items
                         .map(menu_item => ({
                             ...menu_item,
@@ -382,6 +416,20 @@ export default {
     },
 
     computed: {
+        partitioned_menu_categories() {
+            return partition(this.p_menu_data, (menu_category) => {
+                return menu_category.index < (this.p_menu_data.length / 2);
+            })
+        },
+
+        first_column_menu_categories() {
+            return this.partitioned_menu_categories[0]
+        },
+
+        second_column_menu_categories() {
+            return this.partitioned_menu_categories[1]
+        },
+
         order_types() {
             return order_types
         },

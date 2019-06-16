@@ -1,4 +1,4 @@
 module.exports = {
-    DINE_IN: "Makan Disini",
-    TAKEAWAY: "Bungkus / Bawa Pulang",
+    DINE_IN: "Makan Ditempat",
+    TAKEAWAY: "Bungkus",
 }

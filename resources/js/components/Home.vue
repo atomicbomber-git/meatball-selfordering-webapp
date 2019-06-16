@@ -4,39 +4,12 @@
             <div class="card">
                 <div class="card-body">
                     <transition name="menu-fade" mode="out-in">
-                        <div key="if" v-if="selected_menu_category === null">
-                            <div class="row">
-                                <div
-                                    class="card col-md-4 d-inline-block m-t:3"
-                                    v-for="menu_category in p_menu_data"
-                                    :key="menu_category.id"
-                                >
-                                    <img
-                                        class="card-img-top"
-                                        :src="`/menuCategory/image/${menu_category.id}`"
-                                        :alt="menu_category.name"
-                                    >
-                                    <div class="card-body">
-                                        <span
-                                            class="font-weight-bold text-info"
-                                        >{{ menu_category.name }}</span>
-
-                                        <p class="text-muted">
-                                            {{ menu_category.description }}
-                                        </p>
-
-                                        <div class="t-a:r">
-                                            <button
-                                                @click="onOrderMenuCategoryButtonClick(menu_category)"
-                                                class="btn btn-info btn-sm"
-                                            >
-                                                Pesan
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div key="if" v-if="!is_in_order_mode">
+                            <button
+                                @click="is_in_order_mode = true"
+                                class="btn btn-primary btn-lg btn-block">
+                                Pesan
+                            </button>
                         </div>
 
                         <div key="else" v-else>
@@ -44,7 +17,7 @@
                                 <div class="t-a:r">
                                     <button
                                         class="btn btn-warning"
-                                        @click="selected_menu_category = null"
+                                        @click="is_in_order_mode = false"
                                     >
                                         <i class="fa fa-arrow-left"></i>
                                         Kembali
@@ -55,23 +28,21 @@
                             <div class="row">
                                 <div class="col-md-6 pr-1">
                                     <table class="table table-sm table-striped">
-                                        <thead class="thead thead-dark">
-                                            <th> Nama </th>
-                                            <th class="t-a:r"> Rp </th>
-                                            <th class="t-a:r"> Diskon </th>
-                                            <th class="t-a:c"> Jumlah </th>
-                                        </thead>
-
                                         <tbody>
-                                            <template v-for="menu_category in first_column_menu_categories">
+                                            <template v-for="(menu_category, index) in first_column_menu_categories">
 
-                                                <tr :key="'space_' + menu_category.id" style="height: 30px">
+                                                <tr
+                                                    v-if="index !== 0"
+                                                    :key="'space_' + menu_category.id" style="height: 30px">
                                                 </tr>
 
                                                 <tr class="table-primary" :key="'category_' + menu_category.id">
-                                                    <th colspan="4">
+                                                    <th>
                                                         {{ menu_category.name }}
                                                     </th>
+                                                    <th class="t-a:r"> Rp </th>
+                                                    <th class="t-a:r"> Diskon </th>
+                                                    <th class="t-a:c"> Jumlah </th>
                                                 </tr>
 
                                                 <tr
@@ -124,9 +95,13 @@
                                                 </tr>
 
                                                 <tr style="max-width: 150px" class="table-primary" :key="'category_' + menu_category.id">
-                                                    <th colspan="4">
+                                                    <th>
                                                         {{ menu_category.name }}
                                                     </th>
+
+                                                    <th class="t-a:r"> Rp </th>
+                                                    <th class="t-a:r"> Diskon </th>
+                                                    <th class="t-a:c"> Jumlah </th>
                                                 </tr>
 
                                                 <tr
@@ -408,6 +383,8 @@ export default {
                 .filter(menu_category => menu_category.menu_items.length > 0 ),
 
             selected_menu_category: null,
+
+            is_in_order_mode: false,
             order_type: null,
 
             is_submitting_sales_invoice: false,

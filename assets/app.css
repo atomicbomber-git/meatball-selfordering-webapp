@@ -2108,6 +2108,10 @@ td, th {
 .width-md {
   max-width: 650px;
 }
+
+.width-sm {
+  max-width: 450px;
+}
 img.card-img-top[data-v-3ebacf] {
     width: 100%;
     height: 200px;

@@ -6,7 +6,7 @@ use App\Policies\DiscountPolicy;
 use App\Helpers\Auth;
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
+<?php $this->layout("shared/base", ["title" => "Detail Diskon Outlet"]) ?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">

@@ -1,12 +1,11 @@
 <?php
 use App\Helpers\DefaultRoute;
 use App\Helpers\AppInfo;
-use App\Helpers\Formatter;
 use function GuzzleHttp\json_encode;
 
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
+<?php $this->layout("shared/base", ["title" => "Tambah Diskon Baru"]) ?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">

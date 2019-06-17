@@ -1,11 +1,6 @@
 <?php
 use App\Helpers\Auth;
 use App\Helpers\AppInfo;
-use App\Policies\OutletPolicy;
-use App\Policies\UserPolicy;
-use App\Policies\MenuCategoryPolicy;
-use App\Policies\OutletMenuPolicy;
-use App\Policies\DiscountPolicy;
 
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
@@ -34,7 +29,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <!-- page stylesheets -->
     <!-- end page stylesheets -->
-
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap/dist/css/bootstrap.css') ?> " />
     <link rel="stylesheet" href="<?= base_url('assets/vendor/PACE/themes/blue/pace-theme-minimal.css') ?> " />
     <link rel="stylesheet" href="<?= base_url('assets/vendor/font-awesome/css/font-awesome.css') ?> " />

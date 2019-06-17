@@ -3,7 +3,7 @@
 <?php $this->layout("shared/base", ["title" => "Masuk"]) ?>
 
 <div class="container">
-    <div class="card">
+    <div class="card width-sm m:a">
         <div class="card-header">
             Masuk <i class="fa fa-sign-in"></i>
         </div>

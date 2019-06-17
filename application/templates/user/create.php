@@ -4,7 +4,7 @@ use App\Helpers\AppInfo;
 use App\Enums\UserLevel;
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Pengguna"]) ?>
+<?php $this->layout("shared/base", ["title" => "Tambah Pengguna Baru"]) ?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">

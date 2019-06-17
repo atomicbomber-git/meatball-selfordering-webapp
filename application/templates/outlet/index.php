@@ -6,7 +6,7 @@ use App\Helpers\Auth;
 
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
+<?php $this->layout("shared/base", ["title" => "Outlet"]) ?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">

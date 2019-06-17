@@ -3,7 +3,7 @@ use App\Helpers\DefaultRoute;
 use App\Helpers\AppInfo;
 ?>
 
-<?php $this->layout("shared/base", ["title" => "Kategori Menu"]) ?>
+<?php $this->layout("shared/base", ["title" => "Detail Menu Outlet"]) ?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">

@@ -399,7 +399,8 @@ export default {
                         order_quantity: 0
                     }))
                 }))
-                .filter(menu_category => menu_category.menu_items.length > 0),
+                .filter(menu_category => menu_category.menu_items.length > 0)
+                .sort((mc_a, mc_b) => mc_a.priority - mc_b.priority),
 
             selected_menu_category: null,
 
@@ -414,7 +415,7 @@ export default {
     computed: {
         partitioned_menu_categories() {
             return partition(this.p_menu_data, menu_category => {
-                return menu_category.index < this.p_menu_data.length / 2;
+                return menu_category.column == 1;
             });
         },
 

@@ -43,7 +43,7 @@ use App\Helpers\AppInfo;
                 <?php endif ?>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="description"> Deskripsi: </label>
                 <textarea name="description" id="description" type="text" rows="6" class="form-control <?= $this->has_error("description") ? "error" : "" ?>" placeholder="Deskripsi"><?= $this->old("description") ?></textarea>
                 <?php if ($this->has_error("description")) : ?>
@@ -51,20 +51,21 @@ use App\Helpers\AppInfo;
                         <?= $this->error("description") ?>
                     </label>
                 <?php endif ?>
-            </div>
+            </div> -->
 
             <div class="form-group">
                 <label for="priority"> Nilai Prioritas Urutan: </label>
                 <input
                     name="priority"
                     id="priority"
-                    type="text"
-                    class="form-control <?= $this->has_error("priority") ? "is-invalid" : "" ?>"
+                    type="number"
+                    min="0"
+                    class="form-control <?= $this->has_error("priority") ? "error" : "" ?>"
                     placeholder="Nilai Prioritas Urutan"
                     value="<?= $this->old("priority") ?>"
                     >
                 <?php if($this->has_error("priority")): ?>
-                <div class="invalid-feedback">
+                <div class="error">
                     <?= $this->error("priority") ?>
                 </div>
                 <?php endif ?>
@@ -75,19 +76,21 @@ use App\Helpers\AppInfo;
                 <input
                     name="column"
                     id="column"
-                    type="text"
-                    class="form-control <?= $this->has_error("column") ? "is-invalid" : "" ?>"
+                    type="number"
+                    min="1"
+                    max="2"
+                    class="form-control <?= $this->has_error("column") ? "error" : "" ?>"
                     placeholder="Kolom Tempat Kategori Menu Berada"
                     value="<?= $this->old("column") ?>"
                     >
                 <?php if($this->has_error("column")): ?>
-                <div class="invalid-feedback">
+                <div class="error">
                     <?= $this->error("column") ?>
                 </div>
                 <?php endif ?>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="image"> Gambar: </label>
                 <input name="image" id="image" type="file" class="form-control <?= $this->has_error("image") ? "error" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
                 <?php if ($this->has_error("image")) : ?>
@@ -95,7 +98,7 @@ use App\Helpers\AppInfo;
                         <?= $this->error("image") ?>
                     </div>
                 <?php endif ?>
-            </div>
+            </div> -->
 
             <div class="t-a:r">
                 <button class="btn btn-primary">

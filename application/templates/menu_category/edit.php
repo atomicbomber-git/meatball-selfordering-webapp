@@ -41,27 +41,36 @@ use App\Helpers\AppInfo;
             </div>
 
             <div class="form-group">
-                <label for="description"> Deskripsi: </label>
-                <textarea name="description" id="description" type="text" rows="6" class="form-control <?= $this->has_error("description") ? "error" : "" ?>" placeholder="Deskripsi"><?= $this->old("description", $menu_category->description) ?></textarea>
-                <?php if ($this->has_error("description")) : ?>
-                    <label class='error'>
-                        <?= $this->error("description") ?>
-                    </label>
+                <label for="priority"> Nilai Prioritas Urutan: </label>
+                <input
+                    name="priority"
+                    id="priority"
+                    type="text"
+                    class="form-control <?= $this->has_error("priority") ? "error" : "" ?>"
+                    placeholder="Nilai Prioritas Urutan"
+                    value="<?= $this->old("priority", $menu_category->priority) ?>"
+                    >
+                <?php if($this->has_error("priority")): ?>
+                <div class="error">
+                    <?= $this->error("priority") ?>
+                </div>
                 <?php endif ?>
             </div>
 
             <div class="form-group">
-                <label for="current_image"> Gambar Lama: </label>
-                <img style="width: 640px; height: 480px; display: block; object-fit: cover" src="<?= base_url("menuCategory/image/{$menu_category->id}") ?>" alt="<?= $menu_category->name ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="image"> Gambar Baru: </label>
-                <input name="image" id="image" type="file" class="form-control <?= $this->has_error("image") ? "error" : "" ?>" placeholder="Gambar" value="<?= $this->old("image") ?>">
-                <?php if ($this->has_error("image")) : ?>
-                    <div class='error'>
-                        <?= $this->error("image") ?>
-                    </div>
+                <label for="column"> Kolom Tempat Kategori Menu Berada: </label>
+                <input
+                    name="column"
+                    id="column"
+                    type="text"
+                    class="form-control <?= $this->has_error("column") ? "error" : "" ?>"
+                    placeholder="Kolom Tempat Kategori Menu Berada"
+                    value="<?= $this->old("column", $menu_category->column) ?>"
+                    >
+                <?php if($this->has_error("column")): ?>
+                <div class="error">
+                    <?= $this->error("column") ?>
+                </div>
                 <?php endif ?>
             </div>
 

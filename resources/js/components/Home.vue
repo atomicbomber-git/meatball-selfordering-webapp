@@ -329,7 +329,7 @@
 
                                 <div class="alert alert-danger m-t:5">
                                     <i class="fa fa-warning"></i>
-                                    Silahkan cek pesanan anda dg teliti sekali lagi,, makanan yg sdh dipesan tidak bisa dibatalkan ataupun ditukar.
+                                    Silahkan cek pesanan anda dg teliti sekali lagi. Makanan yg sdh dipesan tidak bisa dibatalkan ataupun ditukar.
                                 </div>
                             </div>
 

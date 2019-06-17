@@ -31,7 +31,11 @@ class MenuCategory extends BaseController {
     {
         MenuCategoryPolicy::canIndex(Auth::user()) ?: $this->error403();
 
-        $menu_categories = MenuCategoryModel::all();
+        $menu_categories = MenuCategoryModel::query()
+            ->orderBy("column")
+            ->orderBy("priority")
+            ->get();
+        
         $this->template->render("menu_category/index", compact("menu_categories"));
     }
 
@@ -48,36 +52,15 @@ class MenuCategory extends BaseController {
 
         $this->validate([
             ["name", "nama", "required|is_unique[menu_categories.name]"],
+            ["priority", "prioritas", "required"],
+            ["column", "nomor kolom", "required"],
         ]);
 
         Capsule::transaction(function() {
             $menu_category = MenuCategoryModel::create([
                 "name" => $this->input->post("name"),
-                "description" => $this->input->post("description"),
-            ]);
-    
-            $this->load->library('upload', [
-                'upload_path' => MenuCategoryModel::IMAGE_STORAGE_PATH,
-                'allowed_types' => 'jpg|jpeg|png',
-                'file_name' => "{$menu_category->id}",
-                'max_size' => 1024 * 40, // 40 Megabytes
-            ]);
-    
-            if ( ! $this->upload->do_upload('image')) {
-                $this->session->set_flashdata("errors", array_merge(
-                    $this->session->flashdata(),
-                    ["image" => $this->upload->display_errors('', '')]
-                ));
-
-                $this->saveOldFormData();
-                $this->redirectBack();
-                throw new \Exception("Image upload failed.");
-            }
-    
-            $upload_data = $this->upload->data();
-            
-            $menu_category->update([
-                "image" => MenuCategoryModel::IMAGE_STORAGE_PATH . "/" . $upload_data["orig_name"]
+                "priority" => $this->input->post("priority"),
+                "column" => $this->input->post("column"),
             ]);
         });
 
@@ -100,37 +83,16 @@ class MenuCategory extends BaseController {
 
         $this->validate([
             ["name", "nama", ["required", IsUniqueExcept::validator("menu_categories.name", $menu_category->name)]],
+            ["priority", "prioritas", "required"],
+            ["column", "nomor kolom", "required"],
         ]);
-
 
         Capsule::transaction(function() use($menu_category) {
             $menu_category->update([
                 "name" => $this->input->post("name"),
-                "description" => $this->input->post("description"),
+                "priority" => $this->input->post("priority"),
+                "column" => $this->input->post("column"),
             ]);
-
-            if (!empty($_FILES["image"]["name"])) {
-                $this->load->library('upload', [
-                    'upload_path' => MenuCategoryModel::IMAGE_STORAGE_PATH,
-                    'allowed_types' => 'jpg|jpeg|png',
-                    'file_name' => "{$menu_category->id}",
-                    'overwrite' => TRUE,
-                    'max_size' => MenuCategoryModel::IMAGE_MAX_SIZE, // 40 Megabytes
-                ]);
-
-                if ( ! $this->upload->do_upload('image')) {
-                    $this->session->set_flashdata("errors", array_merge(
-                        $this->session->flashdata(),
-                        ["image" => $this->upload->display_errors('', '')]
-                    ));
-
-                    $this->redirectBack();
-                    throw new \Exception("Image upload failed.");
-                }
-
-                $upload_data = $this->upload->data();
-                $menu_category->update(["image" => MenuCategoryModel::IMAGE_STORAGE_PATH . "/" . $upload_data["orig_name"]]);
-            }
         });
 
         $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');

@@ -37,6 +37,7 @@ use App\Helpers\AppInfo;
                 <tr>
                     <th> # </th>
                     <th> Kategori Menu </th>
+                    <th class="t-a:c"> Jumlah Menu </th>
                     <th class="t-a:c"> Kendali </th>
                 </tr>
             </thead>
@@ -46,6 +47,7 @@ use App\Helpers\AppInfo;
                     <tr>
                         <td> <?= $menu_category->id ?> </td>
                         <td> <?= $menu_category->name ?> </td>
+                        <td class="t-a:c"> <?= $menu_category->outlet_menu_items_count ?> </td>
                         <td class="t-a:c">
                             <a class="btn btn-info btn-sm" href="<?= base_url("outletMenuItem/index/{$outlet->id}/{$menu_category->id}") ?>">
                                 Detail

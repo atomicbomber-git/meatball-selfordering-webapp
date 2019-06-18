@@ -42,6 +42,7 @@ use App\Helpers\Auth;
                     <th> Nama </th>
                     <th class="t-a:c"> Prioritas </th>
                     <th class="t-a:c"> Kolom </th>
+                    <th class="t-a:c"> Jumlah Menu </th>
                     <th class="t-a:c"> Kendali </th>
                 </tr>
             </thead>
@@ -54,6 +55,10 @@ use App\Helpers\Auth;
 
                         <td class="t-a:c"> <?= $menu_category->priority ?> </td>
                         <td class="t-a:c"> <?= $menu_category->column ?> </td>
+
+                        <td class="t-a:c">
+                            <?= $menu_category->menu_items_count ?>
+                        </td>
 
                         <td class="t-a:c">
                             <a href="<?= base_url("menuCategory/edit/{$menu_category->id}") ?>" class="btn btn-sm btn-info">

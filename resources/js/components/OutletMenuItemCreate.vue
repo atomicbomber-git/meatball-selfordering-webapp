@@ -22,14 +22,29 @@
             </div>
 
             <div class='form-group'>
+                <label for='priority'> Nilai Prioritas Urutan: </label>
+                <input
+                    v-model='priority'
+                    class='form-control'
+                    :class="{'error': get(this.error_data, 'errors.priority', false)}"
+                    type='text' id='priority' placeholder='Prioritas'>
+                <div class='error' v-if="get(this.error_data, 'errors.priority', false)">
+                    {{ get(this.error_data, 'errors.priority', false) }}
+                </div>
+            </div>
+
+            <div class='form-group'>
                 <label for='price'> Harga (Rp.): </label>
                 <vue-cleave
                     class="form-control"
-                    :class="{'is-invalid': get(this.error_data, 'errors.price', false)}"
+                    placeholder="harga"
+                    :class="{'error': get(this.error_data, 'errors.price', false)}"
                     v-model.number="price"
                     :options="{ numeral: true, numeralDecimalMark: ',', delimiter: '.' }">
                 </vue-cleave>
-                <label class='error' v-if="get(this.error_data, 'errors.price', false)">{{ get(this.error_data, 'errors.price', false) }}</label>
+                <label class='error' v-if="get(this.error_data, 'errors.price', false)">
+                    {{ get(this.error_data, 'errors.price', false) }}
+                </label>
             </div>
 
             <div class="t-a:r">
@@ -57,6 +72,7 @@ export default {
         return {
             selected_menu_item: null,
             price: null,
+            priority: null,
             error_data: null,
         }
     },
@@ -66,6 +82,7 @@ export default {
             return {
                 menu_item_id: get(this.selected_menu_item, "id", null),
                 price: this.price,
+                priority: this.priority,
             }
         }
     },

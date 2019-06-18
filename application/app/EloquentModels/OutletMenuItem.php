@@ -10,7 +10,7 @@ class OutletMenuItem extends Model
     use HasRelatedEntitiesCount;
 
     public $fillable = [
-        "outlet_id", "menu_item_id", "price", "is_active",
+        "outlet_id", "menu_item_id", "price", "is_active", "priority"
     ];
 
     const RELATED_ENTITIES = [

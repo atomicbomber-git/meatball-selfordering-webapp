@@ -20,3 +20,19 @@ td, th {
 .width-md {
     max-width: 650px;
 }
+
+.btn-menu-control {
+    width: 40px;
+}
+
+.menu-fade-enter-active, .menu-fade-leave-active {
+    transition: opacity 0.1s ease;
+}
+.menu-fade-enter, .menu-fade-leave-to
+    /* .menu-fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+
+div.total-price {
+    font-size: 16pt;
+}

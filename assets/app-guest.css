@@ -14104,4 +14104,20 @@ td, th {
   max-width: 650px;
 }
 
+.btn-menu-control {
+  width: 40px;
+}
+
+.menu-fade-enter-active, .menu-fade-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.menu-fade-enter, .menu-fade-leave-to {
+  opacity: 0;
+}
+
+div.total-price {
+  font-size: 16pt;
+}
+
 /*# sourceMappingURL=/assets/app-guest.css.map */

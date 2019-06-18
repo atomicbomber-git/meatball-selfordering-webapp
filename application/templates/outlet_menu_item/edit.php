@@ -56,6 +56,22 @@ use App\Helpers\AppInfo;
                 <?php endif ?>
             </div>
 
+            <div class="form-group">
+                <label for="priority">
+                    Nilai Prioritas Urutan:
+                </label>
+                <input
+                    value="<?= $this->e($this->old('priority', $outlet_menu_item->priority)) ?>"
+                    type="text" name="priority"
+                    class="form-control <?= $this->has_error('priority') ? 'error' : '' ?>"
+                    id="priority" placeholder="Prioritas"/>
+                <?php if ($this->has_error('priority')): ?>
+                <label for="priority" class="error">
+                    <?= $this->e($this->error('priority')) ?>
+                </label>
+                <?php endif ?>
+            </div>
+
             <div class="t-a:r">
                 <button class="btn btn-primary">
                     Ubah Data

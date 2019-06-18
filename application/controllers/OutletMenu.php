@@ -33,6 +33,9 @@ class OutletMenu extends BaseController {
 
         $menu_categories = MenuCategory::query()
             ->select("id", "name")
+            ->withCount(["outlet_menu_items" => function ($query) use ($outlet_id) {
+                $query->where("outlet_id", $outlet_id);
+            }])
             ->orderBy("id")
             ->get();
 

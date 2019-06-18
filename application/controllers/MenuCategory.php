@@ -32,6 +32,7 @@ class MenuCategory extends BaseController {
         MenuCategoryPolicy::canIndex(Auth::user()) ?: $this->error403();
 
         $menu_categories = MenuCategoryModel::query()
+            ->withCount("menu_items")
             ->orderBy("column")
             ->orderBy("priority")
             ->get();

@@ -17,4 +17,9 @@ class MenuCategory extends Model
     {
         return $this->hasMany(MenuItem::class);
     }
+
+    public function outlet_menu_items()
+    {
+        return $this->hasManyThrough(OutletMenuItem::class, MenuItem::class);
+    }
 }

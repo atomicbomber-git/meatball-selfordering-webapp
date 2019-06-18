@@ -37,6 +37,7 @@ class OutletMenuItem extends BaseController {
             ->whereHas("menu_item", function ($query) use($menu_category) {
                 $query->where("menu_category_id", $menu_category->id);
             })
+            ->orderBy("priority")
             ->get();
 
         $this->template->render("outlet_menu_item/index", compact("outlet", "menu_category", "outlet_menu_items"));
@@ -130,10 +131,12 @@ class OutletMenuItem extends BaseController {
 
         $this->validate([
             ["price", "harga", "required"],
+            ["priority", "prioritas", "required"],
         ]);
 
         $outlet_menu_item->update([
             "price" => $this->input->post("price"),
+            "priority" => $this->input->post("priority"),
         ]);
 
         $this->session->set_flashdata('message-success', 'Data berhasil diperbarui.');

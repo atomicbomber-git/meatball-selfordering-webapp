@@ -14,21 +14,11 @@
 
             <div key="else" v-else>
                 <div class="row" style="margin-top: 100px">
-                    <div class="col-lg-9 pr-2">
+                    <div class="col-lg-9">
                         <div class="card">
                             <div class="card-body">
-                                <div class="t-a:r m-b:3">
-                                    <button
-                                        class="btn btn-warning"
-                                        @click="is_in_order_mode = false"
-                                    >
-                                        <i class="fa fa-arrow-left"></i>
-                                        Back
-                                    </button>
-                                </div>
-
                                 <div class="row">
-                                    <div class="col-md-6 pr-1">
+                                    <div class="col-md-6">
                                         <table class="table table-sm table-striped">
                                             <tbody>
                                                 <template
@@ -68,7 +58,7 @@
                                                         <td class="t-a:c">
                                                             <button
                                                                 @click="--menu_item.order_quantity"
-                                                                class="btn btn-sm btn-danger"
+                                                                class="btn btn-sm btn-danger btn-menu-control"
                                                             >
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
@@ -81,7 +71,7 @@
 
                                                             <button
                                                                 @click="++menu_item.order_quantity"
-                                                                class="btn btn-sm btn-success"
+                                                                class="btn btn-sm btn-success btn-menu-control"
                                                             >
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
@@ -92,7 +82,7 @@
                                         </table>
                                     </div>
 
-                                    <div class="col-md-6 pl-1">
+                                    <div class="col-md-6 pl-0">
                                         <table class="table table-sm table-striped">
                                             <tbody>
                                                 <template
@@ -132,7 +122,7 @@
                                                         <td class="t-a:c">
                                                             <button
                                                                 @click="--menu_item.order_quantity"
-                                                                class="btn btn-sm btn-danger"
+                                                                class="btn btn-sm btn-danger btn-menu-control"
                                                             >
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
@@ -145,7 +135,7 @@
 
                                                             <button
                                                                 @click="++menu_item.order_quantity"
-                                                                class="btn btn-sm btn-success"
+                                                                class="btn btn-sm btn-success btn-menu-control"
                                                             >
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
@@ -155,6 +145,15 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+
+                                <div class="t-a:r m-t:2">
+                                    <button
+                                        class="btn btn-warning"
+                                        @click="is_in_order_mode = false">
+                                        <i class="fa fa-arrow-left"></i>
+                                        Back
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -192,17 +191,17 @@
                                         </tbody>
 
                                         <tfoot class="t-a:r">
-                                            <tr>
+                                            <!-- <tr>
                                                 <td></td>
                                                 <td class="t-a:r"> Service Charge </td>
                                                 <td class="t-a:r"> ({{ percent_format(outlet.service_charge) }})</td>
                                                 <td>{{ number_format(this.service_charge) }}</td>
-                                            </tr>
+                                            </tr> -->
 
                                             <tr>
-                                                <td></td>
-                                                <td class="t-a:r"> PPN </td>
-                                                <td class="t-a:r"> ({{ percent_format(outlet.pajak_pertambahan_nilai) }})</td>
+                                                <td> </td>
+                                                <td> </td>
+                                                <td class="t-a:r"> PPN ({{ percent_format(outlet.pajak_pertambahan_nilai) }})</td>
                                                 <td>{{ number_format(this.tax) }}</td>
                                             </tr>
                                         </tfoot>
@@ -304,10 +303,10 @@
                                     </tbody>
 
                                     <tfoot class="t-a:r">
-                                        <tr>
+                                        <!-- <tr>
                                             <td colspan="3">Service Charge ({{ percent_format(outlet.service_charge) }})</td>
                                             <td>{{ number_format(this.service_charge) }}</td>
-                                        </tr>
+                                        </tr> -->
 
                                         <tr>
                                             <td colspan="3">PPN ({{ percent_format(outlet.pajak_pertambahan_nilai) }})</td>
@@ -394,10 +393,14 @@ export default {
                 .map((menu_category, index) => ({
                     ...menu_category,
                     index: index,
-                    menu_items: menu_category.menu_items.map(menu_item => ({
-                        ...menu_item,
-                        order_quantity: 0
-                    }))
+                    menu_items: menu_category.menu_items
+                        .map(menu_item => ({
+                            ...menu_item,
+                            order_quantity: 0
+                        }))
+                        .sort((m_a, m_b) => {
+                            return m_a.outlet_menu_item.priority - m_b.outlet_menu_item.priority
+                        })
                 }))
                 .filter(menu_category => menu_category.menu_items.length > 0)
                 .sort((mc_a, mc_b) => mc_a.priority - mc_b.priority),
@@ -602,29 +605,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-img.card-img-top {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-img.img-detail {
-    width: 100%;
-    height: auto;
-}
-
-.menu-fade-enter-active,
-.menu-fade-leave-active {
-    transition: opacity 0.1s ease;
-}
-.menu-fade-enter, .menu-fade-leave-to
-    /* .menu-fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-}
-
-div.total-price {
-    font-size: 24pt;
-}
-</style>
